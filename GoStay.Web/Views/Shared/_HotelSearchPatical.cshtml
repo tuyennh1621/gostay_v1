@@ -1,0 +1,349 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.Web.Model
+@model MainSearchModels;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Globalization
+@inject IViewLocalizer Localizer
+<input type="hidden" value="@Model.TT" name="IdTinhthanh" />
+<input id="txtparaQuans" class="hidden" type="checkbox" value="@Model.QH" name="Quans" />
+<input type="hidden" value="@Model.PX" name="IdPhuong" />
+<input type="hidden" value="@Model.IDH" name="idHotel" />
+
+<div class="search">
+    <div class="search-form">
+        <div class="row margin-zero align-items-center">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 search-location">
+                <div class="form-floating search-box">
+                    <div class="d-flex align-items-center justify-between">
+                        <input onClick="this.setSelectionRange(0, this.value.length)" type="text"
+                               class="form-control" id="txtInputHotelSearch" value="@Model.strPlace"
+                               placeholder="@Localizer["Where are you wanna go?"] ">
+                        <div class="bg-white-custom">
+                            <div class="delete-show-hide btnClearKW">
+                                <i class="fa-solid fa-xmark ic-16-gray"></i>
+                            </div>
+                            <a class="near-location" id="btnnearme" title="Tìm các khách sạn gần tôi">
+                                <i class="fa-solid fa-street-view"></i>
+                                <div class="near-location-text">@Localizer["Near me"]</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 select-date bd-left pl-20">
+                <div class="row align-items-center">
+                    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-5">
+                        <div class="title-date">
+                            @Localizer["Check in"]
+                        </div>
+                        <div class="input-date">
+                            <input type="text" asp-for="@AppConfigs.checkinDate" onchange="numberNight()" readonly="readonly" class="InputDate_from" id="hotel_InputDate_from" placeholder="CheckIn">
+                        </div>
+                    </div>
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-2">
+                        <div class="night">
+                            @{
+                                var numberNight = DateTime.ParseExact(@AppConfigs.checkoutDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) -
+                                DateTime.ParseExact(@AppConfigs.checkinDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            }
+                            <span id="number-night">@numberNight.TotalDays</span><i class="fa-regular fa-moon"></i>
+                        </div>
+                    </div>
+                    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-5">
+                        <div class="title-date">
+                            @Localizer["Check out"]
+                        </div>
+                        <div class="input-date">
+                            <input type="text" readonly="readonly" asp-for="@AppConfigs.checkoutDate" onchange="numberNight()" class="InputDate_to" id="hotel_InputDate_to"
+                                   placeholder="CheckOut">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 select-room bd-left pl-20">
+                <div class="col-9">
+                    <div class="title-date">
+                        @Localizer["Guests and Rooms"]
+                    </div>
+                    <div class="input-date">
+                        <input type="text" readonly="readonly" class="w-100" id="txtInputRoomSearch" name="InputRoomSearch" value="@AppConfigs.TextHotelSearchBar" placeholder="@Localizer["Select number of room, passenger"]">
+                        <input hidden type="number" id="inputNumRoom" name="NumRoom">
+                        <input hidden type="number" id="inputNumMature" name="NumMature">
+                        <input hidden type="number" id="inputNumChild" name="NumChild">
+
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="button-search">
+                        <button class="btn-search" type="submit" id="btnSubmitSearch"><i class="fa-solid fa-magnifying-glass ic-16-white"></i> </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="result_search_hotel">
+    <div class="result-room drop-location w-100">
+        <div class="container">
+            <div class="row pt-30 pb-30">
+                <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-12 pb-20">
+                    <div class="drop-left-result" id="mainsgsresult">
+                        <div class="no-result" id="no-resultCachedKeyWord"><i class="fa-solid fa-search"></i><span>@Localizer["Enter the hotel name or the name of the city where you want to go"]</span></div>
+                        <ul id="sgsCachedKeyWord" class="sgsCachedKeyWord">
+                        </ul>
+                        <div id="ResultSuggest">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-7 col-xl-7 col-lg-7 col-md-12">
+                    <h3 class="text-16-b">@Localizer["Favorite destinations"]</h3>
+                    <div class="popular-location row">
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Phú Quốc" href="/khach-san/kien-giang/huyen-phu-quoc"><img alt="Phú Quốc" data-src="/assets/images/location/phu-quoc.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Phú Quốc" href="/khach-san/kien-giang/huyen-phu-quoc">Phú Quốc</a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Nha Trang" href="/khach-san/khanh-hoa/thanh-pho-nha-trang"><img alt="Nha Trang" data-src="/assets/images/location/nha-trang.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Nha Trang" href="/khach-san/khanh-hoa/thanh-pho-nha-trang">Nha Trang</a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a href="/khach-san/binh-thuan/thanh-pho-phan-thiet" title="Phan thiết"><img alt="Phan thiết" data-src="/assets/images/location/phan-thiet.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a href="/khach-san/binh-thuan/thanh-pho-phan-thiet" title="Khách sạn tại Phan thiết">Phan Thiết</a>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a href="/khach-san/binh-dinh/thanh-pho-quy-nhon" title="Quy Nhơn, Bình Định"><img alt="Hòa Bình" data-src="/assets/images/location/quy-nhon.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a href="/khach-san/binh-dinh/thanh-pho-quy-nhon" title="Khách sạn tại Quy Nhơn, Bình Định">Quy Nhơn</a>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a href="/khach-san/ha-noi" title="Hà Nội"><img alt="Hà Nội" data-src="/assets/images/location/ha-noi.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a href="/khach-san/ha-noi" title="Khách sạn tại Hà Nội">Hà Nội</a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a href="/khach-san/da-nang" title="Đà Nẵng"><img alt="Đà Nẵng" data-src="/assets/images/location/da-nang.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a href="/khach-san/da-nang" title="Khách sạn tại Đà Nẵng">Đà Nẵng</a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Đà Lạt"><img alt="Đà Lạt" data-src="/assets/images/location/da-lat.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Đà Lạt">Đà Lạt</a>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Ninh Bình"><img alt="Ninh Bình" data-src="/assets/images/location/ninh-binh.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Ninh Bình">Ninh Bình</a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Sa Pa"><img alt="Sa Pa" data-src="/assets/images/location/sapa.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Sa Pa">Sa Pa</a>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Hạ Long"><img alt="Hạ Long" data-src="/assets/images/location/ha-long.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Hạ Long">Hạ Long</a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Mộc Châu"><img alt="Mộc Châu" data-src="/assets/images/location/moc-chau.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Mộc Châu">Mộc Châu</a>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-2 col mt-20">
+                            <div class="img-location">
+                                <a title="Huế"><img alt="Huế" data-src="/assets/images/location/hue.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            </div>
+                            <div class="title-location1">
+                                <a title="Khách sạn tại Huế">Huế</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="result_search_room3">
+    <div class="room-three drop-select-room1">
+        <ul class="drop-room" id="ul_room_c">
+            <li id="room_c1" data-NumRoom="1" data-NumAdults="1" data-NumChils="0" class="person-parent person-child room active">
+                <span>1 @Localizer["room"], 1 @Localizer["Adult"]</span>
+            </li>
+            <li id="room_c2" data-NumRoom="1" data-NumAdults="2" data-NumChils="0" class="person-parent person-child room">
+                <span>1 @Localizer["room"], 2 @Localizer["Adult"]</span>
+            </li>
+            <li id="room_c3" data-NumRoom="1" data-NumAdults="2" data-NumChils="2" class="person-parent person-child room">
+                <span>@Localizer["Family travelers"]</span>
+            </li>
+        </ul>
+        <div id="family-room" class="family-room-parent">
+            <div class="family-room room">
+                <div class="family-title">
+                    @Localizer["Rooms"]
+                </div>
+                <div class="family-quality">
+                    <span id="btnsublbnumRoom"><i class="fa-solid fa-minus"></i></span>
+                    <div>
+                        <input id="numRoom" style="width:30px;text-align:center;" type="number" min="1" value="@AppConfigs.NumRoom" name="NumRoom" disabled />
+                    </div>
+                    <span id="btnaddlbnumRoom"><i class="fa-solid fa-plus"></i></span>
+                </div>
+            </div>
+            <div class="family-room person">
+                <div class="family-title">
+                    @Localizer["Adult"]
+                </div>
+                <div class="family-quality">
+
+                    <span id="btnsublbnumAdu"><i class="fa-solid fa-minus"></i></span>
+                    <div>
+                        <input id="numMature" style="width:30px;text-align:center;" type="number" min="1" value="@AppConfigs.NumAdult" name="NumMature" disabled />
+                    </div>
+                    <span id="btnaddlbnumAdu"><i class="fa-solid fa-plus"></i></span>
+                </div>
+            </div>
+            <div class="family-room child">
+                <div class="family-title">
+                    @Localizer["Children"]
+                </div>
+                <div class="family-quality">
+
+                    <span id="btnsublbnumChi"><i class="fa-solid fa-minus"></i></span>
+                    <div>
+                        <input id="numChild" style="width:30px;text-align:center;" type="number" min="0" value="@AppConfigs.NumChildren" name="NumChild" disabled />
+                    </div>
+                    <span id="btnaddlbnumChi"><i class="fa-solid fa-plus"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#txtInputRoomSearch").val($("#numRoom").val() + " @Localizer["Rooms"] " + $("#numMature").val() + " @Localizer["Adult"] " + $("#numChild").val() + " @Localizer["Children"]");
+    $("#inputNumRoom").val($("#numRoom").val());
+    $("#inputNumMature").val($("#numMature").val());
+    $("#inputNumChild").val($("#numChild").val());
+
+    function numberNight() {
+        var checkin = document.getElementById("hotel_InputDate_from").value;
+        var checkout = document.getElementById("hotel_InputDate_to").value;
+
+        var datearray = checkin.split("/");
+        var datearray2 = checkout.split("/");
+
+        var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+        var newdate2 = datearray2[1] + '/' + datearray2[0] + '/' + datearray2[2];
+
+        var dateFrom = new Date(newdate);
+        var dateTo = new Date(newdate2);
+
+        var totalNight = Math.ceil((dateTo - dateFrom) / (1000 * 60 * 60 * 24));
+
+        if (checkin == "" || checkout == "") {
+            document.getElementById("number-night").innerHTML = 0;
+        } else {
+            document.getElementById("number-night").innerHTML = totalNight;
+        }
+
+    }
+
+    function binCap() {
+        $("#txtInputRoomSearch").val($("#numRoom").val() + " @Localizer["Rooms"] " + $("#numMature").val() + " @Localizer["Adult"] " + $("#numChild").val() + " @Localizer["Children"]");
+        $("#inputNumRoom").val($("#numRoom").val());
+        $("#inputNumMature").val($("#numMature").val());
+        $("#inputNumChild").val($("#numChild").val());
+
+    }
+    function addNum(id) {
+        var temp = parseInt($("#" + id).val()) || 0;
+        temp += 1;
+
+        $("#" + id).val(temp);
+        binCap();
+    }
+    function subNum(id) {
+        var temp = parseInt($("#" + id).val()) || 0;
+        temp -= 1;
+
+        if (temp <= 0)
+            temp = 0;
+        $("#" + id).val(temp);
+
+        binCap();
+    }
+    function subNumA(id) {
+        var temp = parseInt($("#" + id).val()) || 0;
+        temp -= 1;
+        if (temp < 1)
+            temp = 1;
+        $("#" + id).val(temp);
+
+        binCap();
+    }
+    $("#btnaddlbnumRoom").click(function () {
+        addNum('numRoom');
+    });
+    $("#btnsublbnumRoom").click(function () {
+        subNumA('numRoom');
+    });
+
+
+    $("#btnsublbnumAdu").click(function () {
+        subNumA('numMature');
+    });
+    $("#btnaddlbnumAdu").click(function () {
+        addNum('numMature');
+    });
+
+
+    $("#btnsublbnumChi").click(function () {
+        subNum('numChild');
+    });
+    $("#btnaddlbnumChi").click(function () {
+        addNum('numChild');
+    });
+</script>

@@ -1,0 +1,109 @@
+﻿@using GoStay.DataDto.Scheduler
+@using GoStay.Web.Areas.Admin.Controllers;
+@addTagHelper *, Kendo.Mvc
+@using Kendo.Mvc.UI
+@model InputScheduler
+@{
+    ViewData["Title"] = "Editor";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+
+}
+@{
+    var kendoVersion = "2022.2.510";
+}
+    <link href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.material-main.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.aspnetmvc.min.js"></script>
+    <link rel="stylesheet" href="~/kendoui/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/kendoui/css/site.css" />
+
+@{
+    var resources = new[]
+    {
+        new { Text = "Alex", Value = 1, Color = "#f8a398" },
+        new { Text = "Bob", Value = 2, Color = "#51a0ed" },
+        new { Text = "Charlie", Value = 3, Color = "#56ca85" },
+    };
+
+    string defaultTitle = "No Title";
+}
+
+<kendo-scheduler name="scheduler" height="600" date="new DateTime(Model.Year, Model.Month, 1)"
+                start-time="new DateTime(Model.Year, Model.Month, 1, 0, 0, 0, 0)"
+                
+                event-template-id="event-template">
+    <views>
+        <view type="day"></view>
+        <view type="month" selected="true"></view>
+        <view type="year" ></view>
+
+        <view type="agenda"></view>
+    </views>
+    <resources>
+        <resource field="Attendees" title="Attendees" datatextfield="Text" datavaluefield="Value" datacolorfield="Color" bind-to="@resources">
+        </resource>
+        
+    </resources>
+    <scheduler-datasource type="@DataSourceTagHelperType.Ajax">
+        <transport>
+            <read url="@Url.Action("Overview_Read", "Scheduler", new {idRoom= Model.IdRoom, year=Model.Year, month= Model.Month})" />
+            <create url="@Url.Action("Create", "Scheduler", new{IdRoom = Model.IdRoom})" />
+            <destroy url="@Url.Action("Overview_Destroy", "Scheduler")" />
+            <update url="@Url.Action("Update", "Scheduler")" />
+        </transport>
+        <schema data="Data" total="Total" errors="Errors">
+            <scheduler-model id="PriceId">
+                <fields>
+                    <field name="PriceId" type="number"></field>
+                    <field name="title" from="Title" type="string" ></field>
+                    <field name="start" from="Start" type="date"></field>
+                    <field name="end" from="End" type="date"></field>
+                    <field name="description" from="Description" type="string"></field>
+                    <field name="recurrenceId" from="RecurrenceID" type="number" default-value=null></field>
+                    <field name="recurrenceRule" from="RecurrenceRule" type="string"></field>
+                    <field name="recurrenceException" from="RecurrenceException" type="string"></field>
+                    <field name="Attendees" type="number" default-value="1"></field>
+                    <field name="RoomId" from="RoomId" type="number" ></field>
+                    <field name="startTimezone" from="StartTimezone" type="string"></field>
+                    <field name="endTimezone" from="EndTimezone" type="string"></field>
+                    <field name="isAllDay" from="IsAllDay" type="boolean"></field>
+                </fields>
+            </scheduler-model>
+        </schema>
+    </scheduler-datasource>
+</kendo-scheduler>
+
+<style>
+   /* .template-container {
+        margin-top: -8px;
+    }*/
+
+        .template-container img {
+            float: left;
+            margin: 0 4px;
+            margin-right: 10px;
+        }
+
+        .template-container h3 {
+            padding: 0 4px 4px;
+            font-size: 18px;
+            font-weight: 800;
+            margin-right: 14px;
+        }
+
+    .template-title-1 {
+        color: orangered;
+    }
+
+    .template-title-2 {
+        color: #D0D03B;
+    }
+
+    .k-event .k-i-reload,
+    .k-event .k-i-non-recurrence {
+        display: none;
+    }
+</style>

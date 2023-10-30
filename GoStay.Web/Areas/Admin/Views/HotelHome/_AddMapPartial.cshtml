@@ -1,0 +1,735 @@
+﻿@model string
+@{
+    string[] strPara = Model.Split('|');
+}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<style>
+   #mapfoDangTin {
+        height: 390px;
+    }
+    #map{
+        height:300px;
+    }
+
+    #wrapper2{
+        height:100%;
+    }
+    #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+    }
+
+    #infowindow-content .title {
+        font-weight: bold;
+    }
+
+    #infowindow-content {
+        display: none;
+    }
+
+    #map #infowindow-content {
+        display: inline;
+    }
+
+    .pac-card {
+        background-color: #fff;
+        border: 0;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+        margin: 10px;
+        padding: 0 0.5em;
+        font: 400 18px Roboto, Arial, sans-serif;
+        overflow: hidden;
+        font-family: Roboto;
+        padding: 0;
+    }
+
+    #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+        z-index: 10000 !important;
+    }
+
+    .pac-container {
+        z-index: 100000;
+    }
+
+    .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+    }
+
+        .pac-controls label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+    #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+    }
+
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
+
+    #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+    }
+
+
+</style>
+<div id="mapfoDangTin" class="dv-viewmap-mb">
+    <div class="pac-card" id="pac-card">
+        <div id="pac-container">
+            <input id="pac-input" value="@strPara[1]" autocomplete="off" type="text" onClick="this.setSelectionRange(0, this.value.length)" placeholder="Nhập vào tên đường hoặc tên dự án">
+        </div>
+    </div>
+    <div id="map">
+      
+    </div>
+    
+    <div id="infowindow-content">
+        <img src="" width="16" height="16" id="place-icon">
+        <span id="place-name" class="title"></span><br>
+        <span id="place-address"></span><br>Click chuột lên bản đồ để chọn vị trí cho khách sạn!
+    </div>
+    <span class="Label">Tọa độ: </span>
+    <input id="txtLAT" autocomplete="off" value="@strPara[2].ToString().Replace(",",".")" style="margin-top: 4px;width: 120px;" readonly="readonly" name="txtLAT" type="text" />
+    <input id="txtLON" autocomplete="off" value="@strPara[3].ToString().Replace(",",".")" style="width: 120px;" name="txtLon" readonly="readonly" type="text" />
+    <button onclick="UpdateMAP(@strPara[0])" class="button button-3d button-rounded gradient-grey-orange  float-right">
+        Cập nhật tọa độ cho khách sạn
+    </button>
+</div>
+
+<script>
+ var marker = [];
+ function initializeMAPNEARBY(){
+
+   var Lat = document.getElementById("txtLAT").value;
+   var Lon = document.getElementById("txtLON").value;
+
+    var image_src = "/duan/5/images/";
+    let map;
+    var infowindow;
+    var bounds = new google.maps.LatLngBounds();
+
+    var _address = document.getElementById("pac-input").value;
+
+    var PlaceArray = ["restaurant","cafe","bank","park","stadium","post_office","shopping_mall","supermarket","gym","university","school","movie_theater","hospital","airport","zoo","pet_store","clothing_store","spa","parking","night_club","bar","atm","amusement_park","bakery","grocery_or_supermarket"];
+    var PlaceArrayName = ["Nhà hàng","Cafe","Ngân hàng","Công viên","Sân vận động","Bưu điện","Mua sắm","Siêu thị","Gym","Trường đại học","Trường học","Rạp chiếu phim","Bệnh viện","Sân bay","Sở thú","Cửa hàng thú cưng","Cửa hàng quần áo","Spa","Bãi đỗ xe","Night club","Bar","Atm","Công viên giải trí","Tiệm bánh","Tạp hoá, siêu thị"];
+   
+    var PlaceCounter = 0;
+    
+        var directionsService = new google.maps.DirectionsService;
+        //var directionsRenderer = new google.maps.DirectionsRenderer;
+
+        var directionsRenderer = new google.maps.DirectionsRenderer({
+          
+          panel: document.getElementById('right-panel')
+        });
+
+    var pyrmont = new google.maps.LatLng(Lat, Lon);
+
+        
+    
+    function initializeMAPNEARBY(_radius) {
+
+            map = new google.maps.Map(document.getElementById('map'), {
+            center: pyrmont,
+            zoom: 16,
+            mapId: 'dccc44ad71831c0d',
+            animation: google.maps.Animation.DROP,
+            scrollwheel: false,
+            rankby: 'distance',
+        });
+
+            var a = document.getElementById("pac-card"),
+                s = document.getElementById("pac-input");
+            document.getElementById("strict-bounds-selector");
+            map.controls[google.maps.ControlPosition.TOP_RIGHT].push(a);
+
+            const _options = {
+                componentRestrictions: { country: "vn" },
+            };
+
+            var d = new google.maps.places.Autocomplete(s, _options);
+            d.bindTo("bounds", map);
+            var l = new google.maps.InfoWindow,
+                r = document.getElementById("infowindow-content");
+            l.setContent(r);
+            var c, i = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29),
+                icon: 'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png'
+            });
+
+            d.addListener("place_changed", function () {
+                // mustchoise = true;
+                l.close(), Lat.value = "", Lon.value = "", i.setVisible(!1);
+                var e = d.getPlace();
+                if (e.geometry) {
+                    e.geometry.viewport ? map.fitBounds(e.geometry.viewport) : (map.setCenter(e.geometry.location), map.setZoom(17)), i.setPosition(e.geometry.location), i.setVisible(!0);
+                    var t = "";
+                    e.address_components && (t = [e.address_components[0] && e.address_components[0].short_name || "", e.address_components[1] && e.address_components[1].short_name || "", e.address_components[2] && e.address_components[2].short_name || ""].join(" ")), r.children["place-icon"].src = e.icon, r.children["place-name"].textContent = e.name, r.children["place-address"].textContent = t, l.open(map, i), google.maps.event.addListener(i, "drag", function (e) {
+                        var t = i.getPosition();
+                        r.children["place-address"].textContent = t, Lat.value = t.lat(), Lon.value = t.lng()
+                    })
+                } else window.alert("No details available for input: '" + e.name + "'")
+            }), c = [], d.setTypes(c), map.addListener("click", function (e) {
+                deleteMarkers(), addMarkerPOS(e.latLng)
+            });
+
+            if (Lat == '0' || Lat == '') {
+                (geocoder = new google.maps.Geocoder).geocode({
+                    address: _address
+                }, function (e, t) {
+                    t == google.maps.GeocoderStatus.OK && (
+                        map.setCenter(e[0].geometry.location),
+                        addMarkerPOS(e[0].geometry.location)
+
+                    )
+                })
+            }
+            else{
+                addMarkerPOS(pyrmont);
+            }
+        
+            //element.addEventListener("click", function () {
+            //    document.getElementById("demo").innerHTML = "Hello World";
+            //});
+    }
+
+    function addMarkerPOS(e) {
+
+            var _lat = document.getElementById("txtLAT");
+            var _lon = document.getElementById("txtLON");
+            var t = new google.maps.Marker({
+                id:1,
+                position: e,
+                map: map,
+                icon: 'https://nhadat24h.net/duan/5/images/target_marker.png',
+                draggable: !0
+                });
+
+            var infowindow = new google.maps.InfoWindow({
+                content: 'Di điểm này đến vị trí của khách sạn.',
+                maxWidth: 200
+            });
+
+            infowindow.open(map, t);
+
+            marker.push(t), google.maps.event.addListener(t, "dragend", function (e) {
+                var n = t.getPosition();
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'location': n }, function (results, status) {
+                    if (status === 'OK') {
+                        if (results[0]) {
+                            infowindow.setContent("<b>Vị trí gần đúng:</b> " + results[0].formatted_address);
+
+                        } else { }
+                    } else { }
+                });
+
+                _lat.value = n.lat(), _lon.value = n.lng()
+            }), e && (_lat.value = e.lat(), _lon.value = e.lng())
+
+            //marker.push(t), google.maps.event.addListener(t, "dragend", function (e) {
+                
+            //    var n = t.getPosition();
+
+            //    var geocoder = new google.maps.Geocoder();
+            //    calculateAndDisplayRoute(directionsService, directionsRenderer, pyrmont, n);
+            //    geocoder.geocode({ 'location': n }, function (results, status) {
+            //        if (status === 'OK') {
+            //            if (results[0]) {
+            //                infowindow.setContent("<b>Điểm đến: </b> " + results[0].formatted_address);
+            //                google.maps.event.addListener(t, 'click', function () {
+            //                    infowindow.open(map, this);
+            //                });
+            //                _lat.value = n.lat(), _lon.value = n.lng();
+            //               // document.getElementById("desccalculateRoute").innerHTML = 'Khoảng cách từ bất động sản đến vị trí: ' + results[0].formatted_address + ' là: ';
+            //            } else { }
+            //        } else { }
+            //    });
+                
+            //    //geocoder.geocode({ 'location': n }, function (results, status) {
+            //    //    if (status === 'OK') {
+            //    //        if (results[0]) {
+            //    //            infowindow.setContent("<b>Vị trí gần đúng:</b> " + results[0].formatted_address);
+            //    //        } else { }
+            //    //    } else { }
+            //    //});
+
+            //    //
+              
+            //});
+        }
+
+   function deleteMarkers() {
+            clearMarkers(), marker = []
+        }
+
+   function clearMarkers() {
+            setMapOnAll(null)
+        }
+
+   function setMapOnAll(e) {
+            for (var t = 0; t < marker.length; t++) marker[t].setMap(e)
+        }
+   function codeAddress(e) {
+            (geocoder = new google.maps.Geocoder).geocode({
+                address: e
+            }, function (e, t) {
+                t == google.maps.GeocoderStatus.OK && (
+                    map.setCenter(e[0].geometry.location),
+                    addMarker(e[0].geometry.location)
+                )
+            })
+        }
+
+       
+
+    initializeMAPNEARBY(1000);
+}
+
+function botCheck() {
+        var botPattern = "(googlebot\/|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+        var re = new RegExp(botPattern, 'i');
+        var userAgent = navigator.userAgent;
+        if (re.test(userAgent)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo7fN2jyfoghkS2oBUOG51cAYVit3vSzc&libraries=places&callback=initializeMAPNEARBY"></script>
+
+@*<script>
+
+    (() => {
+        "use strict";
+        var e = {
+            d: (t, i) => {
+                for (var r in i)
+                    e.o(i, r) &&
+                        !e.o(t, r) &&
+                        Object.defineProperty(t, r, { enumerable: !0, get: i[r] });
+            },
+            o: (e, t) => Object.prototype.hasOwnProperty.call(e, t),
+            r: (e) => {
+                "undefined" != typeof Symbol &&
+                    Symbol.toStringTag &&
+                    Object.defineProperty(e, Symbol.toStringTag, {
+                        value: "Module",
+                    }),
+                    Object.defineProperty(e, "__esModule", { value: !0 });
+            },
+        },
+            t = {};
+        e.r(t), e.d(t, { map: () => map });
+        var i = function e(t, i) {
+            if (t === i) return !0;
+            if (t && i && "object" == typeof t && "object" == typeof i) {
+                if (t.constructor !== i.constructor) return !1;
+                var r, s, n;
+                if (Array.isArray(t)) {
+                    if ((r = t.length) != i.length) return !1;
+                    for (s = r; 0 != s--;) if (!e(t[s], i[s])) return !1;
+                    return !0;
+                }
+                if (t.constructor === RegExp)
+                    return t.source === i.source && t.flags === i.flags;
+                if (t.valueOf !== Object.prototype.valueOf)
+                    return t.valueOf() === i.valueOf();
+                if (t.toString !== Object.prototype.toString)
+                    return t.toString() === i.toString();
+                if ((r = (n = Object.keys(t)).length) !== Object.keys(i).length)
+                    return !1;
+                for (s = r; 0 != s--;)
+                    if (!Object.prototype.hasOwnProperty.call(i, n[s])) return !1;
+                for (s = r; 0 != s--;) {
+                    var o = n[s];
+                    if (!e(t[o], i[o])) return !1;
+                }
+                return !0;
+            }
+            return t != t && i != i;
+        };
+        const r = "__googleMapsScriptId";
+        class s {
+            constructor({
+                apiKey: e,
+                channel: t,
+                client: n,
+                id: o = r,
+                libraries: a = ['places'],
+                language: l,
+                region: h,
+                version: c,
+                mapIds: d,
+                nonce: g,
+                retries: p = 3,
+                url: u = "https://maps.googleapis.com/maps/api/js",
+            }) {
+                if (
+                    ((this.CALLBACK = "__googleMapsCallback"),
+                        (this.callbacks = []),
+                        (this.done = !1),
+                        (this.loading = !1),
+                        (this.errors = []),
+                        (this.version = c),
+                        (this.apiKey = e),
+                        (this.channel = t),
+                        (this.client = n),
+                        (this.id = o || r),
+                        (this.libraries = a),
+                        (this.language = l),
+                        (this.region = h),
+                        (this.mapIds = d),
+                        (this.nonce = g),
+                        (this.retries = p),
+                        (this.url = u),
+                        s.instance)
+                ) {
+                    if (!i(this.options, s.instance.options))
+                        throw new Error(
+                            `Loader must not be called again with different options. ${JSON.stringify(
+                                this.options
+                            )} !== ${JSON.stringify(s.instance.options)}`
+                        );
+                    return s.instance;
+                }
+                s.instance = this;
+            }
+            get options() {
+                return {
+                    version: this.version,
+                    apiKey: this.apiKey,
+                    channel: this.channel,
+                    client: this.client,
+                    id: this.id,
+                    libraries: this.libraries,
+                    language: this.language,
+                    region: this.region,
+                    mapIds: this.mapIds,
+                    nonce: this.nonce,
+                    url: this.url,
+                };
+            }
+            get failed() {
+                return (
+                    this.done &&
+                    !this.loading &&
+                    this.errors.length >= this.retries + 1
+                );
+            }
+            createUrl() {
+                let e = this.url;
+                return (
+                    (e += `?callback=${this.CALLBACK}`),
+                    this.apiKey && (e += `&key=${this.apiKey}`),
+                    this.channel && (e += `&channel=${this.channel}`),
+                    this.client && (e += `&client=${this.client}`),
+                    this.libraries.length > 0 &&
+                    (e += `&libraries=${this.libraries.join(",")}`),
+                    this.language && (e += `&language=${this.language}`),
+                    this.region && (e += `&region=${this.region}`),
+                    this.version && (e += `&v=${this.version}`),
+                    this.mapIds && (e += `&map_ids=${this.mapIds.join(",")}`),
+                    e
+                );
+            }
+            load() {
+                return this.loadPromise();
+            }
+            loadPromise() {
+                return new Promise((e, t) => {
+                    this.loadCallback((i) => {
+                        i ? t(i) : e();
+                    });
+                });
+            }
+            loadCallback(e) {
+                this.callbacks.push(e), this.execute();
+            }
+            setScript() {
+                if (document.getElementById(this.id)) return void this.callback();
+                const e = this.createUrl(),
+                    t = document.createElement("script");
+                (t.id = this.id),
+                    (t.type = "text/javascript"),
+                    (t.src = e),
+                    (t.onerror = this.loadErrorCallback.bind(this)),
+                    (t.defer = !0),
+                    (t.async = !0),
+                    this.nonce && (t.nonce = this.nonce),
+                    document.head.appendChild(t);
+            }
+            deleteScript() {
+                const e = document.getElementById(this.id);
+                e && e.remove();
+            }
+            reset() {
+                this.deleteScript(),
+                    (this.done = !1),
+                    (this.loading = !1),
+                    (this.errors = []),
+                    (this.onerrorEvent = null);
+            }
+            resetIfRetryingFailed() {
+                this.failed && this.reset();
+            }
+            loadErrorCallback(e) {
+                if ((this.errors.push(e), this.errors.length <= this.retries)) {
+                    const e = this.errors.length * Math.pow(2, this.errors.length);
+                    console.log(
+                        `Failed to load Google Maps script, retrying in ${e} ms.`
+                    ),
+                        setTimeout(() => {
+                            this.deleteScript(), this.setScript();
+                        }, e);
+                } else (this.onerrorEvent = e), this.callback();
+            }
+            setCallback() {
+                window.__googleMapsCallback = this.callback.bind(this);
+            }
+            callback() {
+                (this.done = !0),
+                    (this.loading = !1),
+                    this.callbacks.forEach((e) => {
+                        e(this.onerrorEvent);
+                    }),
+                    (this.callbacks = []);
+            }
+            execute() {
+                if ((this.resetIfRetryingFailed(), this.done)) this.callback();
+                else {
+                    if (
+                        window.google &&
+                        window.google.maps &&
+                        window.google.maps.version
+                    )
+                        return (
+                            console.warn(
+                                "Google Maps already loaded outside googlemaps/js-api-loader.This may result in undesirable behavior as options and script parameters may not match."
+                            ),
+                            void this.callback()
+                        );
+                    this.loading ||
+                        ((this.loading = !0), this.setCallback(), this.setScript());
+                }
+            }
+        }
+
+        
+        let map;
+        var geocoder, markers = [], _address = "Hà Nội";
+
+
+        function initMap() {
+            var t = {
+                lat: 21.01969347858969,
+                lng: 105.83099196693422
+            };
+
+            var _lat = document.getElementById("txtLat");
+            var _lon = document.getElementById("txtLon");
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 40.749933, lng: -73.98633 },
+                zoom: 14,
+                mapTypeControl: true,
+            });
+
+           
+
+            var a = document.getElementById("pac-card"),
+                s = document.getElementById("pac-input");
+            document.getElementById("strict-bounds-selector");
+            map.controls[google.maps.ControlPosition.TOP_RIGHT].push(a);
+
+            const _options = {
+                componentRestrictions: { country: "vn" },
+            };
+
+            var d = new google.maps.places.Autocomplete(s, _options);
+            d.bindTo("bounds", map);
+            var l = new google.maps.InfoWindow,
+                r = document.getElementById("infowindow-content");
+            l.setContent(r);
+            var c, i = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29),
+                icon: 'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png'
+            });
+
+            d.addListener("place_changed", function () {
+                // mustchoise = true;
+                l.close(), _lat.value = "", _lon.value = "", i.setVisible(!1);
+                var e = d.getPlace();
+                if (e.geometry) {
+                    e.geometry.viewport ? map.fitBounds(e.geometry.viewport) : (map.setCenter(e.geometry.location), map.setZoom(17)), i.setPosition(e.geometry.location), i.setVisible(!0);
+                    var t = "";
+                    e.address_components && (t = [e.address_components[0] && e.address_components[0].short_name || "", e.address_components[1] && e.address_components[1].short_name || "", e.address_components[2] && e.address_components[2].short_name || ""].join(" ")), r.children["place-icon"].src = e.icon, r.children["place-name"].textContent = e.name, r.children["place-address"].textContent = t, l.open(map, i), google.maps.event.addListener(i, "drag", function (e) {
+                        var t = i.getPosition();
+                        r.children["place-address"].textContent = t, _lat.value = t.lat(), _lon.value = t.lng()
+                    })
+                } else window.alert("No details available for input: '" + e.name + "'")
+            }), c = [], d.setTypes(c), document.getElementById("use-strict-bounds").addEventListener("click", function () {
+                console.log("Checkbox clicked! New state=" + this.checked), d.setOptions({
+                    strictBounds: this.checked
+                })
+            }), map.addListener("click", function (e) {
+                deleteMarkers(), addMarker(e.latLng)
+            });
+
+            if (_lat.value == '' || _lat.value == '0') {
+                var selectedText="Ha Noi";
+                /*
+                var tt = document.getElementById("ContentPlaceHolder2_ddlCustomers");
+                var selectedText = tt.options[tt.selectedIndex].text;
+
+                var qq = document.getElementById("ContentPlaceHolder2_ddlOrders");
+                if (qq.selectedIndex > 0) {
+                    selectedText += ", " + qq.options[qq.selectedIndex].text;
+                }
+
+                var phuongxa = document.getElementById("ContentPlaceHolder2_ddlPhuongXa");
+                if (phuongxa.options[phuongxa.selectedIndex].text != '' > 0) {
+                    selectedText += ", " + phuongxa.options[phuongxa.selectedIndex].text;
+                }
+
+                var kv = document.getElementById("ContentPlaceHolder2_ddlProducts");
+                if (kv.selectedIndex > 0) {
+                    selectedText += ", " + kv.options[kv.selectedIndex].text;
+                }
+                */
+                codeAddress(selectedText);
+            }
+
+        }
+
+        function codeAddress(e) {
+            (geocoder = new google.maps.Geocoder).geocode({
+                address: e
+            }, function (e, t) {
+                t == google.maps.GeocoderStatus.OK && (
+                    map.setCenter(e[0].geometry.location),
+                    addMarker(e[0].geometry.location),
+                    document.getElementById("pac-input").value = ""
+                )
+            })
+        }
+
+        function deleteMarkers() {
+            clearMarkers(), markers = []
+        }
+
+        function clearMarkers() {
+            setMapOnAll(null)
+        }
+
+        function setMapOnAll(e) {
+            for (var t = 0; t < markers.length; t++) markers[t].setMap(e)
+        }
+
+        function addMarker(e) {
+            deleteMarkers();
+            // mustchoise = false;
+
+            var _lat = document.getElementById("txtLat");
+            var _lon = document.getElementById("txtLon");
+
+            var t = new google.maps.Marker({
+                position: e,
+                map: map,
+                icon: 'https://nhadat24h.net/duan/5/images/map_marker.png',
+                draggable: !0
+            });
+
+            var infowindow = new google.maps.InfoWindow({
+                content: 'Vị trí bất động sản của bạn. Di điểm này đến đúng vị trí bất động sản của bạn',
+                maxWidth: 200
+            });
+
+            infowindow.open(map, t);
+
+            markers.push(t), google.maps.event.addListener(t, "dragend", function (e) {
+                var n = t.getPosition();
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'location': n }, function (results, status) {
+                    if (status === 'OK') {
+                        if (results[0]) {
+                            infowindow.setContent("<b>Vị trí gần đúng:</b> " + results[0].formatted_address);
+                        } else { }
+                    } else { }
+                });
+
+                _lat.value = n.lat(), _lon.value = n.lng()
+            }), e && (_lat.value = e.lat(), _lon.value = e.lng())
+        }
+
+        const o = { lat: 21.02586253502997, lng: 105.83232234260561 },
+            a = new s({
+                apiKey: "AIzaSyCo7fN2jyfoghkS2oBUOG51cAYVit3vSzc",
+                version: "weekly",
+            });
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const e = document.getElementById("wrapper2");
+            (e.style.backgroundImage = `url(https://nhadat24h.net/Images/staticmap.png)`),
+                e.addEventListener("click", () => {
+                    e.remove(),
+                        a.load().then(() => {
+                            document.getElementById("pac-card").style.display = "block";
+                            initMap();
+                        });
+                });
+        });
+
+        var l = window;
+        for (var h in t) l[h] = t[h];
+        t.__esModule && Object.defineProperty(l, "__esModule", { value: !0 });
+
+    })();
+
+    $(document).on("keypress", 'form', function (e) {
+        if (e.target.className.indexOf("allowEnter") == -1) {
+            var code = e.keyCode || e.which;
+            if (code == 13) {
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
+    function botCheck(){
+        var botPattern = "(googlebot\/|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+              var re = new RegExp(botPattern, 'i');
+              var userAgent = navigator.userAgent;
+              if (re.test(userAgent)) {
+                  return true;
+              }else{
+                return false;
+              }
+    }
+
+
+
+    
+</script>*@

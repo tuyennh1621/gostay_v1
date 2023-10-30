@@ -1,0 +1,44 @@
+﻿@using GoStay.Common.Configuration;
+@using GoStay.DataDto.Apis;
+
+@model List<SuggestResultDto>;
+<div class="row">
+    @foreach (var item in Model.Take(30))
+    {
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="single-grid-maps">
+                <div class="image">
+                    <div class="swiper mySwiper9">
+                        <div class="swiper-wrapper swiper-wrapper-maps">
+                            <div class="swiper-slide swiper-slide-custom2 ">
+                                <img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=600,height=400,quality=80/@item.URL" alt="#">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-info">
+                        <div class="heart hotel-grid-heart">
+                            <a href="#"><i class="fa-regular fa-heart"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="top-content">
+                        <h3 class="title">
+                            <a target="_blank" title="@item.Value" href="~/khach-san/@item.Id/@item.Slug">
+                                @item.Value
+                            </a>
+                        </h3>
+                        <div class="rating-@item.Rating-sao"></div>
+                        <ul class="info-list">
+                            <li><a href="javascript:void(0)"><i class="fa-solid fa-location-dot"></i>@item.Address</a></li>
+                        </ul>
+                    </div>
+                    <div class="bottom-content">
+                        <p class="price"><span>@AppConfigs.FormatCurrency("VND", Math.Round(@item.NewPrice,0))</span></p>
+                        <p href="javascript:void(0)" class="label_discount">-@Math.Round(@item.Discount ?? 0,1) %</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

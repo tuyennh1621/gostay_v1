@@ -1,0 +1,264 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.DataDto.Statistical
+@using goStayCore.CommonCode
+@using Newtonsoft.Json
+@model ChartDto;
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+        </a>
+    </div>
+    @if (AppConfigs.permission == 0)
+    {
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Hotels
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalHotel</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-hotel fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Total Rooms
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalRoom</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Total Pictures
+                                </div>
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@Model.TotalImg</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-image fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Total Size
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalSizeImg (M)</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-file fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+            <div class="col-xl-6 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Biểu đồ số lượng phòng nhập theo ngày trong (@System.DateTime.Now.Month/@System.DateTime.Now.Year)</h6>
+
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="chart-area">
+                            <canvas id="myAreaChartRoomByDay" data-key="@string.Join(",", Model.roomByDay.RoomByDayValue.Select(kv => kv.Day))" data-value="@string.Join(",", Model.roomByDay.RoomByDayValue.Select(kv => kv.Amount))"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Biểu đồ tăng trưởng số lượng phòng theo tháng</h6>
+
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="chart-area">
+                            <canvas id="myAreaChart" data-key="@string.Join(",", Model.RoomByMonth.Select(kv => kv.Key))" data-value="@string.Join(",", Model.RoomByMonth.Select(kv => kv.Value.Count))"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Hạng sao</h6>
+
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="chart-pie pt-4 pb-2">
+                                    <canvas id="myPieChart" data-key="@string.Join(",", Model.HotelRating.Select(kv => kv.Key))" data-value="@string.Join(",", Model.HotelRating.Select(kv => kv.Value.Count))"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mt-4 small">
+                                    <ul>
+                                        @{
+                                            int i = 0;
+                                        }
+                                        @foreach (var m in Model.HotelRating)
+                                        {
+                                            <li>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle bg-color-@i"></i> @m.Key : @m.Value.Count (@m.Value.Percent %)
+                                                </span>
+                                            </li>
+                                            i++;
+                                        }
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Phân khúc</h6>
+
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="chart-pie pt-4 pb-2">
+                                    <canvas id="myPieChartPhanKhuc" data-key="@string.Join(",", Model.PriceRange.Select(kv => kv.Key))" data-value="@string.Join(",", Model.PriceRange.Select(kv => kv.Value.Count))"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mt-4 small">
+                                    <ul>
+
+                                        @{
+                                            i = 0;
+                                        }
+                                        @foreach (var m in Model.PriceRange)
+                                        {
+                                            <li>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle bg-color-@i"></i> @m.Key : @m.Value.Count (@m.Value.Percent %)
+                                                </span>
+                                            </li>
+                                            i++;
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Loại Hotels</h6>
+
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="chart-pie pt-4 pb-2">
+                                    <canvas id="myLoaiChart" data-key="@string.Join(",", Model.TypeHotel.Select(kv => kv.Key))" data-value="@string.Join(",", Model.TypeHotel.Select(kv => kv.Value.Count))"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mt-4 small">
+                                    <ul>
+                                        @{
+                                            i = 0;
+                                        }
+                                        @foreach (var m in Model.TypeHotel)
+                                        {
+                                            <li>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle bg-color-@i"></i> @m.Key : @m.Value.Count (@m.Value.Percent %)
+                                                </span>
+                                            </li>
+                                            i++;
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<script src="~/admintheme/vendor/chart/Chart.js"></script>
+<script src="~/admintheme/js/demo/chart-area-demo.js?v6"></script>
+<script src="~/admintheme/js/demo/chart-pie-demo.js?v=11"></script>

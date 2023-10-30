@@ -1,0 +1,48 @@
+[
+  {
+    "outputFileName": "wwwroot/css/main.min.css",
+    "inputFiles": [
+      "wwwroot/assets/css/bootstrap.min.css",
+      "wwwroot/assets/css/animate.css",
+      "wwwroot/assets/css/swiper-bundle.min.css",
+      "wwwroot/assets/css/all.css",
+      "wwwroot/assets/css/bootstrap-utilities.css",
+      "wwwroot/assets/css/loader.css",
+      //"wwwroot/assets/css/rome.css",
+      //"wwwroot/assets/css/rome_style.css",
+      "wwwroot/assets/css/main.css",
+      "wwwroot/assets/owlcarousel/css/owl.carousel.min.css",
+      "wwwroot/assets/owlcarousel/css/owl.theme.default.min.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+  //,
+  //{
+  //  "outputFileName": "wwwroot/js/main.min.js",
+  //  "inputFiles": [
+  //    "wwwroot/assets/js/jquery.min.js",
+  //    "wwwroot/assets/js/bootstrap.js",
+  //    "wwwroot/assets/js/firebase.js",
+  //    "wwwroot/assets/js/configfirebase.js",
+  //    "wwwroot/assets/js/wow.min.js",
+  //    "wwwroot/assets/js/tab-product.js",
+  //    "wwwroot/assets/js/tab-search.js",
+  //    "wwwroot/assets/js/swiper-bundle.min.js",
+  //    "wwwroot/assets/js/swipecarousel/swipecarousel.js",
+  //    "wwwroot/assets/js/verify-otp.js",
+  //    "wwwroot/assets/js/calendar.js",
+  //    "wwwroot/assets/js/popper.js",
+  //    "wwwroot/assets/js/count-down.js",
+  //    "wwwroot/assets/js/alpine.min.js"
+  //  ],
+  //  "minify": {
+  //    "enabled": false,
+  //    "renameLocals": false
+  //  },
+  //  "sourceMap": false
+  //}
+]

@@ -1,0 +1,250 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.TourDto
+@using GoStay.Web.Model
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model ToursModels;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var page = 5;
+    var totalItems = 100;
+}
+<script type="text/javascript" src="/assets/helpers/tui.pagination-3.4.0/dist/tui-pagination.js"></script>
+<form asp-action="Index" asp-controller="Tours" id="fromParaSearch" enctype="multipart/form-data" method="get">
+    <input type="hidden" id="@Model.Para.IdProvinceFrom" name="IdTinhthanh" />
+    <section class="search-fitler-breadcrumns">
+        <div class="container-fluid sticky2">
+            <div class="search-filter-inner">
+                <div class="container">
+                    <div class="hotel-search-form">
+                        <div class="row search-filter1 align-items-center">
+                            <div class="col-12 p-0">
+                                @await Html.PartialAsync("~/Views/Shared/_TourSearchPatical.cshtml",new MainSearchModels
+                                {style=1})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <div class="breadcrumns">
+        <div class="container">
+            <div class="breadcrumns-1 mt-20 mb-30">
+                <div class="row">
+                    <div class="col-auto br-parent">
+                        <div class=""><a asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        <div class=""><a asp-area="" asp-controller="Tours" asp-action="Index">@Localizer["Tour"]</a></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        @if (Model.tours != null)
+                        {
+                            <div class="color-primary"><p>@Model.tours[0].ProvinceFrom</p></div>
+                        }
+                        else
+                        {
+                            <div class="color-primary"><p></p></div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="listing-page">
+        <div class="hotel-result-page">
+            <div class="container">
+                <div class="title-hotel-result-page">
+                    @if (Model.tours != null)
+                    {
+                        <h3>@Model.tours.First().Total @Localizer["Tour"]</h3>
+                    }
+                    else
+                    {
+                        <h3>@Localizer["There is no suitable tour"]</h3>
+                    }
+                </div>
+                <div class="filter-mb-parent-responsive">
+                    <button class="btn btn-filter-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_filter_mb" aria-expanded="false" aria-controls="collapse_filter_mb">
+                        <i class="fa-solid fa-arrow-down-wide-short ic-20"></i> @Localizer["Filter"]
+                    </button>
+                </div>
+                <div class="row row-col-12 hotel-content">
+                    @await Html.PartialAsync("~/Views/Tours/TourParaSearch.cshtml",Model.Para)
+                    <div class="col-xxl-9 col-xl-9 col-lg-9 col-12 main-content-listing">
+                        @*<div class="filter-topbar">
+                            <div class="tab-filter-top">
+                                <p>@Localizer["Topic"]:</p>
+                                <a class="filtertop" id="defaultOpen">@Localizer["Spiritual tourism"]</a>
+                                <a class="filtertop">@Localizer["Tourism-resort"]</a>
+                                <a class="filtertop">@Localizer["Tour discover"]</a>
+                                <a class="filtertop">@Localizer["Vietnam tour"]</a>
+                            </div>
+                        </div>*@
+                        <div class="content_listing" id="MainDataSection">
+                            <div id="best_fit" class="content_listing_page" style="display: block;">
+                                <div class="content_grid_page">
+
+                                    @if (Model.tours != null)
+                                    {
+                                        foreach (var item in Model.tours)
+                                        {
+                                            <div class="col pb-mb-50">
+                                                <div class="single-grid">
+                                                    <div class="image">
+                                                        <div class="swiper mySwiper7">
+                                                            <div class="swiper-wrapper">
+                                                                @foreach (var img in item.Pictures)
+                                                                {
+                                                                    <div class="swiper-slide">
+                                                                        <a title="@item.TourName" href="/tours/@item.Id/@item.Slug">
+                                                                            <img alt="@item.TourName" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=888,height=678,quality=80/@img">
+                                                                        </a>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="swiper-pagination swiper-pagination-custom"></div>
+                                                        </div>
+                                                        <div class="top-info">
+                                                            
+                                                            <div class="icon-hover">
+                                                                <div class="heart">
+                                                                    <a href="#"><i class="fa-regular fa-heart"></i></a>
+                                                                </div>
+                                                                <div class="hide-compare">
+                                                                    <div class="compare">
+                                                                        <a onclick="SubmitCompare(@item.Id)"><i class="fa-solid fa-arrows-rotate"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="label">
+                                                                <ul class="label_review">
+                                                                    <li><a href="javascript:void(0)"><i class="fa-solid fa-umbrella"></i></a></li>
+                                                                </ul>
+                                                                <ul class="text_review">
+                                                                    <li><a href="javascript:void(0)">Tuyệt vời</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="count-img1">
+                                                                <i class="fa-solid fa-image"></i>
+                                                                <span>@item.TotalPicture</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="content">
+                                                        <div class="top-content">
+                                                            <h3 class="title">
+                                                                <a title="@item.TourName" href="/tours/@item.Id/@item.Slug">@item.TourName</a>
+                                                            </h3>
+                                                            <ul class="rating">
+                                                                @for (int i = 1; i <= item.Rating; i++)
+                                                                {
+                                                                    <li><i class="fa-solid fa-star"></i></li>
+                                                                }
+
+                                                            </ul>
+                                                            <ul class="info-list">
+                                                                <li><a href="javascript:void(0)"><i class="fa-solid fa-plane-departure"></i>@Localizer["Depart"]: @item.ProvinceFrom</a></li>
+                                                                @if (item.StartTime != null)
+                                                                {
+                                                                    <li><a href="javascript:void(0)"><i class="fa-regular fa-clock"></i>@item.StartTime - @item.TourStyle</a></li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li><a href="javascript:void(0)"><i class="fa-regular fa-clock"></i>@item.StartDate.ToString("dd/MM/yyyy") - @item.TourStyle</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                        <div class="bottom-content-tour">
+                                                            @if (item.Discount != 0)
+                                                            {
+                                                                <p class="base_price"><span>@AppConfigs.FormatCurrency("VND", Math.Round((decimal)@item.Price,0))</span></p>
+                                                                <p class="price"><span>@AppConfigs.FormatCurrency("VND", Math.Round((decimal)@item.ActualPrice,0))</span></p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="price"><span>@AppConfigs.FormatCurrency("VND", Math.Round((decimal)@item.ActualPrice,0))</span></p>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                                <div class="button-loadmore2">
+                                    <div id="pagination" class="tui-pagination"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- End Search Hotel Listing Pages -->
+<!-- Start Newsletter Area -->
+<div class="modal fade" id="compare-tour" tabindex="-1" aria-labelledby="compare-tour" aria-hidden="true"></div>
+  
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml");
+
+<script>
+        var model = @Json.Serialize(Model);
+        var pagination = new tui.Pagination('pagination', {
+            totalItems: model.Total,
+            page: model.PageIndex,
+            itemsPerPage: model.PageSize,
+            visiblePages: 3
+        });
+        pagination.on('beforeMove', function (eventData) {
+
+
+            var rating = @Json.Serialize(Model.Para.Rating.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+            var foreign = @Json.Serialize(Model.Para.ForeignTravel.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+
+            var idTourTopic = @Json.Serialize(Model.Para.IdTourTopic.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+            var idTourStyle = @Json.Serialize(Model.Para.IdTourStyle.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+            var idProvinceFrom = @Json.Serialize(Model.Para.IdProvinceFrom.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+            var idProvinceTo = @Json.Serialize(Model.Para.IdProvinceTo.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+
+            window.location = "/Tours/Index?IdProvinceFrom=" + idProvinceFrom + "&IdProvinceTo=" + idProvinceTo + "&PriceMin=@Model.Para.PriceMin" +
+                "&PriceMax=@Model.Para.PriceMax" + "&ForeignTravel=" + foreign + "&Rating=" + rating + "&NumMature=@Model.Para.NumMature" + "&IdTourStyle=" + idTourStyle
+                + "&IdTourTopic=" + idTourTopic + "&StartDate=@Model.Para.CheckinDate" + "&pageIndex=" + eventData.page;
+        });
+
+        //$(document).ready(function () {
+        //    setUrlProvince(Tours);
+        //})
+
+        function SubmitCompare(Id) {
+            var Url = '@Url.Action("CompareTours","Home")';
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { IdTour: Id },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                success: function (data) {
+                    $('#compare-tour').html(data);
+                    $('#compare-tour').modal('show');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            })
+        }
+</script>

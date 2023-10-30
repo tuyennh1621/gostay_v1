@@ -1,0 +1,172 @@
+﻿@using GoStay.Common.Configuration;
+@using GoStay.DataDto.Apis
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model HotelSearchParaRequest
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+<script>
+    window.console = window.console || function (t) { };
+</script>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+</div>
+
+<div class="col-xxl-3 col-xl-3 col-lg-3 col-md-4 col-12 left-sidebar">
+    <div class="hotel-maps">
+        <div class="button-view-maps">
+            <a title="Tìm khách sạn trên bản đồ" href="/map" class="button-maps">
+                <i class="fa-solid fa-location-dot"></i>
+                @Localizer["On map"]
+            </a>
+        </div>
+        <div class="bg-maps">
+            <img src="/assets/images/gg-maps/bg-maps.jpg" title="map">
+        </div>
+    </div>
+    <div class="hotel-filter-sidebar mt-30">
+        <div class="title-filter-sidebar">
+            <h4>@Localizer["Filter"]</h4>
+            <a title="Khách sạn" id="btnRemoveAllParaSearch" href="/khach-san">@Localizer["Delete all filter"]</a>
+        </div>
+        <div class="filter-sidebar price">
+            <a>@Localizer["Price range"] (1 @Localizer["nights"])</a>
+            <div class="filter level-filter level-req">
+                <div id="rangeSlider" class="range-slider">
+                    <div class="number-group">
+                        @Localizer["From"]: <span id="minPrice">0</span><input class="number-input" type="number" value="0" min="0" max="100000000" id="rangFrom2"  hidden />đ <br />
+                        @Localizer["To"]: <span id="maxPrice">100,000,000</span> <input class="number-input" type="number" value="100000000" min="0" max="100000000" id="rangTo2"  hidden />đ
+                    </div>
+
+                    <div class="range-group">
+                        <input class="range-input" value="@Model.PriceMin" min="0" max="100000000" step="500000" id="rangFrom" name="PriceMin" type="range" onmousemove="changePrice()" />
+                        <input class="range-input" value="@Model.PriceMax" min="0" max="100000000" step="500000" id="rangTo" name="PriceMax" type="range" onmousemove="changePrice()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-sidebar region">
+            <div class="title-filter">
+                <h6>@Localizer["Type"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @for (var i = 0; i < Model.Criterion.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="criterion_@Model.Criterion[i].Value" name="Criterion"
+                           value="@Model.Criterion[i].Value" checked="@Model.Criterion[i].Selected" />
+                        <label for="criterion_@Model.Criterion[i].Value">@Model.Criterion[i].Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="filter-sidebar rating">
+            <div class="title-filter">
+                <h6>@Localizer["Rating star"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="rating-star">
+                @for (var i = 0; i < Model.Rating.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="rating_@Model.Rating[i].Value" name="Rating"
+                           value="@Model.Rating[i].Value" checked="@Model.Rating[i].Selected" />
+                        <label for="rating_@Model.Rating[i].Value" class="rating-@Model.Rating[i].Value-sao"></label>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+        @if (Model.Quans.Count > 0)
+        {
+            <div class="filter-sidebar region">
+                <div class="title-filter">
+                    <h6>@Localizer["By region"]</h6>
+                    <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+                </div>
+                <div class="parent">
+                    @for (var i = 0; i < Model.Quans.Count; i++)
+                    {
+                        <div class="form-check filter-child">
+                            <input class="form-check-input" type="checkbox" id="Quan_@Model.Quans[i].Value" name="Quans"
+                           value="@Model.Quans[i].Value" checked="@Model.Quans[i].Selected" />
+                            <label for="Quan_@Model.Quans[i].Value">@Model.Quans[i].Text</label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        <div class="filter-sidebar hotel-type">
+            <div class="title-filter">
+                <h6>@Localizer["Type of hotel"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @if (Model != null && Model.Types != null && Model.Types.Count > 0)
+                {
+                    for (var i = 0; i < Model.Types.Count; i++)
+                    {
+                        <div class="form-check filter-child">
+                            <input class="form-check-input" type="checkbox" id="Types_@Model.Types[i].Value" name="Types"
+                           value="@Model.Types[i].Value" checked="@Model.Types[i].Selected" />
+                            <label for="Types_@Model.Types[i].Value">@Model.Types[i].Text</label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="filter-sidebar hotel-service">
+            <div class="title-filter">
+                <h6>@Localizer["Hotel Service"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @if (Model != null && Model.ServiceHotel != null && Model.ServiceHotel.Count > 0)
+                {
+                    for (var i = 0; i < Model.ServiceHotel.Count; i++)
+                    {
+                        <div class="form-check filter-child">
+                            <input class="form-check-input" type="checkbox" id="ServiceHotel_@Model.ServiceHotel[i].Value" name="ServiceHotel"
+                           value="@Model.ServiceHotel[i].Value" checked="@Model.ServiceHotel[i].Selected" />
+                            <label for="ServiceHotel_@Model.ServiceHotel[i].Value">@Model.ServiceHotel[i].Text</label>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+        <div class="filter-sidebar room-service">
+            <div class="title-filter">
+                <h6>@Localizer["Comfortable"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @for (var i = 0; i < Model.ServiceRoom.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="ServiceRoom_@Model.ServiceRoom[i].Value" name="ServiceRoom"
+                           value="@Model.ServiceRoom[i].Value" checked="@Model.ServiceRoom[i].Selected" />
+                        <label for="ServiceRoom_@Model.ServiceRoom[i].Value">@Model.ServiceRoom[i].Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+@section scripts{
+    <script id="rendered-js">
+    </script>
+}

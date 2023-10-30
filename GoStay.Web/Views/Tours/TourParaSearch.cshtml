@@ -1,0 +1,179 @@
+﻿@using GoStay.DataDto.TourDto
+@using GoStay.DataDto.Apis
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SearchTourParam;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="col-xxl-3 col-xl-3 col-lg-3 col-md-4 col-12 left-sidebar">
+    <div class="hotel-filter-sidebar">
+        <div class="title-filter-sidebar">
+            <h4>@Localizer["Filter"]</h4>
+            <a title="Danh sách Tours" href="/Tours">@Localizer["Delete all filter"]</a>
+        </div>
+
+        <div class="filter-sidebar region">
+            <div class="title-filter">
+                <h6>@Localizer["Type"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @for (var i = 0; i < Model.ForeignTravel.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="@Model.ForeignTravel[i].Value" name="ForeignTravel"
+                           value="@Model.ForeignTravel[i].Value" checked="@Model.ForeignTravel[i].Selected" />
+                        <label for="@Model.ForeignTravel[i].Value">@Model.ForeignTravel[i].Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="filter-sidebar price">
+            <a>@Localizer["Price"] (1 @Localizer["night"])</a>
+            <div class="filter level-filter level-req">
+                <div id="rangeSlider" class="range-slider">
+                    <div class="number-group">
+                        @Localizer["From"]: <span id="minPrice">0</span><input class="number-input" type="number" value="0" min="0" max="100000000" id="rangFrom2" hidden />đ <br />
+                        @Localizer["To"]: <span id="maxPrice">100,000,000</span> <input class="number-input" type="number" value="100000000" min="0" max="100000000" id="rangTo2" hidden />đ
+                    </div>
+
+                    <div class="range-group">
+                        <input class="range-input" value="@Model.PriceMin" min="0" max="100000000" step="1000000" id="rangFrom" name="PriceMin" type="range" onmousemove="changePrice()" />
+                        <input class="range-input" value="@Model.PriceMax" min="0" max="100000000" step="1000000" id="rangTo" type="range" name="PriceMax" onmousemove="changePrice()" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="filter-sidebar rating">
+            <div class="title-filter">
+                <h6>@Localizer["Star rating"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="rating-star">
+                @for (var i = 0; i < Model.Rating.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="rating_@Model.Rating[i].Value" name="Rating"
+                           value="@Model.Rating[i].Value" checked="@Model.Rating[i].Selected" />
+                        <label for="rating_@Model.Rating[i].Value" class="rating-@Model.Rating[i].Value-sao"></label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="filter-sidebar region">
+            <div class="title-filter">
+                <h6>@Localizer["From"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @for (var i = 0; i < Model.IdProvinceFrom.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="ProvinceFrom_@Model.IdProvinceFrom[i].Value" name="IdProvinceFrom"
+                           value="@Model.IdProvinceFrom[i].Value" checked="@Model.IdProvinceFrom[i].Selected" />
+                        <label for="ProvinceFrom_@Model.IdProvinceFrom[i].Value">@Model.IdProvinceFrom[i].Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="filter-sidebar hotel-type">
+            <div class="title-filter">
+                <h6>@Localizer["To"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @for (var i = 0; i < Model.IdProvinceTo.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="ProvinceTo_@Model.IdProvinceTo[i].Value" name="IdProvinceTo"
+                           value="@Model.IdProvinceTo[i].Value" checked="@Model.IdProvinceTo[i].Selected" />
+                        <label for="ProvinceTo_@Model.IdProvinceTo[i].Value">@Model.IdProvinceTo[i].Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="filter-sidebar hotel-service">
+            <div class="title-filter">
+                <h6>@Localizer["Trip duration"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @for (var i = 0; i < Model.IdTourStyle.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="TourStyle_@Model.IdTourStyle[i].Value" name="IdTourStyle"
+                           value="@Model.IdTourStyle[i].Value" checked="@Model.IdTourStyle[i].Selected" />
+                        <label for="TourStyle_@Model.IdTourStyle[i].Value">@Model.IdTourStyle[i].Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="filter-sidebar room-service">
+            <div class="title-filter">
+                <h6>@Localizer["Type of trip"]</h6>
+                <button class="text-14-blue appSearch">@Localizer["Apply"]</button>
+            </div>
+            <div class="parent">
+                @for (var i = 0; i < Model.IdTourTopic.Count; i++)
+                {
+                    <div class="form-check filter-child">
+                        <input class="form-check-input" type="checkbox" id="TourTopic_@Model.IdTourTopic[i].Value" name="IdTourTopic"
+                           value="@Model.IdTourTopic[i].Value" checked="@Model.IdTourTopic[i].Selected" />
+                        <label for="TourTopic_@Model.IdTourTopic[i].Value">@Model.IdTourTopic[i].Text</label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script id="rendered-js">
+    //(function () {
+
+    //    var parent = document.querySelector("#rangeSlider");
+    //    if (!parent) return;
+
+    //    var
+    //        rangeS = parent.querySelectorAll("input[type=range]"),
+    //        numberS = parent.querySelectorAll("input[type=number]");
+
+    //    rangeS.forEach(function (el) {
+    //        el.oninput = function () {
+    //            var slide1 = parseFloat(rangeS[0].value),
+    //                slide2 = parseFloat(rangeS[1].value);
+
+    //            if (slide1 > slide2) {
+    //                [slide1, slide2] = [slide2, slide1];
+    //            }
+
+    //            numberS[0].value = slide1;
+    //            numberS[1].value = slide2;
+    //        };
+    //    });
+
+    //    numberS.forEach(function (el) {
+    //        el.oninput = function () {
+    //            var number1 = parseFloat(numberS[0].value),
+    //                number2 = parseFloat(numberS[1].value);
+
+    //            if (number1 > number2) {
+    //                var tmp = number1;
+    //                numberS[0].value = number2;
+    //                numberS[1].value = tmp;
+    //            }
+
+    //            rangeS[0].value = number1;
+    //            rangeS[1].value = number2;
+
+    //        };
+    //    });
+
+    //})();
+</script>

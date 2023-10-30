@@ -1,0 +1,132 @@
+﻿@using GoStay.Common.Enums
+@using GoStay.Data.Enums
+@using GoStay.DataDto.Apis
+@using System.Web.Helpers
+@using GoStay.DataDto.TourDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model List<SuggestTourDto>;
+<div class="title-drop-result3 pt10">
+    <h3 class="text-16-b">@Localizer["Search Tour"]</h3>
+    <div class="btnClearTours"><i class="fa-solid fa-trash-can color-primary"></i></div>
+</div>
+<ul id="sgresult1">
+    @foreach (var item in Model.Where(x => x.Type == SuggestTourType.QuanFrom).Take(5))
+    {
+        <li class="search-result pt-10 pb-10" data-id="@item.Id" data-text="@item.Name" data-style="1" data-image="">
+            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-3">
+                <div class="location-result">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+            </div>
+            <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-9">
+                <div class="title-result3">
+                    <div class="col-6 result3-left">
+                        <a href="/Tours?IdProvinceFrom=@item.IdProvince">@item.Name</a>
+                        <p class="result-title-location">@Localizer["Departure point"]</p>
+
+                    </div>
+                    <div class="col-6 result3-right">
+                        <p>@item.Count Tours</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+
+<ul id="sgresult2">
+    @foreach (var item in Model.Where(x => x.Type == SuggestTourType.QuanTo).Take(5))
+    {
+        <li class="search-result pt-10 pb-10" data-id="@item.Id" data-text="@item.Name" data-style="2" data-image="">
+            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-3">
+                <div class="location-result">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+            </div>
+            <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-9">
+                <div class="title-result3">
+                    <div class="col-6 result3-left">
+                        <a href="/Tours?IdProvinceTo=@item.IdProvince">@item.Name</a>
+                        <p class="result-title-location">@Localizer["Destination"]</p>
+
+                    </div>
+                    <div class="col-6 result3-right">
+                        <p>@item.Count Tours</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+<ul id="sgresult3">
+    @foreach (var item in Model.Where(x => x.Type == SuggestTourType.TinhFrom).Take(5))
+    {
+        <li class="search-result pt-10 pb-10" data-id="@item.Id" data-text="@item.Name" ata-style="2" data-image="">
+            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-3">
+                <div class="location-result">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+            </div>
+            <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-9">
+                <div class="title-result3">
+                    <div class="col-6 result3-left">
+                        <a href="/Tours?IdProvinceFrom=@item.IdProvince">@item.Name</a>
+                        <p class="result-title-location">@Localizer["Departure point"]</p>
+
+                    </div>
+                    <div class="col-6 result3-right">
+                        <p>@item.Count Tours</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+<ul id="sgresult4">
+    @foreach (var item in Model.Where(x => x.Type == SuggestTourType.TinhTo).Take(5))
+    {
+        <li class="search-result pt-10 pb-10" data-id="@item.Id" data-text="@item.Name" data-style="2" data-image="">
+            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-3">
+                <div class="location-result">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+            </div>
+            <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-9">
+                <div class="title-result3">
+                    <div class="col-6 result3-left">
+                        <a href="/Tours?IdProvinceTo=@item.IdProvince">@item.Name</a>
+                        <p class="result-title-location">@Localizer["Destination"]</p>
+
+                    </div>
+                    <div class="col-6 result3-right">
+                        <p>@item.Count Tours</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+<ul id="sgresult5">
+    @foreach (var item in Model.Where(x => x.Type == SuggestTourType.TourName).Take(5))
+    {
+        <li class="search-result pt-10 pb-10" data-id="@item.Id" data-text="@item.Name" data-style="2" data-image="">
+            <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-3">
+                <div class="image-result">
+                    <a href="~/tours/@item.Id/@item.Slug"><img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@item.Img"></a>
+                </div>
+            </div>
+            <div class="col-xxl-10 col-xl-10 col-lg-10 col-md-10 col-9">
+                <div class="title-result3">
+                    <div class="col-6 result3-left">
+                        <a href="/tours/@item.Id/@item.Slug">@item.Name</a>
+                        @*<p class="result-title-location">@Localizer["Tour"]</p>*@
+                    </div>
+                    @*<div class="col-6 result3-right">
+                        <p>@item.Count<i class="fa-solid fa-hotel"></i></p>
+                    </div>*@
+                </div>
+            </div>
+        </li>
+    }
+</ul>

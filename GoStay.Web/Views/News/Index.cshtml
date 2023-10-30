@@ -1,0 +1,777 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Web.Master;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using GoStay.Web.ViewsModel
+@model NewsViewsModel;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var topCultureNews = Model.topCultureNews.Data;
+    var topFoodNews = Model.topFoodNews.Data;
+}
+<script src="~/assets/js/tab-product.js?v=1" defer></script>
+<!-- Search Hotel Listing Pages -->
+<div class="blog-page">
+    <div class="hotel-result-page">
+        <div id="news_0">
+            <div class="container">
+                <div class="breaking-news mt-60 mb-60">
+                    <div class="breaking-title">
+                        <div class="text-align-center">
+                            <div>
+                                @Localizer["Latest news"]
+                            </div>
+                        </div>
+                    </div>
+                    <div class="breaking-content">
+                        <div id="main-carousel-breaking-news" class="owl-carousel owl-theme mt-30">
+                            @foreach (var item in Model.topNews.Data.Take(10))
+                            {
+
+                                <div class="item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="breaking-image">
+                                                <img alt="@item.Title" data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@item.PictureTitle"
+                                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="logo">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="breaking-info">
+                                                <a href="/tin-tuc/@item.Id/@item.Slug" class="br-if-title format-router" title="@item.Title">
+                                                    @item.Title
+                                                </a>
+                                                <div class="br-if-date">
+                                                    <i class="fa-regular fa-clock"></i>
+                                                    @item.DateCreate.ToString("dd/MM/yyyy")
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="news_1">
+            @if (Model.festivallNews.Count > 0)
+            {
+                <div class="bg-gray-">
+                    <div class="container">
+                        <div class="pt-30 pb-60">
+                            <div class="title-trend">
+                                <div class=" hot-trend">
+                                    <a href="/danh-muc-tin/van-hoa-le-hoi" class="d-flex align-items-center" title="@Model.festivallNews[0].Category">
+                                        <i class="fa-solid fa-arrow-trend-up"></i>
+                                        <h2> @Model.festivallNews[0].CategoryLang</h2>
+                                    </a>
+                                    
+                                </div>
+                                <div class="title-tab">
+                                    <div class="tab-product">
+                                        @*<a class="tablinks" onclick="openCity(event, 'festivallNews-@Model.foodNews[0].IdTopic', 'tabproduct6')" id="defaultOpen2"> @Model.foodNews[0].Topic</a>*@
+                                        @* @for (var i = 1; i < Model.foodNews.Count; i++)
+                                    {
+
+                                    <a class="tablinks" onclick="openCity(event, 'festivallNews-@Model.foodNews[i].IdTopic', 'tabproduct6')"> @Model.foodNews[i].Topic</a>
+                                    }*@
+                                        <a class="tablinks" onclick="openCity(event, 'festivallNews-1', 'tabproduct6')" hidden id="defaultOpen2">@Localizer["North"]</a>
+                                        <a class="tablinks" onclick="openCity(event, 'festivallNews-2', 'tabproduct6')" hidden>@Localizer["Central"]</a>
+                                        <a class="tablinks" onclick="openCity(event, 'festivallNews-3', 'tabproduct6')" hidden>@Localizer["South"]</a>
+                                        <a class="tablinks" onclick="openCity(event, 'festivallNews-4', 'tabproduct6')" hidden>@Localizer["Foreign"]</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tabproduct6">
+                                <div id="festivallNews-1" class="tabcontent_hotel">
+                                    <div class="breaking-content">
+                                        <div class="row">
+                                            <div class="col-xxl-3 col-xl-3 col-12 mt-20">
+                                                <div class="bk-item">
+                                                    <div class="bk-images11">
+                                                        <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.festivallNews[1].PictureTitle" src="@Model.festivallNews[1].PictureTitle" alt="@Model.festivallNews[1].Title">
+                                                    </div>
+                                                    <div class="breaking-info pd-10">
+                                                        <a href="/tin-tuc/@Model.festivallNews[1].Id/@Model.festivallNews[1].Slug" class="br-if-title format-router" title="@Model.festivallNews[1].Title">
+                                                            @Model.festivallNews[1].Title
+                                                        </a>
+                                                        <div class="br-if-date">
+                                                            <i class="fa-regular fa-clock"></i>
+                                                            @Model.festivallNews[1].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="bk-item mt-30">
+                                                    <div class="bk-images11">
+                                                        <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.festivallNews[2].PictureTitle" src=" @Model.festivallNews[2].PictureTitle" alt="@Model.festivallNews[2].Title">
+                                                    </div>
+                                                    <div class="breaking-info pd-10">
+                                                        <a href="/tin-tuc/@Model.festivallNews[2].Id/@Model.festivallNews[2].Slug" class="br-if-title format-router" title="@Model.festivallNews[2].Title">
+                                                            @Model.festivallNews[2].Title
+                                                        </a>
+                                                        <div class="br-if-date">
+                                                            <i class="fa-regular fa-clock"></i>
+                                                            @Model.festivallNews[2].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-xl-6 col-12 mt-20">
+                                                <div class="bk-item">
+                                                    <div class="cities-card">
+                                                        <div class="bk-images2">
+                                                            <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.festivallNews[0].PictureTitle" src="@Model.festivallNews[0].PictureTitle" alt="@Model.festivallNews[0].Title">
+                                                        </div>
+                                                        @*  <div class="bk-info">
+                                                    <div class="label2">
+                                                    <a href="#">Hà Giang </a>
+                                                    </div>
+                                                    </div>*@
+                                                        <div class="bk-card-title">
+                                                            <h3>
+                                                                <a href="/tin-tuc/@Model.festivallNews[0].Id/@Model.festivallNews[0].Slug" class="format-router" title="@Model.festivallNews[2].Title">
+                                                                    @Model.festivallNews[0].Title
+                                                                </a>
+                                                            </h3>
+                                                            <div class="bk-des">
+                                                                @Model.festivallNews[0].Description
+
+                                                            </div>
+                                                            <div class="date35">
+                                                                <div class="bk-clock">
+                                                                    <i class="fa-regular fa-clock"></i>
+                                                                    @Model.festivallNews[0].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                                </div>
+                                                                <div class="bk-user35">
+                                                                    <i class="fa-solid fa-user"></i>
+                                                                    @Model.festivallNews[0].UserName
+                                                                </div>
+                                                                <div class="bk-cmt35">
+                                                                    <i class="fa-solid fa-comment"></i>
+                                                                    0 @Localizer["Comment"]
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-3 col-xl-3 col-12 mt-20">
+                                                <div class="bg-white">
+                                                    <div class="d-flex align-items-center justify-between pd-20">
+                                                        <div class="trend-title-sidebar">
+                                                            @Localizer["Featured news"]
+                                                        </div>
+                                                        <div class="view-all">
+                                                            <a href="/danh-muc-tin/idCategory=@Model.festivallNews[0].IdCategory" title="@Model.festivallNews[0].Category">
+                                                                @Localizer["See more"]
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    @if (topCultureNews != null)
+                                                        for (int i = 0; (i < topCultureNews.Count()) && (i < 5); i++)
+                                                        {
+                                                            if (i == 0)
+                                                            {
+                                                                <div class="bk-item">
+                                                                    <div class="cities-card">
+                                                                        <div class="bk-images3">
+                                                                            <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@topCultureNews[i].PictureTitle" src="@topCultureNews[i].PictureTitle" alt="@topCultureNews[i].Title">
+                                                                        </div>
+                                                                        <div class="bk-card-title2">
+                                                                            <div class="bk-cat">
+                                                                                @topCultureNews[i].CategoryLang
+                                                                            </div>
+                                                                            <h3>
+                                                                                <a href="/tin-tuc/@topCultureNews[i].Id/@topCultureNews[i].Slug" title="@topCultureNews[i].Title">@topCultureNews[i].Title</a>
+                                                                            </h3>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="bk-item d-flex align-items-center pd-15">
+                                                                    <div class="trend-number">
+                                                                        @(i+1)
+                                                                    </div>
+                                                                    <div class="bk-card-title3">
+                                                                        <div class="bk-cat3">
+                                                                            @topCultureNews[i].CategoryLang
+                                                                        </div>
+                                                                        <h3>
+                                                                            <a href="/tin-tuc/@topCultureNews[i].Id/@topCultureNews[i].Slug" title="@topCultureNews[i].Title">@topCultureNews[i].Title</a>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                                if (i < topCultureNews.Count - 1)
+                                                                {
+                                                                    <hr>
+                                                                }
+                                                            }
+                                                        }
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="festivallNews-2" class="tabcontent_hotel">
+                                </div>
+                                <div id="festivallNews-3" class="tabcontent_hotel">
+                                </div>
+                                <div id="festivallNews-4" class="tabcontent_hotel">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div id="news_2">
+            <div class="container">
+                <div class="ads970x90">
+                    Ads 970x90
+                </div>
+            </div>
+        </div>
+        <div id="news_3">
+            @if (Model.foodNews.Count > 0)
+            {
+                <div class="container">
+                    <div class="row">
+                        <div class="breaking-news mt-60">
+                            <div class="breaking-title">
+                                <div class="text-align-center">
+                                    <div>
+                                        <a href="/danh-muc-tin/am-thuc-ba-mien" class="none-animation" title="@Model.foodNews[0].Category">
+                                            @Model.foodNews[0].CategoryLang
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="breaking-content">
+                                <div class="row">
+                                    <div class="col-xxl-5 col-xl-5 col-12 mt-30">
+                                        <div class="bk-item">
+                                            <div class="bk-images">
+                                                <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.foodNews[0].PictureTitle" src="@Model.foodNews[0].PictureTitle" alt="@Model.foodNews[0].Title">
+                                            </div>
+                                            <div class="breaking-info mt-20">
+                                                <div class="bk-cat3 mb-10">
+                                                    @Model.foodNews[0].CategoryLang
+                                                </div>
+                                                <h5>
+                                                    <a href="/tin-tuc/@Model.foodNews[0].Id/@Model.foodNews[0].Slug" class="format-router" title=" @Model.festivallNews[0].Title">
+                                                        @Model.festivallNews[0].Title
+                                                    </a>
+                                                </h5>
+                                                <div class="bk-des mt-20">
+                                                    @Model.foodNews[0].Description
+                                                </div>
+                                                <div class="date36 mt-30">
+                                                    <div class="bk-clock">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        @Model.foodNews[0].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                    </div>
+                                                    <div class="bk-user35">
+                                                        <i class="fa-solid fa-user"></i>
+                                                        @Model.foodNews[0].UserName
+                                                    </div>
+                                                    <div class="bk-cmt35">
+                                                        <i class="fa-solid fa-comment"></i>
+                                                        0 @Localizer["Comment"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-xl-4 col-12 bd-left mt-30">
+                                        @for (var i = 1; (i < Model.foodNews.Count) && (i < 6); i++)
+                                        {
+                                            <div class="row align-items-center mb-30">
+                                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                                                    <div class="bk-images">
+                                                        <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.foodNews[i].PictureTitle" src="@Model.foodNews[i].PictureTitle" alt="@Model.foodNews[i].Title">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-8 col-xl-8 col-lg-8 col-12">
+                                                    <div class="breaking-info">
+                                                        <div class="bk-cat3 mb-10">
+                                                            @Model.foodNews[i].CategoryLang
+                                                        </div>
+                                                        <h6>
+                                                            <a href="/tin-tuc/@Model.foodNews[i].Id/@Model.foodNews[i].Slug" class="format-router" title=" @Model.foodNews[i].Title">@Model.foodNews[i].Title</a>
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="col-xxl-3 col-xl-3 col-12 bd-left mt-30">
+                                        @if (topFoodNews != null)
+                                        {
+                                            for (int i = 0; (i < topFoodNews.Count()) && (i < 3); i++)
+                                            {
+                                                if (i == 0)
+                                                {
+                                                    <div class="bk-item mb-20">
+                                                        <div class="bk-images">
+                                                            <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@topFoodNews[i].PictureTitle" src="@topFoodNews[i].PictureTitle" alt="@topFoodNews[i].Title">
+                                                        </div>
+                                                        <div class="breaking-info mt-10">
+                                                            <div class="bk-cat3 mb-10">
+                                                                @topFoodNews[i].CategoryLang
+                                                            </div>
+                                                            <h6>
+                                                                <a href="/tin-tuc/@topFoodNews[i].Id/@topFoodNews[i].Slug" title="@topFoodNews[i].Title">@topFoodNews[i].Title</a>
+                                                            </h6>
+                                                            <div class="bk-des mt-10">
+                                                                @topFoodNews[i].Description
+                                                            </div>
+                                                            <div class="date36 mt-20">
+                                                                <div class="bk-clock">
+                                                                    <i class="fa-regular fa-clock"></i>
+                                                                    @topFoodNews[i].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                                </div>
+                                                                <div class="bk-cmt35">
+                                                                    <i class="fa-solid fa-comment"></i>
+                                                                    0 @Localizer["Comment"]
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <hr>
+                                                    <div class="row align-items-center mt-20 mb-20">
+                                                        <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                                                            <div class="bk-images">
+                                                                <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@topFoodNews[i].PictureTitle" src="@topFoodNews[i].PictureTitle" alt="@topFoodNews[i].Title">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-8 col-xl-8 col-lg-8 col-12">
+                                                            <div class="breaking-info">
+                                                                <a href="/tin-tuc/@topFoodNews[i].Id/@topFoodNews[i].Slug" class="fw-600" title="@topFoodNews[i].Title">@topFoodNews[i].Title</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                }
+                                            }
+                                        }
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="news_4">
+            <div class="container">
+                <div class="ads970x90">
+                    Ads 970x90
+                </div>
+            </div>
+        </div>
+        <div id="news_5">
+            <div class="container">
+                    <div class="breaking-news mt-60 mb-60">
+                        <div class="breaking-content">
+                            <div class="row mt-30">
+                                @if (Model.cultureNews.Count > 0)
+                                {
+                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12 p-m-0">
+                                            <div class=" hot-trend mb-20">
+                                                <a href="/danh-muc-tin/van-hoa-phong-tuc" class="d-flex align-items-center" title="@Model.cultureNews[0].Category">
+                                                    <i class="fa-solid fa-masks-theater"></i>
+                                                    <h2>@Model.cultureNews[0].CategoryLang</h2>
+                                                </a>
+                                            </div>
+                                        <div class="bk-item mb-20">
+                                            <div class="bk-images">
+                                                <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.cultureNews[0].PictureTitle" src=" @Model.cultureNews[0].PictureTitle" alt="@Model.cultureNews[0].Title">
+                                            </div>
+                                            <div class="breaking-info mt-10">
+                                                <div class="bk-cat3 mb-10">
+                                                    @Model.cultureNews[0].CategoryLang
+                                                </div>
+                                                <h5>
+                                                    <a href="/tin-tuc/@Model.cultureNews[0].Id/@Model.cultureNews[0].Slug" class="format-router"> @Model.cultureNews[0].Title</a>
+                                                </h5>
+                                                <div class="bk-des mt-10">
+                                                    @Model.cultureNews[0].Description
+
+                                                </div>
+                                                <div class="date36 mt-20">
+                                                    <div class="bk-clock">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        @Model.cultureNews[0].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                    </div>
+                                                    <div class="bk-cmt35">
+                                                        <i class="fa-solid fa-comment"></i>
+                                                        0 @Localizer["Comment"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @for (var j = 1; (j < Model.cultureNews.Count) && (j < 4); j++)
+                                        {
+                                            <hr>
+                                            <div class="row align-items-center mt-20 mb-20">
+                                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                                                    <div class="bk-images">
+                                                        <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.cultureNews[j].PictureTitle" src=" @Model.cultureNews[j].PictureTitle" alt="@Model.cultureNews[j].Title">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-8 col-xl-8 col-lg-8 col-12">
+                                                    <div class="breaking-info">
+                                                        <a href="/tin-tuc/@Model.cultureNews[j].Id/@Model.cultureNews[j].Slug" class="fw-600 format-router" title="@Model.cultureNews[j].Title"> @Model.cultureNews[j].Title</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                                @if (Model.interviewNews.Count > 0)
+                                {
+                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12 p-m-0">
+                                        <div class=" hot-trend mb-20">
+                                            <a href="/danh-muc-tin/phong-su-anh" class="d-flex align-items-center" title="@Model.interviewNews[0].Category">
+                                                <i class="fa-solid fa-masks-theater"></i>
+                                                <h2>@Model.interviewNews[0].CategoryLang</h2>
+                                            </a>
+                                        </div>
+                                        <div class="bk-item mb-20">
+                                            <div class="bk-images">
+                                                <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.interviewNews[0].PictureTitle" src=" @Model.interviewNews[0].PictureTitle" alt="@Model.interviewNews[0].Title">
+                                            </div>
+                                            <div class="breaking-info mt-10">
+                                                <div class="bk-cat3 mb-10">
+                                                    @Model.interviewNews[0].CategoryLang
+                                                </div>
+                                                <h5>
+                                                    <a href="/tin-tuc/@Model.interviewNews[0].Id/@Model.interviewNews[0].Slug" class="fw-600 format-router" title="@Model.interviewNews[0].Title"> @Model.interviewNews[0].Title</a>
+                                                </h5>
+                                                <div class="bk-des mt-10">
+                                                    @Model.interviewNews[0].Description
+
+                                                </div>
+                                                <div class="date36 mt-20">
+                                                    <div class="bk-clock">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        @Model.interviewNews[0].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                    </div>
+                                                    <div class="bk-cmt35">
+                                                        <i class="fa-solid fa-comment"></i>
+                                                        0 @Localizer["Comment"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @for (var j = 1; (j < Model.interviewNews.Count) && (j < 4); j++)
+                                        {
+                                            <hr>
+                                            <div class="row align-items-center mt-20 mb-20">
+                                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                                                    <div class="bk-images">
+                                                        <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.interviewNews[j].PictureTitle" src=" @Model.interviewNews[j].PictureTitle" alt="@Model.interviewNews[j].Title">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-8 col-xl-8 col-lg-8 col-12">
+                                                    <div class="breaking-info">
+                                                        <a href="/tin-tuc/@Model.interviewNews[j].Id/@Model.interviewNews[j].Slug" class="fw-600 format-router" title="@Model.interviewNews[j].Title"> @Model.interviewNews[j].Title</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                                @if (Model.saleslNews.Count > 0)
+                                {
+                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12 p-m-0">
+                                        <div class=" hot-trend mb-20">
+                                            <a href="/danh-muc-tin/tin-khuyen-mai" class="d-flex align-items-center" title="@Model.saleslNews[0].Category">
+                                                <i class="fa-solid fa-masks-theater"></i>
+                                                <h2>@Model.saleslNews[0].CategoryLang</h2>
+                                            </a>
+                                           
+                                        </div>
+                                        <div class="bk-item mb-20">
+                                            <div class="bk-images">
+                                                <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.cultureNews[0].PictureTitle" src=" @Model.cultureNews[0].PictureTitle" alt="@Model.cultureNews[0].Title">
+                                            </div>
+                                            <div class="breaking-info mt-10">
+                                                <div class="bk-cat3 mb-10">
+                                                    @Model.saleslNews[0].CategoryLang
+                                                </div>
+                                                <h5>
+                                                    <a href="/tin-tuc/@Model.saleslNews[0].Id/@Model.saleslNews[0].Slug" class="format-router" title="@Model.saleslNews[0].Title"> @Model.saleslNews[0].Title</a>
+                                                </h5>
+                                                <div class="bk-des mt-10">
+                                                    @Model.saleslNews[0].Description
+
+                                                </div>
+                                                <div class="date36 mt-20">
+                                                    <div class="bk-clock">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        @Model.saleslNews[0].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                    </div>
+                                                    <div class="bk-cmt35">
+                                                        <i class="fa-solid fa-comment"></i>
+                                                        0 @Localizer["Comment"]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @for (var j = 1; (j < Model.saleslNews.Count) && (j < 4); j++)
+                                        {
+                                            <hr>
+                                            <div class="row align-items-center mt-20 mb-20">
+                                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                                                    <div class="bk-images">
+                                                        <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.saleslNews[j].PictureTitle" src="@Model.saleslNews[j].PictureTitle" alt="@Model.saleslNews[j].Title">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-8 col-xl-8 col-lg-8 col-12">
+                                                    <div class="breaking-info">
+                                                        <a href="/tin-tuc/@Model.saleslNews[j].Id/@Model.saleslNews[j].Slug" class="fw-600 format-router" title="@Model.saleslNews[j].Title"> @Model.saleslNews[j].Title</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                               
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div id="news_6">
+            <div class="video-box overlay section">
+                <div class="container">
+                    <div class="d-flex align-items-center hot-trend mb-20">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                        <h2>
+                            <a class="" href="/video">@Localizer["Video"]</a>
+                        </h2>
+                    </div>
+                    <div class="video-box-grid">
+                        <div class="row">
+                            @if(Model.video.Data.Count > 0)
+                            {
+                                var num0 = ConvertData.ConvertNumberClick(Model.video.Data[0].Click);
+                                <div class="col-xxl-7 col-xl-7 col-12">
+                                    <div class="bg-white pd-20">
+                                        <a class="w-100" href="/video/@Model.video.Data[0].Id/@Model.video.Data[0].Slug" title="@Model.video.Data[0].Slug">
+                                            <div class="main-video">
+                                                <img src="@Model.video.Data[0].PictureTitle" alt="@Model.video.Data[0].Slug">
+                                                <div class="video">
+                                                    <i class="fa-solid fa-play"></i>
+                                                </div>
+                                                <div class="breaking-info mt-10">
+                                                    <div class="bk-cat3 mb-10">
+                                                        @Model.video.Data[0].Category
+                                                    </div>
+                                                    <h5>
+                                                        @if (Model.video.Data[0].Title != null)
+                                                        {
+                                                            @Model.video.Data[0].Title
+                                                        }
+                                                        else
+                                                        {
+                                                            @Model.video.Data[0].Name
+                                                        }
+                                                    </h5>
+                                                </div>
+                                                <div class="relate-video-date text-12 d-flex gap-10 align-items-center mt-1">
+                                                    @num0 | lượt xem
+                                                    <div class="">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        @Model.video.Data[0].DateCreate
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-xxl-5 col-xl-5 col-12 mt-m-30">
+                                    <div class="row">
+                                        @for (var i = 1; (i < Model.video.Data.Count) && (i < 5); i++)
+                                        {
+                                            var num = ConvertData.ConvertNumberClick(Model.video.Data[i].Click);
+                                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-6 mb-30">
+                                                <div class="bg-white pd-20">
+                                                    <a class="w-100" href="/video/@Model.video.Data[i].Id/@Model.video.Data[i].Slug">
+                                                        <div class="main-video2">
+                                                            <img src="@Model.video.Data[i].PictureTitle" alt="#">
+                                                            <div class="video">
+                                                                <i class="fa-solid fa-play"></i>
+                                                            </div>
+                                                            <div class="breaking-info mt-10">
+                                                                <div class="bk-cat3 mb-10">
+                                                                    @Model.video.Data[i].Category
+                                                                </div>
+                                                                <h5>
+                                                                    @if (Model.video.Data[i].Title != null)
+                                                                    {
+                                                                        @Model.video.Data[i].Title
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @Model.video.Data[i].Name
+                                                                    }
+                                                                </h5>
+                                                            </div>
+                                                            <div class="relate-video-date text-12 d-flex gap-10 align-items-center mt-1">
+                                                                @num | lượt xem
+                                                                <div class="">
+                                                                    <i class="fa-regular fa-clock"></i>
+                                                                    @Model.video.Data[i].DateCreate
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        
+                                    </div>
+                                   
+                                </div>
+                            }
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="news_7">
+            <div class="container mt-60 mb-60">
+                <div class="breaking-content">
+                    <div class="row mt-30">
+                        <div class="col-xxl-9 col-xl-9 col-lg-9 col-12">
+                            @if (Model.travelNews.Count > 0)
+                            {
+                                <div class="breaking-title">
+                                    <div class="text-align-center">
+                                        <div>
+                                            <a href="/danh-muc-tin/tin-tuc-du-lich" class="none-animation" title="@Model.travelNews[0].Category">
+                                                @Model.travelNews[0].CategoryLang
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bk-item mt-30 mb-30">
+                                    <div class="bg-gray">
+                                        <div class="row align-items-center">
+                                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-12">
+                                                <div class="bk-images">
+                                                    <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.travelNews[0].PictureTitle" src=" @Model.travelNews[0].PictureTitle" alt="@Model.travelNews[0].Title">
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-12">
+                                                <div class="breaking-info mt-20 pd-20">
+                                                    <div class="bk-cat3 mb-10">
+                                                        @Model.travelNews[0].CategoryLang
+                                                    </div>
+                                                    <h5>
+                                                        <a href="/tin-tuc/@Model.travelNews[0].Id/@Model.travelNews[0].Slug" class="format-router" title="@Model.travelNews[0].Title">
+                                                            @Model.travelNews[0].Title
+                                                        </a>
+                                                    </h5>
+                                                    <div class="bk-des2">
+                                                        @Model.travelNews[0].Description
+                                                    </div>
+                                                    <div class="date36 mt-30">
+                                                        <div class="bk-clock">
+                                                            <i class="fa-regular fa-clock"></i>
+                                                            @Model.travelNews[0].DateCreate.ToString("dd'/'MM'/'yyyy")
+                                                        </div>
+                                                        <div class="bk-user35">
+                                                            <i class="fa-solid fa-user"></i>
+                                                            @Model.travelNews[0].UserName
+                                                        </div>
+                                                        <div class="bk-cmt35">
+                                                            <i class="fa-solid fa-comment"></i>
+                                                            0 @Localizer["Comment"]
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row align-items-center mt-30 mb-30">
+                                    @for (var j = 1; (j < Model.travelNews.Count) && (j < 4); j++)
+                                    {
+                                        <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                                            <a href="/tin-tuc/@Model.travelNews[j].Id/@Model.travelNews[0].Slug" class="format-router" title="@Model.travelNews[0].Title">
+                                                <div class="bk-images">
+                                                    <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.travelNews[j].PictureTitle" src=" @Model.travelNews[j].PictureTitle" alt="@Model.travelNews[j].Title">
+                                                </div>
+                                                <div class="breaking-info mt-20">
+                                                    <div class="bk-cat3 mb-10">
+                                                        @Model.travelNews[j].CategoryLang
+                                                    </div>
+                                                    <h5>
+                                                        @Model.travelNews[0].Title
+                                                    </h5>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                        </div>
+                        <div class="col-xxl-3 col-xl-3 col-lg-3 col-12">
+                            <div class="social-network">
+                                <div class="social-network-title">
+                                    @Localizer["Social network"]
+                                </div>
+                                <div class="social-network-list mt-20">
+                                    <a href="#" class="fb-share">
+                                        <i class="fa-brands fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="tw-share">
+                                        <i class="fa-brands fa-twitter"></i>
+                                    </a>
+                                    <a href="#" class="yt-share">
+                                        <i class="fa-brands fa-youtube"></i>
+                                    </a>
+                                    <a href="#" class="ins-share">
+                                        <i class="fa-brands fa-instagram"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="banner_sidebar">
+                                <img data-src="https://blog.gostay.vn/userfiles/images/banner%20pro-01.png"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="Logo">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Search Hotel Listing Pages -->
+<!-- Start Newsletter Area -->
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml")
+<!-- End Newsletter Area -->

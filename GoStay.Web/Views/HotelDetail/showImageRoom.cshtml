@@ -1,0 +1,118 @@
+﻿@using GoStay.DataDto.Apis;
+@using GoStay.Common.Configuration;
+@model HotelRoomDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="modal-dialog modal-dialog-centered modal-gallery-content-custom">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="text-16">@Model.Name</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="gallery-room-modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="ModalBody">
+            <div class="gallery-room-modal">
+                <div class="gallery-room-image">
+                    <div class="swiper mySwiper5">
+                        <div class="swiper-wrapper swiper-wrapper-custom">
+                            @foreach (var anh in Model.Pictures)
+                            {
+                                <div class="swiper-slide swiper-slide-custom">
+                                    <img src="@anh">
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="swiper-button-next swiper-button-next-custom"><i class="fa-solid fa-arrow-right"></i></div>
+                    <div class="swiper-button-prev swiper-button-prev-custom"><i class="fa-solid fa-arrow-left"></i></div>
+                    <div thumbsSlider="" class="swiper mySwiper6 mt-10">
+                        <div class="swiper-wrapper">
+                            @foreach (var anh in Model.Pictures)
+                            {
+                                <div class="swiper-slide swiper-thumbslide-custom">
+                                    <img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=400,height=300,quality=80/@anh">
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="gallery-room-info">
+                    <div class="room-info-parent-0">
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-person ic-20"></i>
+                            <p>@Model.NumMature @Localizer["adult"]</p>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-wifi"></i>
+                            <p>@Localizer["wifi free"]</p>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-bed"></i>
+                            <p>@Model.PalletbedText</p>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-vector-square"></i>
+                            <p>@Localizer["Room area"]: @Model.RoomSize m²</p>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-square-arrow-up-right"></i>
+                            <p>@Localizer["View room"]: @Model.ViewRoom</p>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-ban-smoking"></i>
+                            <p>@Localizer["No smoking"]</p>
+                        </div>
+                        <div class="room-info-2 mt-5">
+                            <h4 class="text-16">@Localizer["Other utilities"]</h4>
+                        </div>
+                        <div>
+                            @foreach (var service in Model.Services)
+                            {
+                                <div>
+                                    <div class="benefits-icon d-flex align-items-center">
+                                        <i class="fa-solid @service.Icon"></i>
+                                        <p class="text-start">@service.NameLang</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="gallery-room-price">
+                        <p class="label_discount">- @Model.Discount %</p>
+                        <p class="text-12-line-through">@AppConfigs.FormatCurrency("VND", Math.Round(Model.PriceValue,0))</p>
+                        <p class="text-16-primary">@AppConfigs.FormatCurrency("VND", Math.Round(Model.NewPrice,0))</p>
+                        @Html.ActionLink(Localizer["Booking"].Value,"Index","Orders", new {IDHotel=Model.Idhotel, IDRoom=Model.Id, CheckinDate=AppConfigs.checkinDate, CheckoutDate=AppConfigs.checkoutDate}, new {@class="btn-login-form btn-submit mt-10 mb-10"})
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(".btn-close").on("click", function () {
+        $('.modal').modal('hide');
+    });
+
+
+    var swiper6 = new Swiper(".mySwiper6", {
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        clickable: true,
+        watchSlidesProgress: true,
+    });
+
+    var swiper5 = new Swiper(".mySwiper5", {
+        spaceBetween: 10,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        thumbs: {
+            swiper5: swiper6
+        },
+    });
+</script>

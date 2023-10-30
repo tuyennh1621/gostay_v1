@@ -1,0 +1,95 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration;
+@using GoStay.DataDto.Apis;
+@model List<HotelHomePageDto>;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div>
+    <div id="city1" class="tabcontent_hotel">
+        <div class="single-head">
+            <div class="row row-cols-1 row-cols-lg-3 row-cols-xl-5 row-cols-xxl-5">
+                @if (Model != null)
+                {
+                    @foreach (var hotel in Model)
+                    {
+                        <div class="col mt-30 pt-mb-30">
+                            <!-- Start Single Grid -->
+                            <div class="single-grid">
+                                <div class="image">
+                                    <div class="swiper SwiperHotelHome">
+                                        <div class="swiper-wrapper">
+                                            @if (hotel.Pictures.Count() < 3)
+                                            {
+                                                for (int j = 0; j < hotel.Pictures.Count(); j++)
+                                                {
+                                                    <div class="swiper-slide">
+                                                        <a title="@hotel.HotelName" href="~/khach-san/@hotel.Id/@hotel.Slug" class="format-router"><img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=600,height=600,quality=80/@hotel.Pictures[j]" alt="@hotel.HotelName"></a>
+                                                    </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int i = 0; i < 3; i++)
+                                                {
+                                                    <div class="swiper-slide">
+                                                        <a title="@hotel.HotelName" href="~/khach-san/@hotel.Id/@hotel.Slug" class="format-router"><img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=600,height=600,quality=80/@hotel.Pictures[i]" alt="@hotel.HotelName"></a>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                        <div class="swiper-pagination swiper-pagination-custom"></div>
+                                    </div>
+                                    <div class="top-info">
+                                        <div class="icon-hover">
+                                            <div class="heart">
+                                                <a><i class="fa-regular fa-heart"></i></a>
+                                            </div>
+                                        </div>
+                                        @if (@hotel.Review_score > 0)
+                                        {
+                                            <div class="label">
+                                                <ul class="label_review">
+                                                    <li><a href="javascript:void(0)"><i class="fa-solid fa-umbrella"></i> @hotel.Review_score</a></li>
+                                                </ul>
+                                                <ul class="text_review">
+                                                    <li><a href="javascript:void(0)">@AppConfigs.GetNameByPoint(@hotel.Review_score)</a></li>
+                                                </ul>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <div class="top-content">
+                                        <h3 class="title">
+                                            <a title="@hotel.HotelName" href="~/khach-san/@hotel.Id/@hotel.Slug" class="format-router">@hotel.HotelName</a>
+                                        </h3>
+                                        <div class="rating-@hotel.Rating-sao"></div>
+                                        <span><a>@hotel.QuanHuyen - @hotel.TinhThanh</a></span>
+                                        <ul class="booking">
+                                            <li><a href="javascript:void(0)">@hotel.LastOrderDate</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="bottom-content">
+                                        <p class="base_price"><span>@AppConfigs.FormatCurrency("", (decimal)Math.Round(@hotel.DailyBasePrice)) đ</span></p>
+                                        <p class="price"><span>@AppConfigs.FormatCurrency("", (decimal)Math.Round(@hotel.ActualPrice)) đ</span></p>
+                                        <p href="javascript:void(0)" class="label_discount">-@hotel.Discount %</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Single Grid -->
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="button-loadmore-product">
+        <a href="@Url.Action("Index", "Hotels")" class="loadmore" title="Hotels">
+            @Localizer["See all"] <i class="fa-solid fa-arrow-right-long"></i>
+        </a>
+    </div>
+</div>
+
+

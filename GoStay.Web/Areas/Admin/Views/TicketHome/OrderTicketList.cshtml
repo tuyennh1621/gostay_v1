@@ -1,0 +1,308 @@
+﻿@using GoStay.Common
+@using GoStay.Data.Ticket
+@using Kendo;
+
+@model DataTicketAdminDto
+
+@{
+    ViewData["Title"] = "Ticket Order List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+    .success-order {
+        background-color: #4e73df;
+        color: #fff;
+    }
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: rebeccapurple;
+        color: white;
+    }
+</style>
+<!-- Page Title
+============================================= -->
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "Ticket Order" })
+<!-- #page-title end -->
+<!-- Content
+============================================= -->
+<body>
+    <section id="content">
+
+        <div class="content-wrap pb-0">
+
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <!--error message section starts here-->
+
+                    <div class="special-div-less-margin">
+                        @if (TempData["SuccessMsg"] != null)
+                        {
+                            if (!String.IsNullOrEmpty(TempData["SuccessMsg"].ToString()))
+                            {
+
+                                <div class="style-msg successmsg">
+                                    <div class="sb-msg"><i class="icon-thumbs-up"></i>@TempData["SuccessMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+
+                        }
+                        @if (TempData["ErrorMsg"] != null)
+                        {
+
+                            if (!String.IsNullOrEmpty(TempData["ErrorMsg"].ToString()))
+                            {
+                                <div class="style-msg errormsg">
+                                    <div class="sb-msg"><i class="icon-remove"></i>@TempData["ErrorMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+
+                    <div class="special-div-less-margin">
+
+                    </div>
+                    <div class="postcontent col-lg-12" id="MainDataSection">
+                        @await Html.PartialAsync("~/Areas/Admin/Views/TicketHome/TicketListPartial.cshtml", Model)
+                    </div><!-- .postcontent end -->
+                </div>
+            </div>
+
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="orderTicketModal" tabindex="-1" role="dialog" aria-labelledby="orderTicketModalLabel" aria-hidden="true" style="animation-name:showPoupAnimation; animation-duration:1s">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderTicketModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="Cancel()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="number" name="OrderId" hidden/>
+                        <input type="text" name="FullName" hidden />
+                        <input type="text" name="Email" hidden />
+                        <input type="text" name="Phone" hidden />
+                        <input type="text" name="Title" hidden />
+                        <input type="text" name="Start" hidden />
+                        <input type="text" name="End" hidden />
+                        <input type="text" name="Price" hidden />
+                        <textarea class="w-100 px-3 py-2" name="Messenge" id="messengeSMS" style="min-height:13rem">
+
+                        </textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary cancel-order-tick" data-dismiss="modal" onclick="Cancel()" data-order-ticket="1">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="postData()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- #content end -->
+
+</body>
+@section scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        function NextPreData(pagesize, pageindex) 
+          {
+            var Url = '@Url.Action("TicketListPartial","TicketHome", new { area="Admin"})';
+
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: {
+                    pageSize: pagesize,
+                    pageIndex: pageindex
+                },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#MainDataSection').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+        function convertStr (str) {
+            str= str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a");
+            str= str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e");
+            str= str.replace(/ì|í|ị|ỉ|ĩ/g,"i");
+            str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+            str = str.replace(/Ò|Ó|Ọ|Ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|Ở|ỡ/g, "O");
+            str= str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u");
+            str= str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y");
+            str= str.replace(/đ/g,"d");
+            str= str.replace(/Đ/g,"D");
+            str= str.replace(/Ư/g,"U");
+            /* tìm và thay thế các kí tự đặc biệt trong chuỗi sang kí tự - */
+            str= str.replace(/-+-/g,"-"); //thay thế 2- thành 1-
+            str= str.replace(/^\-+|\-+$/g,"");
+            //cắt bỏ ký tự - ở đầu và cuối chuỗi
+            return str;
+        }
+        function showPoup(id, FullName, Email, Phone, Title, Start, End, Price) {
+            debugger;
+            Phone = Phone.trim();
+            var content = convertStr(Title.replace("Order", ""))
+            var name = (FullName != "") ? FullName : Email;
+            var mess = "Hoan tat thu tuc dat ve " + content + " Tong tien: " + Price;
+            var status = $(".order-ticket-no-" + id + " option:selected").val();
+            $("#orderTicketModal .cancel-order-tick").attr("data-order-ticket", id);
+            if(status == 2){
+                var fade = `<div class="modal-backdrop fade show open-modal-order-tick"> </div>`;
+                $("body").append(fade);
+                $("#orderTicketModal").addClass("show").css("display", "block");
+                $("#orderTicketModal input[name=OrderId]").val(id);
+                $("#orderTicketModal input[name=FullName]").val(FullName);
+                $("#orderTicketModal input[name=Email]").val(Email);
+                $("#orderTicketModal input[name=Phone]").val(Phone);
+                $("#orderTicketModal #messengeSMS").val(mess);
+                $(".order-ticket-no-" + id + " .waiting").removeAttr("selected");
+            } else{
+                $(".open-modal-order-tick").remove();
+                $("#orderTicketModal").removeClass("show").css("display", "none");
+                $("#orderTicketModal input").val('');
+            }
+        }
+        
+        function Cancel(){
+            var temp = $("#orderTicketModal .cancel-order-tick").attr("data-order-ticket");
+            $(".order-ticket-no-" + temp + " .waiting").attr("selected", "selected");
+            closeModal("orderTicketModal");
+        }
+        function closeModal(attrId){
+            $("#" + attrId).removeClass("show").css("display", "none");
+            $(".open-modal-order-tick").remove();
+            $("#" + attrId + " input").val('');
+        }
+        
+        function postData() {
+            var input = new Object;
+            input.OrderId = parseInt($("#orderTicketModal input[name=OrderId]").val());
+            input.Messenge = $("textarea#messengeSMS").val();;
+            input.FullName = $("#orderTicketModal input[name=FullName]").val();
+            input.Email = $("#orderTicketModal input[name=Email]").val();
+            input.Phone = $("#orderTicketModal input[name=Phone]").val();
+            createData(input);
+        }
+
+        function createData(input) {
+            debugger;
+            //var input = new Object;
+            //input.fullName = "test";
+            //input.email = "Huynhduc752@gmail.com";
+            //input.phone = "0398025988";
+            //input.title = "Chuyến bay demo";
+            //input.startPoint = "hà Nội";
+            //input.endPoint = "HCM Nội";
+            //input.time = "";
+            //input.messenge = "--";
+            //input.customerId = "1";
+
+            $.ajax({
+                url: "/Admin/FireBaseHome/Create",
+                type: "POST",
+                data: JSON.stringify(input),
+                contentType: "application/json",
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+                    hideSearchLoader();
+                    if (data.ErrorCode == "0") {
+                        console.log("done");
+                        closeModal("orderTicketModal");
+                        $(".order-ticket-no-" + input.OrderId).attr("disabled", "disabled");
+                        $(".order-ticket-no-" + input.OrderId).addClass("success-order");
+                        alertComplete("success", "Đã gửi SMS tới khách hàng", "Chuyển đổi trạng thái thành công");
+                    }
+                    else{
+                        alert("lỗi");
+                        alertComplete("error", data.ErrorMess);
+                    }
+                    
+
+                },
+                error: function (e) {
+                    hideSearchLoader();
+                    console.log(e)
+                    alertComplete("error", "Lỗi hệ thống");
+                }
+            })
+        }
+        function alertComplete(status, mess, title){
+            swal({
+                title: title,
+                text: mess,
+                icon: status,
+            });
+        }
+        //$(document).ready(function(){
+        //    new JSTable("#my_table");
+        //})
+    </script>
+}

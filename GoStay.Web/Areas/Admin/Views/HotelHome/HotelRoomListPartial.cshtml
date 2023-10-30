@@ -1,0 +1,268 @@
+﻿@using DAL.Helpers.PageHelpers;
+@using GoStay.Common.Configuration;
+@using GoStay.Common.Enums
+@using GoStay.DataAccess.Entities
+
+@using GoStay.DataDto.HotelDto
+@using GoStay.DataDto.OrderDto
+@using GoStay.Common
+@using goStayCore.CommonCode
+@model ViewModel<RoomAdminDto>
+<link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
+@{
+    int totalPage = (Model.Data != null && Model.Data.Count > 0 && Model.Data.FirstOrDefault().Total > 0) ? ((Model.Data.FirstOrDefault().Total - 1) / Model.PageSize + 1) : 0;
+    int pageNumber = Model.PageIndex;
+    int pageSize = Model.PageSize;
+    int FromIndex = pageNumber == 1 ? 1 : (pageNumber - 1) * pageSize + 1;
+    int totalCount = (Model.Data.Count > 0) ? Model.Data.FirstOrDefault().Total : 0;
+    int EndIndex = pageNumber == totalPage ? totalCount : pageNumber * pageSize;
+    Dictionary<int, string> StatusRoom = new Dictionary<int, string>()
+    {
+        {0,"Chờ Duyệt"},
+        {1,"Đã Duyệt"},
+        {2,"Đã Hủy"}
+    };
+}
+
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: rebeccapurple;
+        color: white;
+    }
+
+    .dropdown-showpage a {
+        color: #fff !important;
+        background: #1ABC9C;
+    }
+
+    .pagination button.active {
+        background-color: #1ABC9C;
+        color: white !important;
+    }
+    /* thêm màu nền khi người dùng hover vào class không active */
+    .pagination button:hover:not(.active) {
+        background-color: #1ABC9C !important;
+    }
+    /* css pagedList pagination*/
+    .pagination li {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+
+        .pagination li button {
+            min-width: 35px;
+            min-height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #C3D6C6;
+            color: #3f8740;
+            border-radius: 5px;
+        }
+
+            .pagination li button:hover {
+                background-color: #1ABC9C;
+                color: #fff;
+                transition: ease all .15s;
+            }
+
+    .pagination .active button {
+        color: #ffffff;
+        background-color: #3f8740;
+    }
+
+    .pagination .active span {
+        color: #fff;
+        background: #1ABC9C;
+        min-width: 35px;
+        min-height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #C3D6C6;
+        border-radius: 5px;
+    }
+
+    .order-code>a {
+        color: #1ABC9C !important;
+    }
+</style>
+
+<div class="d-flex flex-sm-row">
+    <p style="margin-top:10px;margin-right:10px">Hiển thị </p>
+    <div class="dropdown dropdown-showpage">
+        <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+            @pageSize
+        </a>
+
+        <ul class="dropdown-menu">
+            <li><button class="dropdown-item" onclick="SubmitSearch('25', '1')">25</button></li>
+            <li><button class="dropdown-item" onclick="SubmitSearch('50', '1')">50</button></li>
+            <li><button class="dropdown-item" onclick="SubmitSearch('100', '1')">100</button></li>
+        </ul>
+    </div>
+    <p style="margin-top:10px;margin-left:10px">   bản ghi</p>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover mb-0" id="my_table">
+        <thead>
+            <tr>
+
+                <th> ID</th>
+                <th> Tên Phòng </th>
+                <th> Tên Khách Sạn</th>
+                <th> Trạng Thái </th>
+                <th> Giá Phòng </th>
+                <th> Actions </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.Data.Count > 0)
+                {
+                    foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Name</td>
+                            <td>@item.HotelName</td>
+                            <th>
+                                <div class="col-md-3 form-group">
+                                    <select class="box-on-stock-option-region headerLeft_select" id="status_@item.Id" name="Status" data-idRoom="@item.Id" onchange="ChangeStatus(@item.Id)">
+                                        <option selected="@item.Selected(0)" value="0">Chờ Duyệt</option>
+                                        <option selected="@item.Selected(1)" value="1">Đã Duyệt</option>
+                                        <option selected="@item.Selected(2)" value="2">Đã Hủy</option>
+                                    </select>
+
+                                </div>
+                                
+                            </th>
+                            <th>@AppConfigs.FormatCurrency("", Math.Round((decimal)item.NewPrice,0)) VND</th>
+
+                            <td>
+                                <div class="justify-content-center order-code">
+                                    <button class="button button-3d button-rounded gradient-grey-orange  float-right" href="#!" onclick="AddPicture(@item.Id);"
+                                    data-toggle="modal" data-target="#myAddPicture">
+                                        <i class="icon-plus"></i> Add Picture
+                                    </button>
+                                    <a class="button button-3d button-rounded gradient-grey-orange  float-right" href="@Url.Action("Index", "Scheduler",new {area="Admin", IdRoom = @item.Id, month = DateTime.Now.Month, year = DateTime.Now.Year})">
+                                        <i class="icon-plus"></i> Thêm giá theo ngày
+                                    </a>
+
+                                    <button class="button button-3d button-rounded gradient-grey-orange  float-right" href="#!" onclick="AddAlbum('@item.Id');"
+                                    data-toggle="modal" data-target="#myAddAlbum">
+                                        <i class="icon-plus"></i> Add Album
+                                    </button>
+
+                                    <a href="#" class="center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon-edit" style="font-size:23px;"></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-right" style="">
+                                        <li>
+
+                                            <a class="dropdown-item" href="#!" onclick="DeleteItem('@item.Id');" data-toggle="modal" data-target="#myDeleteModal"><span class="icon-line-delete"></span> Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-3">
+    @if (Model.Data != null && Model.Data.Count > 0 && Model.Data.FirstOrDefault().Total > 0)
+    {
+        <div class="row y-gap-30">
+            <div class="pagintion-table">
+                <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row">
+                    <p class="mb-3 mb-sm-0">
+                        Hiển thị từ
+                        <span>@FromIndex</span>
+                        đến
+                        <span>@EndIndex</span>
+                        của @Model.Data.FirstOrDefault().Total bản ghi
+                    </p>
+                    <nav class="pagination ">
+                        <ul class="pagination mb-0">
+                            <li class="page-item "><button class="page-link" onclick="SubmitSearch(@Model.PageSize.ToString(), '1')"> Fisrt </button></li>
+
+                            @for (int i = 1; i <= totalPage; i++)
+                            {
+                                string active = "";
+                                if (i == pageNumber) active = "active";
+                                if (pageNumber <= 3 && i <= 5)
+                                {
+                                    <li class="page-item "><button onclick="SubmitSearch(@Model.PageSize.ToString(), @i.ToString())" class="page-link @active"> @i </button></li>
+
+                                }
+                                else if (pageNumber > 3 && i >= pageNumber - 2 && i <= pageNumber + 2)
+                                {
+                                    <li class="page-item "><button onclick="SubmitSearch(@Model.PageSize.ToString(), @i.ToString())" class="page-link @active"> @i </button></li>
+
+                                }
+
+                            }
+                            <li class="page-item "><button class="page-link" onclick="SubmitSearch(@Model.PageSize.ToString(), @totalPage.ToString())" tabindex="-1"> Last </button></li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

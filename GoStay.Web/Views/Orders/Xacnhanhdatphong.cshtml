@@ -1,0 +1,249 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.OrderDto
+@using GoStay.Web.Model
+@model OrderSuccessInfor
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<head>
+    <link href="https://kendo.cdn.telerik.com/themes/6.3.0/default/default-main.css" rel="stylesheet" />
+    @{
+        var kendoVersion = "2022.2.510";
+    }
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+
+
+</head>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["TitlePage"] = "Đặt phòng thành công, mẵ đặt phòng: " + @Model.OrderSuccessInforDto.Ordercode;
+    var amount = System.Convert.ToDecimal(Model.amount);
+}
+@if (Model.OrderSuccessInforDto.Status <= 3)
+{
+    @await Html.PartialAsync("~/Views/Shared/_statusHotelbooking.cshtml",Model.OrderSuccessInforDto.Status)
+}
+else
+{
+
+    @await Html.PartialAsync("~/Views/Shared/_statusHotelbooking.cshtml",byte.Parse("3") )
+}
+
+
+<section class="hotel-booking-payment">
+    <div class="container">
+        <div class="booking-payment-parent pd-20 pb-80">
+            <div class="bk-success">
+                <div class="bk-title-center">
+                    <i class="pt-10 fa-regular fa-circle-check ic-50"></i>
+                    <h3 class="pt-10 text-18">@Localizer["Booking request sent successfully"]</h3>
+                    <div class="pt-10 text-14-gray">@Localizer["goStay will actively contact you within 30 minutes to confirm availability and payment instructions"].</div>
+                </div>
+                <div class="bk-success-info">
+                    <div class="bk-success-code">
+                        <div class="text-14">
+                            @Localizer["Booking code"]
+                        </div>
+                        <div class="text-16-b item-success-order-code" data-item="@Model.OrderSuccessInforDto.Ordercode">@Model.OrderSuccessInforDto.Ordercode</div>
+                        <div class="text-16-b item-success-order-email" hidden data-item="@Model.OrderSuccessInforDto.Email">@Model.OrderSuccessInforDto.Email</div>
+                        <div class="text-16-b item-success-order-id" hidden data-item="@Model.OrderSuccessInforDto.Id">@Model.OrderSuccessInforDto.Id</div>
+                    </div>
+                    <div class="bk-success-date">
+                        <div class="text-14">
+                            @Localizer["Booking date"]
+                        </div>
+                        <div class="text-16-b item-success-order-date" data-item="@Model.OrderSuccessInforDto.DateCreate.ToString("dd/MM/yy")">@Model.OrderSuccessInforDto.DateCreate.ToString("dd/MM/yy")</div>
+                    </div>
+                    <div class="bk-success-price">
+                        <div class="text-14">
+                            @Localizer["Total payment"]
+                        </div>
+                        <div class="text-16-b item-success-order-price" data-item="@AppConfigs.FormatCurrency("VND", Math.Round((decimal)@Model.OrderSuccessInforDto.TotalAmount,0))">@AppConfigs.FormatCurrency("VND", Math.Round((decimal)@Model.OrderSuccessInforDto.TotalAmount,0))</div>
+
+                    </div>
+                    <div class="bk-success-price">
+                        <div class="text-14">
+                            Đã thanh toán
+                        </div>
+                        <div class="text-16-b item-success-order-prepay" data-item="@AppConfigs.FormatCurrency("VND", Math.Round(amount,0))">@AppConfigs.FormatCurrency("VND", Math.Round(amount,0))</div>
+
+                    </div>
+                    <div class="bk-success-price">
+                        <div class="text-14">
+                            @Localizer["Payment methods"]
+                        </div>
+                        <div class="text-16-b item-success-order-method" data-item="@Model.OrderSuccessInforDto.PaymentMethod">@Model.OrderSuccessInforDto.PaymentMethod</div>
+                    </div>
+                </div>
+                <div class="booking-room">
+                    <div class="booking-items">
+                        <div class="row align-items-center">
+                            @if (@Model.OrderSuccessInforDto.Room.Pictures.Count > 1)
+                            {
+                                <div class="col-xxl-3 col-xl-3 col-lg-3 col-12 booking-image item-success-order-image" data-item="https://cdn.realtech.com.vn/@Model.OrderSuccessInforDto.Room.Pictures[1]">
+                                    <img alt="@Model.OrderSuccessInforDto.Room.HotelName"
+                                     data-src="https://cdn.realtech.com.vn/@Model.OrderSuccessInforDto.Room.Pictures[1]"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" />
+                                </div>
+                            }
+                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 booking-items-info">
+                                <h3 class="text-16-b item-success-order-hotel" data-item="@Model.OrderSuccessInforDto.Room.HotelName">@Model.OrderSuccessInforDto.Room.HotelName</h3>
+                                <div class="rating-booking">
+                                    <div class="rating-@Model.OrderSuccessInforDto.Room.Rating-sao"></div>
+                                </div>
+                                
+                                <div class="sub-title grid-list-region item-success-order-hoteladdress" data-item="@Model.OrderSuccessInforDto.Room.Address">
+                                    <span><i class="fa-solid fa-location-dot"></i></span>
+                                    <span> @Model.OrderSuccessInforDto.Room.Address</span>
+                                    <a href="#" title="Xem vị trí khách sạn trên bản đồ" class="more-map"><i class="fa-solid fa-map-location-dot"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-12">
+                            <div class="col-xxl-3 col-xl-3 col-lg-4 col-12">
+                                <div class="qr-wrapper">
+                                    <div class="demo-section">
+                                        <div id="qrUrl"></div>
+                                        <p class="mt-5"><i>Lưu lại mã QRcode này để xác nhận đặt phòng thành công và checkin phòng.</i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion accordion3" id="accordionPanelsStayOpenExample">
+
+                            <div class="accordion-item" data-name="@Model.OrderSuccessInforDto.Room.RoomName" data-desc="@Model.OrderSuccessInforDto.Room.NumRoom @Localizer["Rooms"], @Model.OrderSuccessInforDto.Room.NumMature @Localizer["adult"] +  @Model.OrderSuccessInforDto.Room.NumChild @Localizer["children"]"
+                                 data-checkin="@Model.OrderSuccessInforDto.CheckInDate?.ToString("dd/MM/yy")" data-checkout="@Model.OrderSuccessInforDto.CheckOutDate?.ToString("dd/MM/yy")" data-night="@Model.OrderSuccessInforDto.Room.NumNight"
+                                 data-image="https://cdn.realtech.com.vn/@Model.OrderSuccessInforDto.Room.Pictures[0]">
+                                <div class="accordion-button accordion-button2 pd-20" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne-@Model.OrderSuccessInforDto.Room.Id" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne-@Model.OrderSuccessInforDto.Room.Id">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="booking-select">
+                                                <div class="text-16-b">@Model.OrderSuccessInforDto.Room.RoomName</div>
+                                                <div class="text-14-gray">@Model.OrderSuccessInforDto.Room.NumRoom @Localizer["Rooms"], @Model.OrderSuccessInforDto.Room.NumMature @Localizer["adult"] +  @Model.OrderSuccessInforDto.Room.NumChild @Localizer["children"]</div>
+                                                <ul class="check-in-out">
+                                                    <li class="text-14">@Localizer["Check in"]: @Model.OrderSuccessInforDto.CheckInDate?.ToString("dd/MM/yy")</li>
+                                                    <li class="text-14">@Localizer["Check out"]: @Model.OrderSuccessInforDto.CheckOutDate?.ToString("dd/MM/yy")</li>
+                                                    <li class="text-14">@Localizer["Number of nights"]: @Model.OrderSuccessInforDto.Room.NumNight @Localizer["nights"]</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+                                <div id="panelsStayOpen-collapseOne-@Model.OrderSuccessInforDto.Room.Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                                    <div class="accordion-body pd-20">
+                                        <div class="detail-room-info pt-20">
+                                            <h3 class="text-16-b mb-15">@Localizer["Room details"]</h3>
+                                            <div class="col-12">
+                                                <img alt="@Model.OrderSuccessInforDto.Room.RoomName" data-src="https://cdn.realtech.com.vn/@Model.OrderSuccessInforDto.Room.Pictures[0]"
+                                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                            </div>
+                                            <div class="room-info info-sidebar">
+                                                <div class="room-info-11">
+                                                    <i class="fa-solid fa-person ic-20"></i>
+                                                    <div class="text-list">
+                                                        <p>@Model.OrderSuccessInforDto.Room.NumMature @Localizer["adult"]</p>
+                                                        <ul class="text-11-gray list-style">
+                                                            <li>@Localizer["Maximum capacity of the room"] (@Model.OrderSuccessInforDto.Room.NumMature + @Model.OrderSuccessInforDto.Room.NumChild)</li>
+                                                            <li>@Localizer["Standard number of guests"] @Model.OrderSuccessInforDto.Room.NumMature</li>
+                                                            <li>@Localizer["Allow to stay more"] @Model.OrderSuccessInforDto.Room.NumChild @Localizer["children satisfy"] (@Model.OrderSuccessInforDto.Room.NumMature + @Model.OrderSuccessInforDto.Room.NumChild) @Localizer["Maximum guests may incur additional charges"].</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="room-info-1">
+                                                    <i class="fa-solid fa-bed"></i>
+                                                    <p>@Model.OrderSuccessInforDto.Room.PalletbedText</p>
+                                                </div>
+                                                <div class="room-info-1">
+                                                    <i class="fa-solid fa-vector-square"></i>
+                                                    <p>@Localizer["Room size"]: @Model.OrderSuccessInforDto.Room.RoomSize m²</p>
+                                                </div>
+                                                <div class="room-info-1">
+                                                    <i class="fa-solid fa-square-arrow-up-right"></i>
+                                                    <p>@Localizer["Room direction"]: @Model.OrderSuccessInforDto.Room.ViewDirection</p>
+                                                </div>
+                                                <div class="room-info-2">
+                                                    <i class="fa-solid fa-circle-plus"></i>
+                                                    <a href="#">@Localizer["Other facilities"]</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            @if (Model.RoomOrner == true && Model.OrderSuccessInforDto.Status<4)
+            {
+                <button type="button" id="btnSendcheckin" onclick="SubmitCheckin(@Model.OrderSuccessInforDto.Id)" class="btn-login-form btn-submit format-router">
+                    Xác Nhận Khách Đã Nhận Phòng<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                </button>
+            }
+            @if (Model.CheckIn == true)
+            {
+                <label>Đã checkin thành công</label>
+            }
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#qrUrl").kendoQRCode({
+            value: "https://gostay.realtech.com.vn/Orders/Order/@Model.OrderSuccessInforDto.Id",
+            errorCorrection: "M",
+            size: 120,
+            border: {
+                color: "#000000",
+                width: 5
+            }
+        });
+        orderSuccess();
+       
+    });
+    function SubmitCheckin(Id) {
+        $.ajax({
+            type: "GET",
+            url: "/Orders/ConfirmCheckIn",
+            data:
+            {
+                IdOrder: Id
+            },
+            success: function (data) {
+                if(data=="1")
+                {
+                    alert("Ban dat phong thanh cong");
+                }
+                else
+                {
+                    alert(data);
+                }
+                $("#btnSendcheckin").hide();
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+</script>
+
+<style>
+    .demo-section {
+        display: inline-block;
+        margin: 15px 30px 15px 0;
+    }
+
+    .k-qrcode {
+        display: inline-block;
+        margin: 10px 0 0;
+        border: none;
+    }
+</style>

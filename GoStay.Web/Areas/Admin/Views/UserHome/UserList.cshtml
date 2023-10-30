@@ -1,0 +1,131 @@
+﻿@using GoStay.Common
+@using GoStay.DataAccess.Entities
+
+@model ResponseBase<List<User>>
+
+@{
+    ViewData["Title"] = "User List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+
+</head>
+
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: rebeccapurple;
+        color: white;
+    }
+</style>
+<!-- Page Title
+============================================= -->
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "USER" })
+<!-- #page-title end -->
+<!-- Content
+============================================= -->
+<body>
+    <section id="content">
+
+        <div class="content-wrap pb-0">
+
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <!--error message section starts here-->
+
+                    <div class="special-div-less-margin">
+                        @if (TempData["SuccessMsg"] != null)
+                        {
+                            if (!String.IsNullOrEmpty(TempData["SuccessMsg"].ToString()))
+                            {
+
+                                <div class="style-msg successmsg">
+                                    <div class="sb-msg"><i class="icon-thumbs-up"></i>@TempData["SuccessMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+
+                        }
+                        @if (TempData["ErrorMsg"] != null)
+                        {
+
+                            if (!String.IsNullOrEmpty(TempData["ErrorMsg"].ToString()))
+                            {
+                                <div class="style-msg errormsg">
+                                    <div class="sb-msg"><i class="icon-remove"></i>@TempData["ErrorMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+
+                    <div class="special-div-less-margin">
+
+                    </div>
+                    <div class="postcontent col-lg-12" id="MainDataSection">
+                        @await Html.PartialAsync("~/Areas/Admin/Views/UserHome/UserListPartial.cshtml", Model)
+                    </div><!-- .postcontent end -->
+                </div>
+            </div>
+
+        </div>
+    </section><!-- #content end -->
+
+
+</body>
+@section scripts{
+
+    <script>
+        new JSTable("#my_table");
+    </script>
+}

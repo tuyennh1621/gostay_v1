@@ -1,0 +1,223 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.DataDto.OrderDto
+@using GoStay.Web.Model
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model OrderGetInfoDto
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    ViewData["TitlePage"] = "Order " + Model.Title;
+
+}
+@await Html.PartialAsync("~/Views/Shared/_statusHotelbooking.cshtml",Model.Status)
+<section class="hotel-booking" >
+    <div class="container" id="containerhotelbooking">
+        <div class="row">
+            <div class="col-xxl-8 col-xl-8 col-lg-12 col-12">
+                <div class="booking-room">
+                    <div class="booking-info">
+                        <div class="booking-items">
+                            <div class="row">
+                                <div class="col-xxl-4 col-xl-3 col-lg-3 col-12 booking-image">
+                                    @if (@Model.Room.Pictures.Count() > 1)
+                                    {
+                                        <img alt="@Model.Room.HotelName" src="https://cdn.realtech.com.vn/@Model.Room.Pictures[1]" />
+                                    }
+                                    <a title="Đặt thêm phòng khác" href="~/khach-san/@Model.IdHotel#hotel-rooms" class="btn-add-room">
+                                        <i class="fa-solid fa-plus text-white border-0"></i>
+                                        @Localizer["Change Room"]
+                                    </a>
+                                </div>
+                                <div class="col-xxl-8 col-xl-9 col-lg-9 col-12 booking-items-info">
+                                    <h3 class="text-16-b">@Model.Room.HotelName</h3>
+                                    <div class="rating-booking">
+                                        <div class="rating-@Model.Room.Rating-sao"></div>
+                                    </div>
+
+                                    <div class="sub-title grid-list-region">
+                                        <span><i class="fa-solid fa-location-dot"></i></span>
+                                        @Model.Room.Address
+                                        <a href="#" title="Xem vị trí khách sạn trên bản đồ" class="more-map"><i class="fa-solid fa-map-location-dot"></i></a>
+                                    </div>
+                                    <ul class="check-in-out">
+                                        <li class="text-14">@Localizer["Check in"]: @Model.CheckInDate?.ToString("dd/MM/yy")</li>
+                                        <li class="text-14">@Localizer["Check out"]: @Model.CheckOutDate?.ToString("dd/MM/yy")</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion accordion3" id="RoomDataSection">
+                            @await Html.PartialAsync("~/Views/Orders/ListRoomOrderPartial.cshtml", Model.Room)
+                        </div>
+                    </div>
+                </div>
+                <div class="booking-special-requirements mt-30">
+                    <h3 class="text-16-b">@Localizer["Special requirements"]</h3>
+                    <div class="bk-user-login">
+                        <span class="text-14-blue">@Localizer["Note"]: @Localizer["Your requests can only be accommodated depending on the status of the hotel's rooms"].</span>
+                    </div>
+                    <div class="check-room-parent">
+                        <div class="text-14-b">
+                            @Localizer["Choose a bed type"] (@Localizer["if there's room"]):
+                        </div>
+                        <div class="form-check check-room">
+                            <div class="check-room-left">
+                                <input class="form-check-input" type="checkbox" id="checkycdb1">
+                                <label class="form-check-label text-14-gray pl-10" for="checkycdb1">
+                                    @Localizer["I want the big bed"]
+                                </label>
+                            </div>
+                            <div class="check-room-right">
+                                <input class="form-check-input pl-10" type="checkbox" id="checkycdb2">
+                                <label class="form-check-label text-14-gray pl-10" for="checkycdb2">
+                                    @Localizer["I want an extra bed"]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bk-select-room-parent mb-20">
+                        <div class="text-14-b">
+                            @Localizer["Estimated check-in time"] (@Localizer["optional"])
+                        </div>
+                        <select class="form-select bk-select-room" id="selectycdb1">
+                            <option selected>@Localizer["From"] 15:00 - 16:00</option>
+                            <option value="1">@Localizer["From"] 15:00 - 16:00</option>
+                            <option value="2">@Localizer["From"] 16:00 - 17:00</option>
+                            <option value="3">@Localizer["From"] 17:00 - 18:00</option>
+                        </select>
+                    </div>
+                    <button type="button" class="bk-requirements text-14-b">@Localizer["Other special requirements"]<i class="fa-solid fa-circle-plus ic-16-1"></i></button>
+                    <div class="content check-room">
+                        <div class="check-room-left">
+                            <input class="form-check-input" type="checkbox" id="checkycdb3">
+                            <label class="form-check-label text-14-gray pl-10" for="checkycdb3">
+                                @Localizer["Smoking"]
+                            </label>
+                        </div>
+                        <div class="check-room-right">
+                            <input class="form-check-input" type="checkbox" id="checkycdb4">
+                            <label class="form-check-label text-14-gray pl-10" for="checkycdb4">
+                                @Localizer["Nearest to the sea"]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-xl-4 col-lg-12 col-12 sidebar__inner">
+                <div id="sidebar_hotelsOrders">
+                    <div class="sidebar_innner sidebar_fix">
+                        <div class="detail-price-sidebar">
+                            <h3 class="text-14-b title-info-sidebar">@Localizer["Price details"]</h3>
+                            <div class="room-price-parent" id="PriceBox">
+                                @await Html.PartialAsync("~/Views/Orders/PriceBoxPartial.cshtml", new OrderPriceBoxDto(){
+                                    Room= Model.Room,
+                                    Price = (decimal)Model.Price,
+                                    ActualPrice = (decimal)Model.TotalAmount,
+                                })
+                            </div>
+                        </div>
+                        <div class="total-parent mt-20">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label text-14-gray" for="flexCheckDefault">
+                                    @Localizer["Request a VAT invoice"]
+                                </label>
+                            </div>
+                            <a href="/order/payments?orderId=@Model.Id" title="Đi đến bước xác nhận phương thức thanh toán" class="btn-login-form btn-submit mt-10 mb-10">
+                                @Localizer["Booking"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                            </a>
+                            <div class="text-12">
+                                Bằng cách nhấn vào nút này, bạn công nhận mình đã đọc và đồng ý với
+                                <a href="#" title="Điều khoản dịch vụ" class="text-12-primary">Điều kiện</a> và <a href="#" class="text-12-primary">Điều khoản</a> của chúng tôi
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal_benefits" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-gallery-content-custom">
+        <div class="modal-content">
+            <div class="modal-body" id="ModalService">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showService(_IDRooms) {
+        $.ajax({
+            type: "GET",
+            url: "/HotelDetail/showAllServiceOnly",
+            data:
+            {
+                IDRooms: _IDRooms
+            },
+            success: function (data) {
+                $('#ModalService').html(data);
+                $('#modal_benefits').modal('show');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+    function DeleteRoomInOrder(_IdDetail, _IdOrder) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Orders/DeleteRoomInOrder",
+            data:
+            {
+                IdDetail: _IdDetail,
+                IdOrder: _IdOrder
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+                showSearchLoader();
+            },
+            success: function (data) {
+
+                hideSearchLoader();
+                $('#RoomDataSection').html(data);
+                PriceBox(_IdOrder);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                hideSearchLoader();
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+    function PriceBox(_IdOrder) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Orders/PriceBoxInOrder",
+            data:
+            {
+                IdOrder: _IdOrder
+            },
+            cache: false,
+            async: false,
+            beforeSend: function () {
+
+                showSearchLoader();
+            },
+            success: function (data) {
+
+                hideSearchLoader();
+                $('#PriceBox').html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                hideSearchLoader();
+                alert("An error occured. Please try again!");
+            }
+        })
+    }
+</script>

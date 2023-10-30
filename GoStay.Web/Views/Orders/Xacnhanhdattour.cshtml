@@ -1,0 +1,236 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.OrderDto
+@using GoStay.Web.Model
+@model OrderSuccessInfor
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<head>
+    <link href="https://kendo.cdn.telerik.com/themes/6.3.0/default/default-main.css" rel="stylesheet" />
+    @{
+        var kendoVersion = "2022.2.510";
+    }
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+
+
+</head>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["TitlePage"] = "Đặt phòng tour công, mẵ đặt tour: " + @Model.OrderSuccessInforDto.Ordercode;
+    var amount = System.Convert.ToDecimal(Model.amount);
+}
+
+@if (Model.OrderSuccessInforDto.Status <= 3)
+{
+    @await Html.PartialAsync("~/Views/Shared/_statusTourbooking.cshtml", Model.OrderSuccessInforDto.Status)
+}
+else
+{
+
+    @await Html.PartialAsync("~/Views/Shared/_statusHotelbooking.cshtml",byte.Parse("3") )
+}
+
+
+
+<section class="tour-booking-payment" >
+    <div class="container">
+        <div class="booking-payment-parent2">
+                <div class="bk-success pb-80 pd-30">
+                    <div class="bk-title-center">
+                        <i class="pt-10 fa-regular fa-circle-check ic-50"></i>
+                        <h3 class="pt-10 text-18">@Localizer["Booking request sent successfully"]</h3>
+                        <div class="pt-10 text-14-gray">@Localizer["goStay will actively contact you within 30 minutes to confirm availability and payment instructions"].</div>
+                    </div>
+                    <div class="bk-success-info">
+                        <div class="bk-success-code">
+                            <div class="text-14">
+                                @Localizer["Booking code"]
+                            </div>
+                        <div class="text-16-b item-success-order-code" data-item="@Model.OrderSuccessInforDto.Ordercode">@Model.OrderSuccessInforDto.Ordercode</div>
+                        <div class="text-16-b item-success-order-email" hidden data-item="@Model.OrderSuccessInforDto.Email">@Model.OrderSuccessInforDto.Email</div>
+                        <div class="text-16-b item-success-order-id" hidden data-item="@Model.OrderSuccessInforDto.Id">@Model.OrderSuccessInforDto.Id</div>
+                        </div>
+                        <div class="bk-success-date">
+                            <div class="text-14">
+                                @Localizer["Booking date"]
+                            </div>
+                        <div class="text-16-b item-success-order-date" data-item="@Model.OrderSuccessInforDto.DateCreate.ToString("dd/MM/yy")">@Model.OrderSuccessInforDto.DateCreate.ToString("dd/MM/yy")</div>
+                        </div>
+                        <div class="bk-success-price">
+                            <div class="text-14">
+                                @Localizer["Total payment"]
+                            </div>
+                        <div class="text-16-b item-success-order-price" data-item="@AppConfigs.FormatCurrency("VND", Math.Round((decimal)@Model.OrderSuccessInforDto.TotalAmount,0))">@AppConfigs.FormatCurrency("VND", Math.Round((decimal)@Model.OrderSuccessInforDto.TotalAmount,0))</div>
+                        </div>
+                        <div class="bk-success-price">
+                            <div class="text-14">
+                                Đã thanh toán
+                            </div>
+                        <div class="text-16-b item-success-order-prepay" data-item="@AppConfigs.FormatCurrency("VND", Math.Round(amount,0))">@AppConfigs.FormatCurrency("VND", Math.Round(amount,0))</div>
+
+                        </div>
+                        <div class="bk-success-price">
+                            <div class="text-14">
+                                @Localizer["Payment methods"]
+                            </div>
+                        <div class="text-16-b item-success-order-method" data-item="@Model.OrderSuccessInforDto.PaymentMethod">@Model.OrderSuccessInforDto.PaymentMethod</div>
+                        </div>
+                    </div>
+                    <div class="mt-30 booking-room">
+                        <div class="booking-items">
+                            <div class="row align-items-center">
+                            @if (Model.OrderSuccessInforDto.Tour.Pictures.Count > 1)
+                            {
+                                <div class="col-xxl-3 col-xl-3 col-lg-3 col-12 booking-image  item-success-order-image" data-item="https://cdn.realtech.com.vn/@Model.OrderSuccessInforDto.Tour.Pictures[1]">
+
+                                    <img alt="@Model.OrderSuccessInforDto.Tour.TourName"
+                                         data-src="https://cdn.realtech.com.vn/@Model.OrderSuccessInforDto.Tour.Pictures[1]"
+                                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" />
+                                </div>
+                            }
+                            <div class="col-xxl-7 col-xl-7 col-lg-7 col-12 booking-items-info">
+                                <h3 class="text-16-b item-success-order-hotel" data-item="@Model.OrderSuccessInforDto.Tour.TourName">@Model.OrderSuccessInforDto.Tour.TourName</h3>
+                                <div class="rating-booking item-success-order-hoteladdress" data-item="--------------------">
+                                    <div class="rating-@Model.OrderSuccessInforDto.Tour.Rating-sao"></div>
+                                    </div>
+                                <h3 class="text-16-b">@Model.OrderSuccessInforDto.Tour.Adult @Localizer["Adult"] </h3>
+                                <h3 class="text-16-b">@Model.OrderSuccessInforDto.Tour.Children @Localizer["Children"] </h3>
+                                <h3 class="text-16-b">@Model.OrderSuccessInforDto.Tour.Infant @Localizer["Infant"] </h3>
+
+
+                                    @*<div class="sub-title grid-list-region">
+                                        <a href="#">
+                                            <span><i class="fa-solid fa-location-dot"></i></span>
+                                            <span> @Model.ListOrderDetails.FirstOrDefault().Tours.Locations</span>
+                                            <span class="more-map">@Localizer["On map"]</span>
+                                        </a>
+                                    </div>*@
+                                </div>
+                                <div class="col-xxl-2 col-xl-2 col-lg-2 col-12 ">
+                                    <div class="qr-wrapper">
+                                        <div class="demo-section">
+                                            <div id="qrUrl"></div>
+                                            <p><i>Lưu lại mã QRcode này để xác nhận đặt tour thành công.</i></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="booking-date pd-30">
+                            <div class="check-in2">
+                                <a class="text-14">@Localizer["Departure date"]</a>
+                            <div class="text-16-b">@Model.OrderSuccessInforDto.Tour.StartDate</div>
+                                <div class="text-14-gray">@Localizer["Departure time"] - 08:00</div>
+                            </div>
+                            <div class="line-vetical"></div>
+                            <div class="check-out2">
+                                <a class="text-14">@Localizer["Place to go"]</a>
+                            <div class="text-16-b">@Model.OrderSuccessInforDto.Tour.ProvinceFrom</div>
+                            </div>
+                            <div class="line-vetical"></div>
+                            <div class="night-sleeps2">
+                                <a class="text-14">@Localizer["Number of nights"]</a>
+                            <div class="text-16-b">@Model.OrderSuccessInforDto.Tour.TourStyle</div>
+                            </div>
+                        </div>
+                        <div class="tour-booking-select-parent">
+                            <div class="tour-booking-select">
+                                <a class="text-14">@Localizer["Tour of your choice"]</a>
+                            <div class="text-16-b">@Model.OrderSuccessInforDto.Tour.TourName</div>
+                            </div>
+@*                            <div class="tour-bk-date-room">
+                                <div class="text-14-gray">@Model.ListOrderDetails.FirstOrDefault().Tours.</div>
+                                <div class="text-14-gray">2 @Localizer["Room"], 4 @Localizer["Passenger"] (@Localizer["Includes 2 Adults and 2 Children"])</div>
+                            </div>*@
+                        </div>
+                    </div>
+                    <div class="mt-30 mb-20 bk-user-info">
+                        <div class="text-16-b">@Localizer["Contact Info"]</div>
+                        <div class="bk-phone-email">
+                            <div class="text-14-b">SGO Travel</div>
+                            <div class="text-14"> @Localizer["Hotline"]: 0926.50.60.68</div>
+                            <div class="text-14"> @Localizer["Email"]: lienhe@sgogroup.net</div>
+                            <div class="text-14"> @Localizer["Address"]: @Localizer["2nd floor, CT4 Building, The Pride, New Urban Area, An Hung, Ha Dong, Hanoi"]</div>
+                        </div>
+                        @*<div class="mt-10 pl-20 guest-info-room">
+                            <div class="text-14">Thông tin khách hàng 1:</div>
+                            <div class="tour-bk-guest mb-10">
+                                <div>@Localizer["Fullname"]: <span class="text-14-b">Nguyễn Văn Anh</span></div>
+                                <div>@Localizer["Sex"]: <span class="text-14-b">@Localizer["Male"]</span></div>
+                                <div>@Localizer["Date of birth"]: <span class="text-14-b">28 Tháng 8, 1990</span></div>
+                            </div>
+                            <hr>
+                            <div class="text-14 mt-10">Thông tin khách hàng 2:</div>
+                            <div class="tour-bk-guest mb-10">
+                                <div>@Localizer["Fullname"]: <span class="text-14-b">Nguyễn Văn Anh</span></div>
+                                <div>@Localizer["Sex"]: <span class="text-14-b">@Localizer["Male"]</span></div>
+                                <div>@Localizer["Date of birth"]: <span class="text-14-b">28 Tháng 8, 1990</span></div>
+                            </div>
+                            <hr>
+                            <div class="text-14 mt-10">Thông tin khách hàng 3:</div>
+                            <div class="tour-bk-guest mb-10">
+                                <div>@Localizer["Fullname"]: <span class="text-14-b">Nguyễn Văn Anh</span></div>
+                                <div>@Localizer["Sex"]: <span class="text-14-b">@Localizer["Male"]</span></div>
+                                <div>@Localizer["Date of birth"]: <span class="text-14-b">28 Tháng 8, 1990</span></div>
+                            </div>
+                            <hr>
+                            <div class="text-14 mt-10">Thông tin khách hàng 4:</div>
+                            <div class="tour-bk-guest mb-10">
+                                <div>@Localizer["Fullname"]: <span class="text-14-b">Nguyễn Văn Anh</span></div>
+                                <div>@Localizer["Sex"]: <span class="text-14-b">@Localizer["Male"]</span></div>
+                                <div>@Localizer["Date of birth"]: <span class="text-14-b">28 Tháng 8, 1990</span></div>
+                            </div>
+                            <hr>
+                            <div class="text-14 mt-10">Thông tin khách hàng 5:</div>
+                            <div class="tour-bk-guest mb-10">
+                                <div>@Localizer["Fullname"]: <span class="text-14-b">Nguyễn Văn Anh</span></div>
+                                <div>@Localizer["Sex"]: <span class="text-14-b">@Localizer["Male"]</span></div>
+                                <div>@Localizer["Date of birth"]: <span class="text-14-b">28 Tháng 8, 1990</span></div>
+                            </div>
+                        </div>*@
+                    </div>
+                    @*<div class="btn-footer d-flex">
+                    <button class="pd-15 btn-print"><i class="fa-solid fa-print"></i>@Localizer["Print"]</button>
+                    <button class="pd-15 btn-continue"><i class="fa-solid fa-arrow-trend-up"></i>@Localizer["Continue booking"]</button>
+                    <button class="pd-15 btn-gray"><i class="fa-solid fa-arrow-right-to-bracket"></i>Demo</button>
+                    </div>*@
+                </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#qrUrl").kendoQRCode({
+            value: "https://gostay.realtech.com.vn/Orders/Order/@Model.OrderSuccessInforDto.Id",
+            errorCorrection: "M",
+            size: 120,
+            border: {
+                color: "#000000",
+                width: 5
+            }
+        });
+        orderSuccess();
+    });
+
+</script>
+
+<style>
+    .demo-section {
+        display: inline-block;
+        margin: 15px 30px 15px 0;
+    }
+
+    .k-qrcode {
+        display: inline-block;
+        margin: 10px 0 0;
+        border: none;
+    }
+</style>
+
+
+

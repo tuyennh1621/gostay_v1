@@ -1,0 +1,48 @@
+﻿@using GoStay.Common.Configuration;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using GoStay.Web.Model
+@model byte;
+@{
+    string strActive = "";
+    AppConfigs.acvivemenu = 2;
+    LocalizedHtmlString[] labelstatus = { Localizer["Booking"], Localizer["Information"], Localizer["Payment"] };
+}
+<section class="step-header sticky3">
+    <div class="container">
+        <div class="step">
+            <div class="step-by-step">
+                <div class="d-flex justify-between">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        if (i <= Model - 1)
+                        {
+                            strActive = "active";
+                        }
+                        else
+                        {
+                            strActive = "";
+                        }
+                        <div>
+                            <a href="#" class="step1 @strActive w-300px">
+                                <div class="step11 @strActive">
+                                    <i class="fa-solid fa-check @strActive"></i>
+                                    <p class="@strActive">@labelstatus[i]</p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    
+                </div>
+            </div>
+        </div>
+        <div class="step-hidden text-align-center">
+            <a title="" href="#" class="step1 w-300px">
+                <div class="step11 active">
+                    <i class="fa-solid fa-check active"></i>
+                    <p class="active">@labelstatus[Model-1]</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>

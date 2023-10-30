@@ -1,0 +1,382 @@
+﻿@using DAL.Helpers.PageHelpers;
+@using GoStay.Common.Configuration
+@using GoStay.DataAccess.Entities
+@using GoStay.DataDto.OrderDto
+@using GoStay.Service
+@using GoStay.Common
+@using goStayCore.CommonCode
+@model ViewModel<OrderSearchOutDto>
+
+@{
+    ViewData["Title"] = "Order List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+
+</head>
+
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: rebeccapurple;
+        color: white;
+    }
+
+    {
+        box-sizing: border-box;
+    }
+
+    /* Button used to open the contact form - fixed at the bottom of the page */
+    .open-button {
+        background-color: #555;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+        position: fixed;
+        bottom: 23px;
+        right: 28px;
+        width: 280px;
+    }
+
+    /* The popup form - hidden by default */
+    .form-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        border: 3px solid #f1f1f1;
+        z-index: 9;
+    }
+
+    /* Add styles to the form container */
+    .form-container {
+        max-width: 300px;
+        padding: 10px;
+        background-color: white;
+    }
+
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+            /* When the inputs get focus, do something */
+            .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+                background-color: #ddd;
+                outline: none;
+            }
+
+        /* Set a style for the submit/login button */
+        .form-container .btn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+            background-color: red;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+</style>
+<!-- Page Title
+============================================= -->
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "Order" })
+<!-- #page-title end -->
+<!-- Content
+============================================= -->
+<body>
+    <section id="content">
+
+        <div class="content-wrap pb-0">
+
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <!--error message section starts here-->
+                    <div class="col-lg-12 " style="padding-bottom: 28px;">
+                        <div class="card p-3 bg-light">
+                            <div class="car-body">
+
+
+                                <form method="get" class="row" asp-area="Admin" asp-controller="HotelHome" asp-action="HotelList" id="search_form" enctype="multipart/form-data">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="userid">User Id</label>
+                                        <input type="text" id="userid" tabindex="2" class="form-control input-sm  valid" value="" aria-invalid="false">
+
+                                    </div>
+
+                                    @*<div class="col-md-3 form-group">
+                                        <label for="email">Email</label>
+                                        <input type="text" id="email" tabindex="2" class="form-control input-sm  valid" value="" aria-invalid="false">
+
+                                    </div>*@
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="phone">Số Điện Thoại</label>
+                                        <input type="text" id="phone" tabindex="2" class="form-control input-sm  valid" value="" aria-invalid="false">
+
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="ordercode">Order Code</label>
+                                        <input type="text" id="ordercode" tabindex="2" class="form-control input-sm  valid" value="" aria-invalid="false">
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="status">Trạng Thái</label>
+                                        <select class="box-on-stock-option-region headerLeft_select" id="status">
+                                            <option value="">Tất cả</option>
+                                            <option value="1">Đang chờ xác nhận</option>
+                                            <option value="2">Xac nhan thong tin dat phong</option>
+                                            <option value="3">Xác dat phong thanh cong</option>
+                                            <option value="4">Da check in</option>
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="style">Kiểu Order</label>
+                                        <select class="box-on-stock-option-region headerLeft_select" id="style">
+                                            <option value="">Tất cả</option>
+                                            <option value="1">Order Hotel</option>
+                                            <option value="2">Order Tour</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input-date">
+                                        <label for="startdate">Từ ngày</label>
+                                        <input type="date" id="startdate" tabindex="2" class="form-control input-sm  valid" value="" aria-invalid="false">
+                                    </div>
+
+                                    <div class="input-date">
+                                        <label for="enddate">Đến ngày</label>
+                                        <input type="date" id="enddate" tabindex="2" class="form-control input-sm  valid" value="" aria-invalid="false">
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <br />
+                                        <button type="button" tabindex="3" onclick="SubmitSearch(@Model.PageSize.ToString(), @Model.PageIndex.ToString());" class="button button-3d button-rounded gradient-blue-green"><i class="icon-search"></i> Search</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="special-div-less-margin">
+                    </div>
+                    <div class="postcontent col-lg-12" id="MainDataSection">
+                        @await Html.PartialAsync("~/Areas/Admin/Views/OrderHome/OrderListPartial.cshtml", Model)
+                    </div><!-- .postcontent end -->
+                </div>
+            </div>
+        </div>
+    </section><!-- #content end -->
+    <div class="modal fade" id="UserInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="ShowUserInfo">User Infor</h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-body">
+
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="userName">User Name</label>
+                        </div>
+                        <div class="overwrite-class col-12 form-group">
+                            <textarea style="width:100%" id="userName" name="UserName"></textarea>
+                        </div>
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="email">Email</label>
+                        </div>
+
+                        <div class="overwrite-class col-12 form-group">
+                            <textarea style="width:100%" id="email" name="Email"></textarea>
+                        </div>
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="address">Địa chỉ</label>
+                        </div>
+
+                        <div class="overwrite-class col-12 form-group">
+                            <textarea style="width:100%" id="address" name="Address"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+@section scripts{
+
+    <!--Following two scripts are for ajax begin form and other ajax calls-->
+
+
+    <script>
+
+
+        function SubmitSearch(_pageSize, _pageIndex) {
+
+            var userid = document.getElementById("userid").value;
+            var ordercode = document.getElementById("ordercode").value;
+            var startdate = document.getElementById("startdate").value;
+            var enddate = document.getElementById("enddate").value;
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+            var status = document.getElementById("status").value;
+            var style = document.getElementById("style").value;
+            var pageSize = _pageSize;
+            var pageIndex = _pageIndex;
+
+            var Url = '@Url.Action("OrderListPartial","OrderHome", new { area="Admin"})';
+
+            showSearchLoader();
+            var Search = {
+                UserId: userid,
+                OrderCode: ordercode,
+                StartDate: startdate,
+                EndDate: enddate,
+                Email: email,
+                Phone: phone,
+                Status: status,
+                Style: style,
+                PageSize: pageSize,
+                PageIndex: pageIndex
+            }
+            debugger;
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: {
+                    "orderSearch": JSON.stringify(Search),
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#MainDataSection').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+
+
+        function GetUserInfo(Id) {
+            debugger
+            var Url = '@Url.Action("GetUserInfo", "OrderHome", new { area="Admin"})';
+
+            $.ajax({
+                type: "GET",
+                traditional: true,
+                data:
+                {
+                    IdUser: Id
+                },
+                url: Url,
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#ShowUserInfo').html(data);
+
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+
+    </script>
+}

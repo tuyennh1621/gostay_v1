@@ -1,0 +1,359 @@
+﻿<rewrite>
+	<rules>
+		<!--<rule name='Khach san ' stopProcessing='true'>
+			<match url='^khach-san' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=0' appendQueryString='false'/>
+		</rule>-->
+		<rule name='Khach san ha-noi' stopProcessing='true'>
+			<match url='^khach-san/ha-noi' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=5' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san tp-hcm' stopProcessing='true'>
+			<match url='^khach-san/tp-ho-chi-minh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=6' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san dak-lak' stopProcessing='true'>
+			<match url='^khach-san/dak-lak' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=8' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san an-giang' stopProcessing='true'>
+			<match url='^khach-san/an-giang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=9' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san binh-duong' stopProcessing='true'>
+			<match url='^khach-san/binh-duong' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=10' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san bac-lieu' stopProcessing='true'>
+			<match url='^khach-san/bac-lieu' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=11' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san bac-ninh' stopProcessing='true'>
+			<match url='^khach-san/bac-ninh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=12' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san can-tho' stopProcessing='true'>
+			<match url='^khach-san/can-tho' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=13' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ha-giang' stopProcessing='true'>
+			<match url='^khach-san/ha-giang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=14' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san hung-yen' stopProcessing='true'>
+			<match url='^khach-san/hung-yen' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=16' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san kontum' stopProcessing='true'>
+			<match url='^khach-san/kontum' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=17' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san lang-son' stopProcessing='true'>
+			<match url='^khach-san/lang-son' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=18' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san nam-dinh' stopProcessing='true'>
+			<match url='^khach-san/nam-dinh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=20' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san quang-binh' stopProcessing='true'>
+			<match url='^khach-san/quang-binh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=22' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san quang-ninh' stopProcessing='true'>
+			<match url='^khach-san/quang-ninh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=23' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san son-la' stopProcessing='true'>
+			<match url='^khach-san/son-la' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=24' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san thai-nguyen' stopProcessing='true'>
+			<match url='^khach-san/thai-nguyen' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=25' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san tien-giang' stopProcessing='true'>
+			<match url='^khach-san/tien-giang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=26' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san vinh-long' stopProcessing='true'>
+			<match url='^khach-san/vinh-long' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=27' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san da-nang' stopProcessing='true'>
+			<match url='^khach-san/da-nang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=28' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san dong-thap' stopProcessing='true'>
+			<match url='^khach-san/dong-thap' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=29' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san binh-dinh' stopProcessing='true'>
+			<match url='^khach-san/binh-dinh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=30' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san binh-thuan' stopProcessing='true'>
+			<match url='^khach-san/binh-thuan' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=31' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san bac-giang' stopProcessing='true'>
+			<match url='^khach-san/bac-giang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=32' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ca-mau' stopProcessing='true'>
+			<match url='^khach-san/ca-mau' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=33' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san gia-lai' stopProcessing='true'>
+			<match url='^khach-san/gia-lai' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=34' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ha-nam' stopProcessing='true'>
+			<match url='^khach-san/ha-nam' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=35' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san hoa-binh' stopProcessing='true'>
+			<match url='^khach-san/hoa-binh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=36' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san hai-phong' stopProcessing='true'>
+			<match url='^khach-san/hai-phong' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=37' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san kien-giang' stopProcessing='true'>
+			<match url='^khach-san/kien-giang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=38' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Khach san phu quoc kien-giang' stopProcessing='true'>
+			<match url='^khach-san/kien-giang/huyen-phu-quoc' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=38&amp;Quans=423' appendQueryString='false'/>
+		</rule>
+		
+		<rule name='Khach san lam-dong' stopProcessing='true'>
+			<match url='^khach-san/lam-dong' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=39' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san long-an' stopProcessing='true'>
+			<match url='^khach-san/long-an' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=40' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ninh-binh' stopProcessing='true'>
+			<match url='^khach-san/ninh-binh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=41' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san phu-yen' stopProcessing='true'>
+			<match url='^khach-san/phu-yen' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=42' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san quang-ngai' stopProcessing='true'>
+			<match url='^khach-san/quang-ngai' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=43' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san soc-trang' stopProcessing='true'>
+			<match url='^khach-san/soc-trang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=44' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san thai-binh' stopProcessing='true'>
+			<match url='^khach-san/thai-binh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=45' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san thanh-hoa' stopProcessing='true'>
+			<match url='^khach-san/thanh-hoa' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=46' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san tuyen-quang' stopProcessing='true'>
+			<match url='^khach-san/tuyen-quang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=47' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san yen-bai' stopProcessing='true'>
+			<match url='^khach-san/yen-bai' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=48' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san dong-nai' stopProcessing='true'>
+			<match url='^khach-san/dong-nai' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=49' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ba-ria-vung-tau' stopProcessing='true'>
+			<match url='^khach-san/ba-ria-vung-tau' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=50' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san binh-phuoc' stopProcessing='true'>
+			<match url='^khach-san/binh-phuoc' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=51' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san bac-kan' stopProcessing='true'>
+			<match url='^khach-san/bac-kan' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=52' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ben-tre' stopProcessing='true'>
+			<match url='^khach-san/ben-tre' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=53' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san cao-bang' stopProcessing='true'>
+			<match url='^khach-san/cao-bang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=54' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ha-tinh' stopProcessing='true'>
+			<match url='^khach-san/ha-tinh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=55' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san hai-duong' stopProcessing='true'>
+			<match url='^khach-san/hai-duong' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=56' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san khanh-hoa' stopProcessing='true'>
+			<match url='^khach-san/khanh-hoa' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=57' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san lao-cai' stopProcessing='true'>
+			<match url='^khach-san/lao-cai' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=58' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san lai-chau' stopProcessing='true'>
+			<match url='^khach-san/lai-chau' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=59' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san nghe-an' stopProcessing='true'>
+			<match url='^khach-san/nghe-an' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=60' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san phu-tho' stopProcessing='true'>
+			<match url='^khach-san/phu-tho' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=61' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san quang-nam' stopProcessing='true'>
+			<match url='^khach-san/quang-nam' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=62' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san quang-tri' stopProcessing='true'>
+			<match url='^khach-san/quang-tri' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=63' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san tay-ninh' stopProcessing='true'>
+			<match url='^khach-san/tay-ninh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=64' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san hue' stopProcessing='true'>
+			<match url='^khach-san/hue' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=65' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san tra-vinh' stopProcessing='true'>
+			<match url='^khach-san/tra-vinh' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=66' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san vinh-phuc' stopProcessing='true'>
+			<match url='^khach-san/vinh-phuc' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=67' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san ninh-thuan' stopProcessing='true'>
+			<match url='^khach-san/ninh-thuan' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=68' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san viet-nam' stopProcessing='true'>
+			<match url='^khach-san/viet-nam' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=0' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san hau-giang' stopProcessing='true'>
+			<match url='^khach-san/hau-giang' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=70' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san dien-bien' stopProcessing='true'>
+			<match url='^khach-san/dien-bien' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=71' appendQueryString='false'/>
+		</rule>
+		<rule name='Khach san dak-nong' stopProcessing='true'>
+			<match url='^khach-san/dak-nong' />
+			<action type='Rewrite' url='Hotels?IdTinhthanh=72' appendQueryString='false'/>
+		</rule>
+		
+		<!--News-->
+		<rule name='Van hoa le hoi' stopProcessing='true'>
+			<match url='^danh-muc-tin/van-hoa-le-hoi' />
+			<action type='Rewrite' url='danh-muc-tin/idCategory=1' appendQueryString='false'/>
+		</rule>
+		<rule name='am-thuc-ba-mien' stopProcessing='true'>
+			<match url='^danh-muc-tin/am-thuc-ba-mien' />
+			<action type='Rewrite' url='danh-muc-tin/idCategory=2' appendQueryString='false'/>
+		</rule>
+		<rule name='van-hoa-phong-tuc' stopProcessing='true'>
+			<match url='^danh-muc-tin/van-hoa-phong-tuc' />
+			<action type='Rewrite' url='danh-muc-tin/idCategory=3' appendQueryString='false'/>
+		</rule>
+		<rule name='phong-su-anh' stopProcessing='true'>
+			<match url='^danh-muc-tin/phong-su-anh' />
+			<action type='Rewrite' url='danh-muc-tin/idCategory=4' appendQueryString='false'/>
+		</rule>
+		<rule name='tin-khuyen-ma' stopProcessing='true'>
+			<match url='^danh-muc-tin/tin-khuyen-mai' />
+			<action type='Rewrite' url='danh-muc-tin/idCategory=5' appendQueryString='false'/>
+		</rule>
+		<rule name='tin-tuc-du-lich' stopProcessing='true'>
+			<match url='^danh-muc-tin/tin-tuc-du-lich' />
+			<action type='Rewrite' url='danh-muc-tin/idCategory=6' appendQueryString='false'/>
+		</rule>
+		
+		<!--Tour-->
+
+		<rule name='Tour kien-giang' stopProcessing='true'>
+			<match url='^tours/kien-giang' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=38' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour khanh-hoa' stopProcessing='true'>
+			<match url='^tours/khanh-hoa' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=57' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour binh-thuan' stopProcessing='true'>
+			<match url='^tours/binh-thuan' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=31' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour binh-dinh' stopProcessing='true'>
+			<match url='^tours/binh-dinh' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=30' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour ha-noi' stopProcessing='true'>
+			<match url='^tours/ha-noi' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=5' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour da-nang' stopProcessing='true'>
+			<match url='^tours/da-nang' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=28' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour lam-dong' stopProcessing='true'>
+			<match url='^tours/lam-dong' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=39' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour ninh-binh' stopProcessing='true'>
+			<match url='^tours/ninh-binh' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=41' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour lao-cai' stopProcessing='true'>
+			<match url='^tours/lao-cai' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=58' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour quang-ninh' stopProcessing='true'>
+			<match url='^tours/quang-ninh' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=23' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour son-la' stopProcessing='true'>
+			<match url='^tours/son-la' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=24' appendQueryString='false'/>
+		</rule>
+
+		<rule name='Tour hue' stopProcessing='true'>
+			<match url='^tours/hue' />
+			<action type='Rewrite' url='Tours?IdProvinceTo=65' appendQueryString='false'/>
+		</rule>
+		
+	</rules>
+</rewrite>

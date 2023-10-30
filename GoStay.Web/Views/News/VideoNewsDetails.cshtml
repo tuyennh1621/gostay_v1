@@ -1,0 +1,473 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Web.Master;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var count = (Model.AllVideo.Data.Count > 0) ? Model.AllVideo.Data.Count : 0;
+    var listCate = ViewBag.GetTotalByCate ;
+    var j = 0;
+    var num1 = ConvertData.ConvertNumberClick(Model.VideoNewsDetail.Data.Click);
+}
+<!-- Breadcrumns -->
+<div class="breadcrumns pt-95">
+    <div class="container">
+        <div class="breadcrumns-1 mt-20 mb-30">
+            <div class="row">
+                <div class="col-auto br-parent">
+                    <div class="">
+                        <a href="/">@Localizer["Home"]</a>
+                    </div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">
+                        <a href="/tin-tuc" class="color-primary">@Localizer["News"]</a>
+                    </div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">
+                        <a href="/video" class="color-primary">@Localizer["Video"]</a>
+                    </div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">
+                        <a href="#" class="color-primary" id="cate-title">@Model.VideoNewsDetail.Data.Title</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumns -->
+<!-- Video Pages -->
+<div class="videos-page">
+    <div class="container">
+        <div class="row mt-100">
+            <div class="main-videos mb-100 col-xxl-9 col-xl-9 col-12">
+                <video class="mb-20 w-100" controls="" autoplay=""><source src="@Model.VideoNewsDetail.Data.Video" type="video/mp4"></video>
+                <h1>@Model.VideoNewsDetail.Data.Title</h1>
+                <div class="avatar d-flex align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="@Model.VideoNewsDetail.Data.Avatar" title="@Model.VideoNewsDetail.Data.UserName" />
+
+                        <div class="avatar-info">
+                            <h3>@Model.VideoNewsDetail.Data.UserName</h3>
+                            <p>@Localizer["Administrators"]</p>
+                        </div>
+                    </div>
+                    @*<a href="https://www.facebook.com/sharer/sharer.php?u=@Context.Request.Host@Context.Request.Path" target="_blank" title="Chia sẻ" class="btn-share">
+                        <i class="fa-solid fa-share"></i> Chia sẻ
+                    </a>*@
+                    <div class="d-flex align-items-center gap-10">
+                        <button type="button" class="count-view border-none" data-bs-toggle="tooltip" data-bs-placement="top" title="@num1 lượt xem" data-bs-custom-class="custom-tooltip">
+                            <p class="text-14-primary">@num1</p>
+                            <p>lượt xem</p>
+                        </button>
+                        <div class="blog-social-share mt-0">
+                            <p>@Localizer["Share"]:</p>
+                            <div class="social-share-btn">
+                                <a class="fb-button-share" href="https://www.facebook.com/sharer/sharer.php?u=https://@Context.Request.Host@Context.Request.Path" title="@Localizer["Share on Facebook"]" target="_blank">
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                </a>
+                                <a class="linkedin-button-share" href="https://www.linkedin.com/shareArticle?mini=true&url=https://@Context.Request.Host@Context.Request.Path&title=@Model.VideoNewsDetail.Data.Title&summary=&source=" title="@Localizer["Share on Linkedin"]" target="_blank">
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </a>
+                                <a class="twitter-button-share" href="http://twitter.com/share?text=@Model.VideoNewsDetail.Data.Title&url=https://@Context.Request.Host@Context.Request.Path" title="@Localizer["Share on Twitter"]" target="_blank">
+                                    <i class="fa-brands fa-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="main-video-info">
+                    @Html.Raw(Model.VideoNewsDetail.Data.Descriptions)
+                   @* <p class="mt-20">Facebook: <a href="#" class="color-primary">https://www.facebook.com/Muppets</a></p>
+                    <p>Twitter: <a href="#" class="color-ssprimary">https://www.facebook.com/Muppets</a></p>
+                    <p>Tumblr: <a href="#" class="color-primary">https://www.facebook.com/Muppets</a></p>
+                    <p>Instagram: <a href="#" class="color-primary">https://www.facebook.com/Muppets</a></p>*@
+                </div>
+               @* <div class="count-sort-by d-flex gap-10">
+                    <p>8,077 Comments</p>
+                    <div class="drop-down">
+                        <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-arrow-up-wide-short"></i>
+                            <span>Sắp xếp theo</span>
+                        </div>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Mới nhất</a></li>
+                            <li><a class="dropdown-item" href="#">Bình luận hàng đầu</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="user-comment">
+                    <div class="write-comment mb-30">
+                        <img src="assets/images/avatar/author-2.jpg" />
+                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Viết đánh giá của bạn...">
+                        <button class="btn-send1">Gửi đánh giá</button>
+                    </div>
+                    <div class="user-comment-child mb-20 d-flex">
+                        <img src="assets/images/avatar/author-3.jpg" />
+                        <div class="user-comment-child-info">
+                            <div class="user-comment-child-title">
+                                <button>SGO Travel</button>
+                                <span>1 năm trước</span>
+                            </div>
+                            <div class="user-comment-content">
+                                Bài hát viết về cuộc đời của người phụ nữ thật hay và ý nghĩa . Nghe đi nghe lại mà thấy thấm ❤️❤️ . Nhiều ca sĩ đã thể hiện bài hát này nhưng mình thấy Phương Ý là người duy nhất thể hiện có hồn và đúng với tâm trạng của người phụ nữ
+                            </div>
+                            <div class="accordion3" id="accordionExample">
+                                <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    <i class="fa-solid fa-reply"></i>
+                                    Trả lời
+                                </button>
+                                <button class="btn-more-reply pl-10" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <i class="fa-solid fa-angle-down"></i>
+                                    1 Phản hồi
+                                </button>
+                                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                        <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseOne">Hủy</a>
+                                        <button class="btn-send mt-10">Gửi đi</button>
+                                    </div>
+                                </div>
+                                <div id="collapseTwo" class="accordion-collapse collapse mt-10" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="user-comment-child d-flex">
+                                            <img src="https://img.freepik.com/free-photo/beauty-woman-asian-cute-girl-feel-happy-holding-flower-red-rose-white-rose-pink-background_1150-10225.jpg?w=1380&t=st=1681870758~exp=1681871358~hmac=06b326096eaf86511c89fe6dc78cbb8696296a4435b2a511fb2132999401373f" />
+                                            <div class="user-comment-child-info">
+                                                <div class="user-comment-child-title d-flex align-items-center">
+                                                    <a>Nguyễn Thị Mộng Mơ</a>
+                                                    <div class="vertical-line"></div>
+                                                    <span>3 tháng trước</span>
+                                                </div>
+                                                <div class="user-comment-content">
+                                                    Cố gắng lên đừng gục ngã, đôi khi cuộc sống có đôi chút áp lực, đôi chút bất công thôi mà. Cứ sống thật tốt trời xanh tự khắc an bài...!!!!
+                                                </div>
+                                                <div class="accordion3" id="accordionExample1">
+                                                    <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                        <i class="fa-solid fa-reply"></i>
+                                                        Trả lời
+                                                    </button>
+                                                </div>
+                                                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
+                                                    <div class="accordion-body">
+                                                        <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                                        <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseThree">Hủy</a>
+                                                        <button class="btn-send mt-10">Gửi đi</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-comment-child mb-20 d-flex">
+                        <img src="https://img.freepik.com/free-photo/beautiful-attractive-elegance-asian-woman-blue-dress-hand-touch-face-model-pose-studio-photo-shoot-isolate-white-background_609648-1705.jpg?w=1380&t=st=1681873129~exp=1681873729~hmac=70a48c7ff6df3d657bcb37f0437b47a9c9bfa860fa30701a8c73970c6244a693" />
+                        <div class="user-comment-child-info">
+                            <div class="user-comment-child-title d-flex align-items-center">
+                                <a>Nông Thị Diệu Hằng</a>
+                                <div class="vertical-line"></div>
+                                <span>1 ngày trước</span>
+                            </div>
+                            <div class="user-comment-content">
+                                Bằng giọng hát thật trầm ấm, êm nhẹ và sâu lắng, với lối diễn đạt thơ mộng trong khung cảnh thính phòng, Phương Ý đã mang nhạc phẩm này lên một tầng cao nghệ thuật khác biệt rất tuyệt vời.
+                            </div>
+                            <div class="accordion3" id="accordionExample1">
+                                <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    <i class="fa-solid fa-reply"></i>
+                                    Trả lời
+                                </button>
+                            </div>
+                            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample1">
+                                <div class="accordion-body">
+                                    <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                    <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseFive">Hủy</a>
+                                    <button class="btn-send mt-10">Gửi đi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-comment-child mb-20 d-flex">
+                        <img src="https://img.freepik.com/free-photo/girl-smelling-flowers-standing-street_1304-4185.jpg?w=1060&t=st=1681873519~exp=1681874119~hmac=33f83f11e500d09a52cdb04b62d7cca008a78eba0cac17651f18731b087c3e4d" />
+                        <div class="user-comment-child-info">
+                            <div class="user-comment-child-title d-flex align-items-center">
+                                <a>Tống Thị Ngọc Hường</a>
+                                <div class="vertical-line"></div>
+                                <span>2 ngày trước</span>
+                            </div>
+                            <div class="user-comment-content">
+                                Hay ! Càng nghe càng cuống ... giọng hát đặc biệt ko lẩn vào đâu được
+                                <div class="accordion3" id="accordionExample2">
+                                    <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                        <i class="fa-solid fa-reply"></i>
+                                        Trả lời
+                                    </button>
+                                </div>
+                                <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+                                    <div class="accordion-body">
+                                        <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                        <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseFour">Hủy</a>
+                                        <button class="btn-send mt-10">Gửi đi</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-comment-child mb-20 d-flex">
+                        <img src="https://img.freepik.com/free-photo/joyful-korean-woman-posing-with-hand-hip-studio-shot-stunning-asian-young-lady-playing-with-curly-hair_197531-14619.jpg?w=1380&t=st=1681898214~exp=1681898814~hmac=66f7b77db00e03b4609a45e06bacb932ed6169fba40152aa67d83b22a02eab09" />
+                        <div class="user-comment-child-info">
+                            <div class="user-comment-child-title d-flex align-items-center">
+                                <a>Giáp Thị Ngọc Lý</a>
+                                <div class="vertical-line"></div>
+                                <span>2 ngày trước</span>
+                            </div>
+                            <div class="user-comment-content">
+                                Một bản nhạc thật sâu lắng. Chúc chị thành công với MV này. Em chưa bao giờ bỏ qua một ca khúc nào của chị.
+                                <div class="accordion3" id="accordionExample2">
+                                    <button class="reply" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                        <i class="fa-solid fa-reply"></i>
+                                        Trả lời
+                                    </button>
+                                </div>
+                                <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+                                    <div class="accordion-body">
+                                        <input type="email" class="form-control mt-10" placeholder="Phản hồi của bạn...">
+                                        <a class="mt-10 text-12" data-bs-toggle="collapse" data-bs-target="#collapseSix">Hủy</a>
+                                        <button class="btn-send mt-10">Gửi đi</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>*@
+            </div>
+            <div class="col-xxl-3 col-xl-3 col-12">
+                <div class="tab-related">
+                    <a class="tablinks1" onclick="TabComment(event, 'TabAll')" data-category-video="0" data-id-tab="TabAll" data-category-index="2">
+                        @Localizer["All"]
+                    </a>
+                    @foreach (var item in listCate)
+                    {
+                        <a class="tablinks1" onclick="TabComment(event, 'tab-@item.Slug')" data-category-video="@item.Id" data-id-tab="tab-@item.Slug" data-category-index="2">
+                            @item.Category
+                        </a>
+                    }
+                </div>
+                @if (count> 0)
+                {
+                    <div id="TabAll" class="tabcontent2">
+                        <div class="add-more-video"> 
+                            @for (var i = 0; i < 10 && i < count; i++)
+                            {
+                                var num = ConvertData.ConvertNumberClick(Model.AllVideo.Data[i].Click);
+                                <div class="row mb-10" data-video-active="@Model.AllVideo.Data[i].Id">
+                                    <div class="col-5">
+                                        <div class="relate-video">
+                                            <a href="/video/@Model.AllVideo.Data[i].Id/@Model.AllVideo.Data[i].Slug"><img src="@Model.AllVideo.Data[i].PictureTitle" alt="@Model.AllVideo.Data[i].Title"></a>
+                                            @*<div class="relate-video-time">
+                                                6:30
+                                            </div>*@
+                                        </div>
+                                    </div>
+                                    <div class="col-7">
+                                        <div class="relate-video-title mt-10">
+                                            <a href="/video/@Model.AllVideo.Data[i].Id/@Model.AllVideo.Data[i].Slug" title="@Model.AllVideo.Data[i].Title">@Model.AllVideo.Data[i].Title</a>
+                                        </div>
+                                        <div class="relate-video-user">
+                                            <a href="#">@Model.AllVideo.Data[i].UserName</a>
+                                        </div>
+                                        <div class="relate-video-date text-12">
+                                            @num | lượt xem
+                                            <i class="fa-regular fa-clock"></i>
+                                            @Model.AllVideo.Data[i].DateCreate.ToString("dd/MM/yyyy")
+                                        </div>
+                                    </div>
+                                </div>
+                            } 
+                        </div>
+                        @if(count == 10)
+                        {
+                            <button class="more-video" onclick="getMoreVideoNews('/News/GetListVideo', 'TabAll')">@Localizer["See more"]</button>
+                        }
+                        
+                    </div>
+                    @foreach (var item in listCate)
+                    {
+                        <div id="tab-@item.Slug" class="tabcontent2">
+                            <div class="add-more-video">
+                                @for(var i = 0 ; i < count ; i++)
+                                {
+                                    @if (item.Id == Model.AllVideo.Data[i].IdCategory)
+                                    {
+                                        j++;
+                                        var num = ConvertData.ConvertNumberClick(Model.AllVideo.Data[i].Click);
+                                        <div class="row mb-10" data-video-active="@Model.AllVideo.Data[i].Id">
+                                            <div class="col-5">
+                                                <div class="relate-video">
+                                                    <a href="/video/@Model.AllVideo.Data[i].Id/@Model.AllVideo.Data[i].Slug" title="@Model.AllVideo.Data[i].Title"><img src="@Model.AllVideo.Data[i].PictureTitle" alt="@Model.AllVideo.Data[i].Title"></a>
+                                                    @*<div class="relate-video-time">
+                                                        6:30
+                                                    </div>*@
+                                                </div>
+                                            </div>
+                                            <div class="col-7">
+                                                <div class="relate-video-title mt-10">
+                                                    <a href="/video/@Model.AllVideo.Data[i].Id/@Model.AllVideo.Data[i].Slug" title="@Model.AllVideo.Data[i].Title">@Model.AllVideo.Data[i].Title</a>
+                                                </div>
+                                                <div class="relate-video-user">
+                                                    <a href="#">@Model.AllVideo.Data[i].UserName</a>
+                                                </div>
+                                                <div class="relate-video-date text-12">
+                                                    @num | lượt xem
+                                                    <i class="fa-regular fa-clock"></i>
+                                                    @Model.AllVideo.Data[i].DateCreate.ToString("dd/MM/yyyy")
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    if (j == 10)
+                                    {
+                                        break;
+                                    }
+                                    
+                                }
+                            </div>
+                            @if( j == 10)
+                            {
+                                j = 0;
+                                <button class="more-video" onclick="getMoreVideoNews('/News/GetListVideo', 'tab-@item.Slug')">@Localizer["See more"]</button>
+                            }
+                            else{
+                                j = 0;
+
+                                }
+
+                        </div>
+                        
+                    }
+                }
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Pages -->
+<!-- Start Newsletter Area -->
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml")
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('.videos-page a.tablinks1').click(function () {
+                let val = $(this).attr("data-id-tab");
+                console.log(val)
+                setLocalStorage("tabVideoActive", val);
+            })
+            let tabVideo = window.localStorage.getItem("tabVideoActive");
+            if (tabVideo != null) {
+                var tabVideoClick = $('[data-id-tab="' + tabVideo + '"]');
+                tabVideoClick.click();
+            }else{
+                var tabVideoClick = $('[data-id-tab="TabAll"]');
+                tabVideoClick.click();
+            }
+            var videoActive = @Model.VideoNewsDetail.Data.Id;
+            $('[data-video-active="' + videoActive + '"] .relate-video-title a').css("color", "#ce0aaa");
+        })
+
+        function setData(obj, tabAppend) {
+            var temp = obj.DateCreate.substring(0, 10);
+            var yyyy = temp.substring(0, 4);
+            var mm = temp.substring(5, 7);
+            var dd = temp.substring(8, 10);
+            var date = dd + "/" + mm + "/" + yyyy;
+            let titleNews = titleChange(obj.Title);
+            let view = `<div class="row mb-10">
+                                        <div class="col-5">
+                                            <div class="relate-video">
+                                                <a href="#"><img src="${obj.PictureTitle}" alt="${obj.Title}"></a>
+                                                <div class="relate-video-time">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="relate-video-title mt-10">
+                                                <a href="#">${obj.Title}</a>
+                                            </div>
+                                            <div class="relate-video-user">
+                                                <a href="#">${obj.UserName}</a>
+                                            </div>
+                                            <div class="relate-video-date text-12">
+                                                <i class="fa-regular fa-clock"></i>
+                                                ${date}
+                                            </div>
+                                        </div>
+                                    </div>`;
+            $('#' + tabAppend + " .add-more-video").append(view);
+        }
+        function setView(arr, tabAppend) {
+            for (var i = 0; i < arr.length; i++) {
+                setData(arr[i], tabAppend);
+            }
+        }
+        function getMoreVideoNews(url, tabAppend) {
+
+            var pageIndex = parseInt($('.tablinks1.active').attr("data-category-index"));
+            var pageCategory = parseInt($('.tablinks1.active').attr("data-category-video"));
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: {
+                    idCategory: pageCategory,
+                    pageNumber: pageIndex,
+                },
+                dataType: "text",
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (result) {
+
+                    if (result) {
+                        //setView(data);
+                        results = JSON.parse(result);
+                        $('.tablinks1.active').attr("data-category-index", pageIndex + 1);
+                        setView(results, tabAppend);
+                        if (results.length < 10) {
+                            $('#' + tabAppend + ' button.more-video').hide();
+                        }
+                        $('#data-list-news').attr("data-page-index", pageIndex + 1)
+                    }
+                    else {
+                        console.log("lỗi");
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                },
+                complete: function (data) {
+                    hideSearchLoader();
+                }
+            })
+
+        }
+    </script>
+}
+
+<!-- End Newsletter Area -->

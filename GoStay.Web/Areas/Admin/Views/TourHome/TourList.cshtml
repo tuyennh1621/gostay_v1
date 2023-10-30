@@ -1,0 +1,1054 @@
+﻿@using DAL
+@using DAL.Entities
+
+@using DAL.Helpers.PageHelpers
+@using GoStay.DataAccess.Entities
+
+@using GoStay.DataDto
+@using GoStay.DataDto.TourDto;
+@using GoStay.Service
+@using GoStay.Common
+@using goStayCore.CommonCode
+@model DataTourAdminDto
+
+@{
+    ViewData["Title"] = "Tour List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color:rebeccapurple;
+        color: white;
+    }
+</style>
+<!-- Page Title
+============================================= -->
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "Tour" })
+<!-- #page-title end -->
+<!-- Content
+============================================= -->
+<body>
+<section id="content">
+
+        <div class="content-wrap pb-0">
+            
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <!--error message section starts here-->
+
+                    <div class="special-div-less-margin">
+                        @if (TempData["SuccessMsg"] != null)
+                        {
+                            if (!String.IsNullOrEmpty(TempData["SuccessMsg"].ToString()))
+                            {
+
+                                <div class="style-msg successmsg">
+                                    <div class="sb-msg"><i class="icon-thumbs-up"></i>@TempData["SuccessMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+
+                        }
+                        @if (TempData["ErrorMsg"] != null)
+                        {
+
+                            if (!String.IsNullOrEmpty(TempData["ErrorMsg"].ToString()))
+                            {
+                                <div class="style-msg errormsg">
+                                    <div class="sb-msg"><i class="icon-remove"></i>@TempData["ErrorMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+
+                    @*<div class="special-div-less-margin">
+                        <div>
+                            <button class="button button-3d button-rounded gradient-grey-orange  float-right" data-toggle="modal" data-target="#myAddModal"><i class="icon-plus"></i> Add Tour</button>
+                        </div>
+                    </div>*@
+                    <div class="postcontent col-lg-12" id="MainDataSection">
+                        @await Html.PartialAsync("~/Areas/Admin/Views/TourHome/TourListPartial.cshtml", Model)
+                    </div><!-- .postcontent end -->
+                </div>
+            </div>
+        </div>
+    </section><!-- #content end -->
+
+    <div class="modal fade" id="myAddPicture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content" id="MainAddPictureTour">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Add Tour</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    @using (Html.BeginForm("AddTour", "TourHome", FormMethod.Post, new { area = "Admin", @id = "TeacherAdd_form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="name">Tour Name<small class="text-danger">*</small></label>
+                                <label for="style">Kiểu Tour</label>
+                                
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="name" name="TourName" class="sm-form-control border-form-control" placeholder="Tên tour" required />
+                                <select class="box-on-stock-option-region headerLeft_select" id="style" name="Style">
+                                    <option value="0">Trong nước</option>
+                                    <option value="1">Quốc tế </option>
+
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group ">
+                                <label for="startDate">Ngày đi</label>
+                                <label for="idStartTime">Ngày đi chi tiết</label>
+
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+
+                                <input type="text" tabindex="1" id="startDate" name="StartDateString" class="sm-form-control border-form-control" placeholder="Ngày đi" required />
+
+
+                                <select class="box-on-stock-option-region headerLeft_select" id="idStartTime" name="IdStartTime">
+                                    <option value=""></option>
+                                    @foreach (var item in ViewBag.listStartTime as List<TourStartTime>)
+                                    {
+                                        <option value="@item.Id">@item.StartDate</option>
+                                    }
+
+                                </select>
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group ">
+                                <label for="idTourStyle">Tour Style</label>
+                                <label for="idTourTopic">Tour Topic</label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <select style="width:50%" class="select2 select2-container form-control" id="idTourStyle" name="IdTourStyle">
+                                    @{
+                                        if (ViewBag.listTourStyle == null)
+                                            return;
+                                        foreach (var item in ViewBag.listTourStyle as IQueryable<TourStyle>)
+                                        {
+                                                               <option value="@item.Id">@item.TourStyle1</option>
+                                        }
+                                    }
+                                </select>
+                                <select style="width:50%" class="select2 select2-container form-control" id="idTourTopic" name="IdTourTopic">
+                                    @{
+                                        if (ViewBag.listTourTopic == null)
+                                            return;
+                                        foreach (var item in ViewBag.listTourTopic as IQueryable<TourTopic>)
+                                        {
+                                                               <option value="@item.Id">@item.TourTopic1</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group ">
+                                <label for="idDistrictFrom">Xuất phát</label>
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <select style="width:100%" class="select2 select2-container sm-form-control" id="idDistrictFrom" name="IdDistrictFrom" multiple="multiple">
+                                    @{
+                                        if (ViewBag.listQuanHuyen == null)
+                                            return;
+                                        foreach (var item in ViewBag.listQuanHuyen as List<QuanDto>)
+                                        {
+                                            if(@item.Tenquan=="Tất cả")
+                                            {
+                                                    <option value="@item.Id">@item.ProvinceName</option>
+                                            }
+                                            else
+                                            {
+                                                    <option value="@item.Id">@item.Tenquan-@item.ProvinceName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="idDistrictTo">Đích đến</label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <select style="width:100%" class="select2 select2-container form-control" name="states[]" id="idDistrictTo" name="IdDistrictTo" multiple="multiple">
+                                    @{
+                                        if (ViewBag.listQuanHuyen == null)
+                                            return;
+                                        foreach (var item in ViewBag.listQuanHuyen as List<QuanDto>)
+                                        {
+                                            if (@item.Tenquan == "Tất cả")
+                                            {
+                                                <option value="@item.Id">@item.ProvinceName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.Tenquan-@item.ProvinceName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="vehicle">Phương tiện di chuyển</label>
+                                <label for="rating">Rating tour</label>
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <select style="width:50%" class="select2 select2-container form-control" name="states[]" id="vehicle" name="Vehicle" multiple="multiple">
+                                    @{
+                                        
+                                        foreach (var item in ViewBag.listVehical as List<Vehicle>)
+                                        {
+
+                                            <option value="@item.Id">@item.Name</option>
+
+                                        }
+                                    }
+                                </select>
+                                <select style="width:50%" class="box-on-stock-option-region headerLeft_select" id="rating" name="Rating">
+                                    @{
+                                        <option></option>
+                                        foreach (var item in ViewBag.listRating as List<TourRating>)
+                                        {
+
+                                            <option value="@item.Id">@item.Rating</option>
+
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="locations">Địa điểm chi tiết</label>
+                                <label for="tourSize">Số lượng người </label>
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea style="width:50%" type="text" id="locations" name="Locations" class="sm-form-control border-form-control"></textarea>
+                                <select style="width:50%" class="box-on-stock-option-region headerLeft_select" id="tourSize" name="TourSize">
+                                    @for (int i = 1; i < 50; i++)
+                                    {
+                                        <option value="@i">@i người</option>
+                                    }
+
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="price">Giá tour<small class="text-danger">*</small></label>
+                                <label for="discount">Giảm giá<small class="text-danger">*</small></label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="number" tabindex="1" id="price" name="Price" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                                <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="discount" name="Discount">
+                                    <option></option>
+                                    @{
+                                        for (int i = 1; i <= 100; i++)
+                                        {
+                                                <option input type="number" value="@i"> @i %</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="cont">Mô tả Tour</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea style="width:100%" type="text" rows="5" id="cont" name="Content" class="ckeditor"></textarea>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="description">Giới thiệu chung</label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea type="text" rows="5" id="description" name="Descriptions" class="sm-form-control border-form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="button" btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+                            <button type="button" onclick="AddTour()" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Edit Tour</h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    @using (Html.BeginForm("EditTour", "TourHome", FormMethod.Post, new { area = "Admin", @id = "TeacherEdit_form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="modal-body">
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="tourName_edit">Tour Name<small class="text-danger">*</small></label>
+                                <label for="style_edit">Kiểu Tour</label>
+                                <input type="hidden" id="id_edit" name="Id" />
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="tourName_edit" name="TourName" class="sm-form-control border-form-control" placeholder="Tên tour" required />
+                                <select class="box-on-stock-option-region headerLeft_select" id="style_edit" name="Style">
+                                    <option value="0">Trong nước</option>
+                                    <option value="1">Quốc tế </option>
+
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group ">
+                                <label for="startDate_edit">Ngày đi</label>
+                                <label for="idStartTime">Ngày đi chi tiết</label>
+
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="startDate_edit" name="StartDateString" class="sm-form-control border-form-control" placeholder="Ngày đi" required />
+
+                                <select class="box-on-stock-option-region headerLeft_select" id="idStartTime_edit" name="IdStartTime">
+                                    <option value=""></option>
+                                    @foreach (var item in ViewBag.listStartTime as List<TourStartTime>)
+                                    {
+                                        <option value="@item.Id">@item.StartDate</option>
+                                    }
+
+                                </select>
+                                
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group ">
+                                <label for="idTourStyle_edit">Tour Style</label>
+                                <label for="idTourTopic_edit">Tour Topic</label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+
+                                <select style="width:50%" class=" select2 select2-container form-control" id="idTourStyle_edit" name="IdTourStyle">
+                                    @{
+                                        if (ViewBag.listTourStyle == null)
+                                            return;
+                                        foreach (var item in ViewBag.listTourStyle as IQueryable<TourStyle>)
+                                        {
+                                                <option value="@item.Id">@item.TourStyle1</option>
+                                        }
+                                    }
+                                </select>
+                                <select style="width:50%" class="select2 select2-container form-control" id="idTourTopic_edit" name="IdTourTopic">
+                                    @{
+                                        if (ViewBag.listTourTopic == null)
+                                            return;
+                                        foreach (var item in ViewBag.listTourTopic as IQueryable<TourTopic>)
+                                        {
+                                                <option value="@item.Id">@item.TourTopic1</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group ">
+                                <label for="idDistrictFrom_edit">Xuất phát</label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <select style="width:100%" class=" select2 select2-container sm-form-control" id="idDistrictFrom_edit" name="IdDistrictFrom" multiple="multiple">
+                                    @{
+                                        if (ViewBag.listQuanHuyen == null)
+                                            return;
+                                        foreach (var item in ViewBag.listQuanHuyen as List<QuanDto>)
+                                        {
+                                            if (@item.Tenquan == "Tất cả")
+                                            {
+                                                <option value="@item.Id">@item.ProvinceName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.Tenquan-@item.ProvinceName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="idDistrictTo_edit">Đích đến</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <select style="width:100%" class="select2 select2-container form-control" name="states[]" id="idDistrictTo_edit" name="IdDistrictTo" multiple="multiple">
+                                    @{
+                                        if (ViewBag.listQuanHuyen == null)
+                                            return;
+                                        foreach (var item in ViewBag.listQuanHuyen as List<QuanDto>)
+                                        {
+                                            if(@item.Tenquan=="Tất cả")
+                                            {
+                                                <option value="@item.Id">@item.ProvinceName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.Tenquan-@item.ProvinceName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="vehicle_edit">Phương tiện di chuyển</label>
+                                <label for="rating_edit">Rating tour</label>
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <select style="width:50%" class="select2 select2-container form-control" name="states[]" id="vehicle_edit" name="Vehicle" multiple="multiple">
+                                    @{
+                                        foreach (var item in ViewBag.listVehical as List<Vehicle>)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <select style="width:50%" class="box-on-stock-option-region headerLeft_select" id="rating_edit" name="Rating">
+                                    @{
+                                        <option ></option>
+                                        foreach (var item in ViewBag.listRating as List<TourRating>)
+                                        {
+
+                                            <option value="@item.Id">@item.Rating</option>
+
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="locations_edit">Địa điểm chi tiết</label>
+                                <label for="tourSize_edit">Số lượng người </label>
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea type="text" id="locations_edit" name="Locations" class="sm-form-control border-form-control"></textarea>
+                                <select class="box-on-stock-option-region headerLeft_select" id="tourSize_edit" name="TourSize">
+                                    @for (int i = 1; i < 50; i++)
+                                    {
+                                        <option value="@i">@i người</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="price_edit">Giá tour<small class="text-danger">*</small></label>
+                                <label for="discount_edit">Giảm giá<small class="text-danger">*</small></label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="number" tabindex="1" id="price_edit" name="Price" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                                <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="discount_edit" name="Discount">
+                                    <option></option>
+                                    @{
+                                        for (int i = 1; i <= 100; i++)
+                                        {
+                                            <option input type="number" value="@i"> @i %</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="cont_edit">Mô tả Tour</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea type="text" id="cont_edit" rows="5" name="Content" class="ckeditor"></textarea>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="description_edit">Giới thiệu chung</label>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea type="text" id="description_edit" name="Descriptions" class="sm-form-control border-form-control"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+                            <button type="button" onclick="EditTourJs()" tabindex="4" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-edit"></i> Update</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Delete Tour</h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    @using (Html.BeginForm("DeleteTour", "TourHome", FormMethod.Post, new { area = "Admin", @id = "CourseDelete_form", enctype = "multipart/form-data" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="modal-body">
+                            <div class="col-12 form-group">
+                                <div class="entry-title">
+                                    <h4>Do you want to delete this record?</h4>
+                                </div>
+                            </div>
+                            <div>
+                                <input type="hidden" id="Id_delete" name="Id" />
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Cancel</button>
+
+                            <button type="submit" tabindex="1" class="button  btn-sm button-3d button-rounded gradient-horizon"><i class="icon-trash2"></i> Delete</button>
+
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myAddTourDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content" id="MainAddTourDetail">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+@section scripts{
+
+    <!--Following two scripts are for ajax begin form and other ajax calls-->
+
+    <script>
+
+        $(function () {
+            $('.select2').select2()
+        });
+        $(document).ready(function () { $("#select2_example").select2(); });
+
+        $(".chosen-select").chosen({
+            no_results_text: "Oops, nothing found!"
+        })
+        //$(".chosen-select").chosen({
+        //    no_results_text: "Oops, nothing found!"
+        //})
+        CKEDITOR.replace("cont_edit");
+        CKEDITOR.replace("cont");
+
+        function NextPreData(pagesize, pageindex) 
+          {
+            var Url = '@Url.Action("TourListPartial","TourHome", new { area="Admin"})';
+
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: {
+                    pageSize: pagesize,
+                    pageIndex: pageindex
+                },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#MainDataSection').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+
+
+        function AddTour() 
+        {
+            debugger
+            var name = document.getElementById("name").value;
+            var style = document.getElementById("style").value;
+            var startDate = document.getElementById("startDate").value;
+            var idDistrictFrom = document.getElementById("idDistrictFrom").value;
+            var toursize = document.getElementById("tourSize").value;
+            var idDistrictTo = $("#idDistrictTo").val();
+            var price = document.getElementById("price").value;
+            var discount = document.getElementById("discount").value;
+            var content = CKEDITOR.instances['cont'].getData();
+            var locations = document.getElementById("locations").value;
+            var description = document.getElementById("description").value;
+
+            var idTourStyle = document.getElementById("idTourStyle").value;
+            var idTourTopic = document.getElementById("idTourTopic").value;
+            var vehicle = $("#vehicle").val();
+            var rating = document.getElementById("rating").value;
+            var idstarttime = document.getElementById("idStartTime").value;
+
+
+            var tour = {
+                TourName: name,
+                Style: style,
+                StartDateString: startDate,
+                IdDistrictFrom: idDistrictFrom,
+                IdDistrictTo : idDistrictTo,
+                Price : price,
+                Discount : discount,
+                Locations : locations,
+                Content : content,
+                IdTourStyle: idTourStyle,
+                IdTourTopic: idTourTopic,
+                TourSize: toursize,
+                Vehicle: vehicle,
+                Rating: rating,
+                Descriptions: description,
+                IdStartTime: idstarttime
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "tourJson": JSON.stringify(tour),
+                },
+                url: "@Url.Action("AddTour", "TourHome")",
+                success: function (data) {
+                    SubmitAddForm();
+                    $('#name').val('');
+                    $('#startDate').val('');
+                    $('#price').val('');
+                    $('#discount').val('');
+                    $('#cont').val('');
+                    $('#locations').val('');
+                    alert("Hoan thanh");
+                },
+            })
+        }
+
+        function SubmitAddForm() {
+            debugger
+            var Url = '@Url.Action("TourListPartial","TourHome", new { area="Admin"})';
+
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: {
+                },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#MainDataSection').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+        function EditTourParam(Id, TourName, Style, IdTourStyle, IdTourTopic, StartDate, IdDistrictFrom, IdDistrictTo, Price,
+            Discount, TourSize, Locations, Vehicle,Rating,Descriptions,IdStartTime)
+        {
+            if(IdDistrictTo.includes(',')){
+                $('#idDistrictTo_edit').val(IdDistrictTo.split(',')).change();
+            }
+            else{
+                $('#idDistrictTo_edit').val(IdDistrictTo).change();
+            }
+            var Content = $('#divContenthtml-' + Id).html();
+            $('#id_edit').val(Id);
+            $('#tourName_edit').val(TourName);
+            $('#style_edit').val(Style);
+            $('#idTourStyle_edit').val(IdTourStyle).change();
+            $('#idTourTopic_edit').val(IdTourTopic).change();
+            $('#startDate_edit').val(StartDate);
+            $('#idDistrictFrom_edit').val(IdDistrictFrom).change();
+            $('#price_edit').val(Price);
+            $('#discount_edit').val(Discount);
+            $('#rating_edit').val(Rating);
+            $('#idStartTime_edit').val(IdStartTime);
+
+            CKEDITOR.instances['cont_edit'].setData(Content);
+
+            $('#tourSize_edit').val(TourSize);
+            $('#locations_edit').val(Locations);
+            $('#description_edit').val(Descriptions);
+
+            if (Vehicle.includes(',')) {
+                $('#vehicle_edit').val(Vehicle.split(',')).change();
+            }
+            else {
+                $('#vehicle_edit').val(Vehicle).change();
+            }
+
+        }
+
+        function EditTourJs() {
+            debugger
+            var id = document.getElementById("id_edit").value;
+            var name = document.getElementById("tourName_edit").value;
+            var style = document.getElementById("style_edit").value;
+            var startDate = document.getElementById("startDate_edit").value;
+            var idDistrictFrom = document.getElementById("idDistrictFrom_edit").value;
+            var toursize = document.getElementById("tourSize_edit").value;
+            var idDistrictTo = $("#idDistrictTo_edit").val();
+            var price = document.getElementById("price_edit").value;
+            var discount = document.getElementById("discount_edit").value;
+            //var content = document.getElementById("cont_edit").value;
+            var content = CKEDITOR.instances['cont_edit'].getData();
+            var locations = document.getElementById("locations_edit").value;
+            var description = document.getElementById("description_edit").value;
+
+            var idTourStyle = document.getElementById("idTourStyle_edit").value;
+            var idTourTopic = document.getElementById("idTourTopic_edit").value;
+            var vehicle = $("#vehicle_edit").val();
+            var rating = document.getElementById("rating_edit").value;
+            var idstarttime = document.getElementById("idStartTime_edit").value;
+
+
+            var tour = {
+                Id :id,
+                TourName: name,
+                Style: style,
+                StartDateString: startDate,
+                IdDistrictFrom: idDistrictFrom,
+                IdDistrictTo: idDistrictTo,
+                Price: price,
+                Discount: discount,
+                Locations: locations,
+                Content: content,
+                IdTourStyle: idTourStyle,
+                IdTourTopic: idTourTopic,
+                TourSize: toursize,
+                Vehicle: vehicle,
+                Rating: rating,
+                Descriptions: description,
+                IdStartTime: idstarttime
+
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "tourJson": JSON.stringify(tour),
+                },
+                url: "@Url.Action("EditTour", "TourHome")",
+                success: function (data) {
+                    SubmitAddForm();
+                    alert("Hoan thanh");
+                },
+            })
+        }
+
+        function AddPicture(IdObj) {
+            
+            var Url = '@Url.Action("TransitParamPicture","TourHome", new { area="Admin"})';
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { IDTour: IdObj },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+                    hideSearchLoader();
+                    $('#MainAddPictureTour').html(data);
+
+                    $("#AddPictureTour_form").submit(function (e) {
+                        e.preventDefault();
+                        
+                        if ($("#inputFileIMG").val() == '') {
+                            alert('Bạn cần chọn ít nhất 01 ảnh');
+                            return;
+                        }
+                        var _submit = $(this).find(":submit");
+                        var formData = new FormData(this);
+                        var formAction = $(this).attr("action");
+               
+                        $.ajax({
+                            type: "POST",
+                            beforeSend: function () {
+                                showSearchLoader();
+                            },
+                            traditional: true,
+                            data: formData,
+                            url: formAction,
+                            cache: false,
+                            contentType: false,
+                            processData: false
+
+                        }).done(function (result) {
+                            $("#inputFileIMG").val('');
+                            hideSearchLoader();
+                            AddPicture(IdObj)
+                        });
+
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+
+        function AddTourDetailTransit(Id) {
+            var Url = '@Url.Action("TransitTourDetail","TourHome", new { area="Admin"})';
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { Idtour: Id },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+                    hideSearchLoader();
+                    $('#MainAddTourDetail').html(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+
+        function AddTourDetail() {
+            debugger
+            var idTour = document.getElementById("idTour").value;
+            var style = document.getElementById("styleDetail").value;
+            var title = document.getElementById("title").value;
+            var details = CKEDITOR.instances['details_add'].getData();
+            var stt = document.getElementById("stt").value;
+            
+            var room = {
+                IdTours: idTour,
+                IdStyle: style,
+                Title: title,
+                Details: details,
+                Stt:stt
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "tourDetailJson": JSON.stringify(room),
+                },
+                url: "@Url.Action("AddTourDetail", "TourHome")",
+                success: function (data) {
+                    AddTourDetailTransit(idTour);
+                    alert("Hoan thanh");
+                    $('#title').val('');
+                    $('#details').val('');
+
+                },
+            })
+        }
+
+        function EditTourDetail() 
+            {
+                debugger
+            var id = document.getElementById("id_detail_edit").value;
+            var idTour = document.getElementById("id_detail_tour_edit").value;
+            var idStyle = document.getElementById("id_detail_style_edit").value;
+            var title = document.getElementById("detail_title_edit").value;
+            var details = CKEDITOR.instances['detail_content_edit'].getData();
+            var stt = document.getElementById("stt_edit").value;
+
+            var tourdetail = {
+                Id: id,
+                IdTours: idTour,
+                IdStyle: idStyle,
+                Title: title,
+                Details: details,
+                Stt:stt
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "tourDetailJson": JSON.stringify(tourdetail),
+                },
+                url: "@Url.Action("EditTourDetail", "TourHome")",
+                success: function (data) {
+                    AddTourDetailTransit(idTour);
+                    alert("Hoan thanh");
+                },
+            })
+        }
+
+        function RemoveDetail (_IdDetail, _IdTour) 
+        {
+            debugger
+            if (confirm("Bạn muốn xóa Detail " + _IdDetail) == true) {
+                var Url = '@Url.Action("RemoveTourDetail","TourHome", new { area="Admin"})';
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    data:
+                    {
+                        IdDetail: _IdDetail
+                    },
+                    url: Url,
+                }).done(function (result) {
+                    console.log(result);
+
+                    //AddTourDetailTransit(_IdTour);
+                });
+            }
+
+        }
+
+
+
+        function DeleteTour(Id) {
+            $('#Id_delete').val(Id);
+
+        }
+        function DeletePicture(IDPic) {
+            
+            if (confirm("Bạn muốn xóa ảnh ID " + IDPic) == true) {
+                var Url = '@Url.Action("DeletePicture","PicturesHome", new { area="Admin"})';
+
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    data:
+                    {
+                        "Id": IDPic,
+                    },
+                    url: Url,
+                }).done(function (result) {
+                    console.log(result);
+                    $('#trpic_' + IDPic).hide();
+                });
+            } 
+        }
+    </script>
+}

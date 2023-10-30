@@ -1,0 +1,567 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["TitlePage"] = "Hướng dẫn thanh toán";
+}
+<section class="guide-introduction pb-60">
+    <div class="container">
+        <h3 class="text-center pt-40">Hướng dẫn thanh toán VNPAY trên Website</h3>
+        <p class="mt-35">Cổng thanh toán VNPAY là giải pháp thanh toán do Công ty Cổ phần Giải pháp Thanh toán Việt Nam (VNPAY) phát triển. Khách hàng sử dụng thẻ/tài khoản ngân hàng, tính năng QR Pay/VNPAY-QR được tích hợp sẵn trên ứng dụng Mobile Banking của các ngân hàng hoặc Ví điện tử liên kết để thanh toán các giao dịch và nhập mã giảm giá (nếu có)</p>
+        <h5 class="mt-25">Quét mã VNPAY-QR trên 35+ Ứng dụng Mobile Banking và 15+ Ví điện tử liên kết</h5>
+        <p class="mt-15">Danh sách Ngân hàng / Ví điện tử có áp dụng khuyến mãi</p>
+        <div class="bank_list_parent gap-10">
+            <div class="row">
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vcb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/bidv.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vietinbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/agribank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/BIDC.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/abb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/baovietbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/hdbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ocenbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/scb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ivb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vietabank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/eximbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/coopbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vietbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/publicbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/saigonbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/jbpsp.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vnpay.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <p class="mt-25">Danh sách Ngân hàng / Ví điện tử khác hỗ trợ thanh toán VNPAY QR</p>
+        <div class="bank_list_parent gap-10">
+            <div class="row">
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/techcombank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/mbbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/Logo-VPBank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vib.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/sacombank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/tbp.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/msb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/acb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/shb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ocb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ncb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/bvb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/bacabank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/shinhan.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/pvcombank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/worri.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/openbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/viettel.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vin.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/true.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/foxpay.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vimass.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vtcpay.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/baokim.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/payme.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ting.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/viviet.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vnptpay.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/mobifone.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/cake.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h3 class="text-center pt-40">40+ Thẻ ATM/nội địa/tài khoản ngân hàng</h3>
+        <div class="bank_list_parent gap-10">
+            <div class="row">
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vcb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/agribank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vietinbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/bidv.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/shb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vib.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/baovietbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/pvcombank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/sacombank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/donga.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/techcombank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/Logo-VPBank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/saigonbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/mbbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/worri.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vietbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/eximbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/hdbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/msb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/tbp.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/seabank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vietabank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/bacabank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/kienlongbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ocenbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ncb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/scb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/baovietbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/publicbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/pgbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/lienviet.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ocb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/acb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/ivb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/abb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/pgbank.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vrb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/shinhan.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/uob.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/vietcredit.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/mirae.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h3 class="text-center pt-40">4 Thẻ thanh toán quốc tế</h3>
+        <div class="bank_list_parent gap-10">
+            <div class="row justify-center">
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/mastercard.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/visa.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/jcb.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+                <div class="col-auto bank_list m-x m-y">
+                    <a>
+                        <img data-src="/assets/images/bank/union.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h3 class="text-center pt-40">
+            Các phương thức thanh toán qua VNPAY
+        </h3>
+        <div class="text-center vnpayyy">
+            <img data-src="/assets/images/bank/vnpayyy.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+        </div>
+        <div class="paytext">
+            <h6 class="mt-10 mb-10 text-16-b">1. Phương thức thanh toán qua “Ứng dụng thanh toán hỗ trợ VNPAY-QR”</h6>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 1:</span> Quý khách lựa chọn sản phẩm, dịch vụ và chọn Thanh toán ngay hoặc Đặt hàng. Tại trang thanh toán, vui lòng kiểm tra lại sản phẩm đã đặt, điền đầy đủ thông tin người nhận hàng, chọn phương thức thanh toán VNPAY và nhấn nút “Đặt hàng ngay”.
+            </p>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 2:</span> Màn hình thanh toán chuyển sang giao diện cổng thanh toán VNPAY. Chọn phương thức  “Ứng dụng thanh toán hỗ trợ VNPAY-QR”
+            </p>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 3:</span>  Hệ thống hiển thị mã QR cùng với số tiền cần thanh toán, Quý khách kiểm tra lại số tiền này. Sử dụng ứng dụng ngân hàng (theo danh sách liệt kê), chọn “Quét Mã” và tiến hành quét mã QR trên màn hình thanh toán website.
+                <span class="text-14-i">
+                    *Lưu ý: Mã QR có hiệu lực trong 15 phút
+                    Để quá trình thanh toán thành công, khách hàng vui lòng tham khảo trước các điều kiện và thao tác quét mã trên điện thoại để sẵn sàng, tránh sự cố hết thời gian ảnh hưởng đến thanh toán và mã khuyến mại của quý khách.
+                </span>
+            </p>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 4:</span>  Kiểm tra thông tin, nhập mã giảm giá (nếu có) và hoàn tất thanh toán. Khi thực hiện thanh toán hoàn tất Quý khách sẽ nhận được thông báo xác nhận đơn hàng đặt hàng thành công tại website.
+            </p>
+            <div class="text-center">
+                <img data-src="/assets/images/bank/vnpay1.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                <p class="text-14-i">Hướng dẫn thanh toán qua tính năng QR Pay/VNPAY-QR</p>
+            </div>
+            <h6 class="mt-10 mb-10 text-16-b">2. Phương thức thanh toán qua “Thẻ nội địa và tài khoản ngân hàng”</h6>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 1:</span> Quý khách lựa chọn sản phẩm, dịch vụ và chọn Thanh toán ngay hoặc Đặt hàng. Tại trang thanh toán, vui lòng kiểm tra lại sản phẩm đã đặt, điền đầy đủ thông tin người nhận hàng, chọn phương thức thanh toán VNPAY và nhấn nút “Đặt hàng ngay”.
+            </p>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 2:</span> Màn hình thanh toán chuyển sang giao diện cổng thanh toán VNPAY. Chọn phương thức  “Thẻ nội địa và tài khoản ngân hàng” và chọn ngân hàng muốn thanh toán thẻ trong danh sách.
+            </p>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 3:</span> Quý khách vui lòng thực hiện nhập các thông tin thẻ/tài khoản theo yêu cầu và chọn “Tiếp tục”. Mã OTP sẽ được gửi về điện thoại đăng ký, nhập mã OTP để hoàn tất giao dịch.
+                <span class="text-14-i">*Lưu ý: Mã QR có hiệu lực trong 15 phút</span>
+            </p>
+            <p class="mb-20">
+                <span class="text-14-b">Bước 4:</span>  Khi thực hiện thanh toán hoàn tất Quý khách sẽ nhận được thông báo xác nhận đơn hàng đặt hàng thành công tại website.
+            </p>
+            <div class="text-center">
+                <img data-src="/assets/images/bank/image2.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                <p class="text-14-i">Giao diện thanh toán qua “Thẻ nội địa và tài khoản ngân hàng”</p>
+            </div>
+            <h6 class="mt-10 mb-10 text-16-b">3. Phương thức thanh toán qua “Thẻ thanh toán quốc tế (Visa, MasterCard, JCB, UnionPay)”</h6>
+            <p class="mb-20">
+                Tương tự như phương thức thanh toán “Thẻ nội địa và tài khoản ngân hàng”
+            </p>
+            <h6 class="mt-10 mb-10 text-16-b">4. Phương thức thanh toán qua “Ví điện tử VNPAY”</h6>
+            <p class="mb-20">
+                Tương tự như phương thức thanh toán “Ứng dụng thanh toán hỗ trợ VNPAY-QR”
+            </p>
+            <div class="line-dash"></div>
+            <div class="text-16-b mt-20 text-uppercase">Kênh hỗ trợ</div>
+            <ul>
+                <li>Tổng đài: *3388 hoặc 1900 55 55 77</li>
+                <li>Zalo OA: <a href="zalo.me/4134983655549474109">zalo.me/4134983655549474109</a></li>
+                <li>Email: <a href="hotro@vnpay.vn">hotro@vnpay.vn</a></li>
+                <li>Fanpage: <a href="facebook.com/VNPAYQR.vn">facebook.com/VNPAYQR.vn</a></li>
+            </ul>
+        </div>
+    </div>
+</section>

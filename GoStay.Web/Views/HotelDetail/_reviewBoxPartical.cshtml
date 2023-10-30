@@ -1,0 +1,92 @@
+﻿@using GoStay.DataDto.RatingDto
+
+<div id="newsest" class="reviews_listing">
+    @if (ViewBag.HotelRating != null && ViewBag.HotelRating.Data != null)
+    {
+        string sortOrder = Model.id ?? "Newest";
+        var ListOder = new List<UserBoxReview>();
+        var ListRatingHotel = (List<UserBoxReview>)ViewBag.HotelRating.Data;
+        Func<UserBoxReview, decimal> orderByFunc = null;
+
+        if (sortOrder == "LocationScore") orderByFunc = item => item.LocationScore;
+        else if (sortOrder == "ServiceScore") orderByFunc = item => item.ServiceScore;
+        else if (sortOrder == "RoomsScore") orderByFunc = item => item.RoomsScore;
+        else if (sortOrder == "CleanlinessScore") orderByFunc = item => item.CleanlinessScore;
+        else if (sortOrder == "ValueScore") orderByFunc = item => item.ValueScore;
+
+        if (sortOrder == "Newest") ListOder = ListRatingHotel.OrderByDescending(x => x.DateReviews).ToList();
+        else ListOder = ListRatingHotel.OrderByDescending(orderByFunc).ToList();
+
+        foreach (var item in ListOder)
+        {
+
+            string userName = "User" + Guid.NewGuid().ToString().Substring(0, 3);
+            decimal pointRating = 0;
+            int? totalPeople = item.NumChild + item.NumMature;
+            Double totalNight = (item.CheckOutDate is null || item.CheckOutDate is null) ? 0 : item.CheckOutDate.Value.Subtract(item.CheckInDate.Value).TotalDays;
+            if (sortOrder == "LocationScore") pointRating = item.LocationScore;
+            else if (sortOrder == "ServiceScore") pointRating = item.ServiceScore;
+            else if (sortOrder == "RoomsScore") pointRating = item.RoomsScore;
+            else if (sortOrder == "CleanlinessScore") pointRating = item.CleanlinessScore;
+            else if (sortOrder == "ValueScore") pointRating = item.ValueScore;
+            else pointRating = (item.LocationScore + item.ServiceScore + item.RoomsScore + item.CleanlinessScore + item.ValueScore) / 5;
+
+
+            if (!string.IsNullOrEmpty(item.UserName)) userName = item.UserName;
+          <div class="user-listing">
+            <div class="d-flex gap-20">
+                <div class="user-avatar">
+                  <img src="@item.Avatar" width="100px" style="border-radius:50%">
+                </div>
+                <div class="user-title">
+                  <h3 class="text-14-b">@userName</h3>
+                  <div>
+                    <div class="user-text date-post">
+                      <i class="fa-solid fa-pencil ic-12"></i>
+                      <div class="text-12-black">@item.DateReviews?.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="user-text date-post">
+                      <i class="fa-solid fa-bed ic-12"></i>
+                      <div class="text-12-black">@item.RoomName</div>
+                    </div>
+                    <div class="user-text date-post">
+                      <i class="fa-solid fa-calendar-check ic-12"></i>
+                      <div class="text-12-black">
+                        @if (totalNight >= 1)
+                                    {
+                            <span>@totalNight đêm - @item.CheckInDate.Value.ToString("MM/yyyy")</span>
+                                    }
+                      </div>
+                    </div>
+                    <div class="user-text date-post">
+                      <i class="fa-solid fa-person-walking-luggage ic-12"></i>
+                      <div class="text-12-black"> @totalPeople  </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="user-info">
+              <p class="text-14-gray">
+                        @item.Description
+              </p>
+              <div class="text-14-gray like-cmt">
+                <a href="#"><i class="fa-solid fa-thumbs-up ic-12"></i>Đánh giá này có hữu ích với bạn không?</a>
+              </div>
+            </div>
+            <div class="label_rating user-list">
+              <div><i class="fa-solid fa-umbrella"></i>@pointRating</div>
+            </div>
+          </div>
+
+
+        }
+
+        @* <div class="button-loadmore2">
+  <button class="loadmore" tabindex="0" type="button">
+  Xem thêm đánh giá khác (@ViewBag.HotelRating.Data.Count) <i class="fa-solid fa-arrow-right-long"></i>
+  </button>
+  </div>*@
+
+    }
+
+</div>

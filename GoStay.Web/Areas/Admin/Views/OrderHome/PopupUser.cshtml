@@ -1,0 +1,69 @@
+﻿@using GoStay.DataAccess.Entities
+
+@using GoStay.DataDto.OrderDto
+@using GoStay.Service
+@using GoStay.Common
+@using goStayCore.CommonCode
+@model UserInfoDto
+
+<html>
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="~/assets/css/demo/orderDetail.css" rel="stylesheet" />
+
+    </head>
+    <body>
+
+    <!-- The form -->
+        <div class="container">
+
+
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <label>Thông tin User @Model.UserName</label>
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="styleDetail">FirstName : @Model.FirstName</label>
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <label for="styleDetail">LastName : @Model.FirstName</label>
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <label for="styleDetail">Email : @Model.Email</label>
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <label for="styleDetail">Địa Chỉ : @Model.Address</label>
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <label for="styleDetail">Số Điện thoại : @Model.MobileNo</label>
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <label for="styleDetail">Avatar</label>
+
+                    <td><img src="@Model.Picture" style="width:200px;" /></td>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button class="button" btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+            </div>
+    
+
+        </div>
+
+
+    </body>
+</html>
+
+@section scripts{
+
+    <!--Following two scripts are for ajax begin form and other ajax calls-->
+    @*<script src="~/Scripts/jquery-3.4.1.js"></script>*@
+
+
+    <script>
+
+    </script>
+}

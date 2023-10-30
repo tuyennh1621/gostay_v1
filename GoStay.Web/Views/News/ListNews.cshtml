@@ -1,0 +1,274 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var count = (Model.Data != null && Model.Data.Count > 0) ? Model.Data.Count : 0;
+    var list = ViewBag.TotalTopic;
+    var topNews = ViewBag.TopNews.Data;
+}
+<!-- Breadcrumns -->
+<div class="breadcrumns pt-95">
+    <div class="container">
+        <div class="breadcrumns-1 mt-20 mb-30">
+            <div class="row">
+                <div class="col-auto br-parent">
+                    <div class="">
+                        <a href="/">@Localizer["Home"]</a>
+                    </div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">
+                        <a href="/tin-tuc" class="color-primary">@Localizer["News"]</a>
+                    </div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">
+                        <a href="/danh-muc-tin/@ViewBag.CateTitle.cateSlug" class="color-primary" id="cate-title">@ViewBag.CateTitle.cateTitle</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumns -->
+<!-- Search Hotel Listing Pages -->
+<div class="hotel-result-page">
+    <div class="container w-1170">
+        <div class="row">
+            <div class="col-xxl-8 col-xl-8 col-lg-8 col-12 " >
+                @if(count > 0)
+                {
+                    <div id="add-data-news" data-cata-title="@Model.Data[0].Category">
+                        @foreach (var item in Model.Data)
+                        {
+                        <div class="bk-item mb-40">
+                            <div class="blog-list-images">
+                                    <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@item.PictureTitle" src="@item.PictureTitle" alt="@item.Title">
+                            </div>
+                            <div class="breaking-info">
+                                <h3>
+                                    <a title="@item.Title" href="/tin-tuc/@item.Id/@item.Slug" class="br-if-title format-router">@item.Title</a>
+                                </h3>
+                                <div class="bk-des">
+                                    @item.Description
+                                </div>
+                                <div class="date36">
+                                    <div class="bk-clock">
+                                        <i class="fa-regular fa-clock"></i>
+                                        @item.DateCreate.ToString("dd'/'MM'/'yyyy")
+                                    </div>
+                                    <div class="bk-user35">
+                                        <i class="fa-solid fa-user"></i>
+                                        @item.UserName
+                                    </div>
+                                    <div class="bk-cmt35">
+                                        <i class="fa-solid fa-comment"></i>
+                                        0 @Localizer["Comment"]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                }
+
+                <hr>
+                @if (count == 10)
+                {
+                    <div class="button-loadmore2 mb-60 mt-30">
+                        <button class="loadmore" tabindex="0" type="button" onclick="getMoreNews('/News/GetList')">
+                            @Localizer["See more"] <i class="fa-solid fa-arrow-right-long"></i>
+                        </button>
+                        <div hidden id="data-list-news" data-page-index="2" data-category="@Model.Data[0].IdCategory"></div>
+                    </div>
+
+                }
+               
+
+            </div>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-12 sidebar">
+                <div class="widget search-widget">
+                    <form action="#">
+                        <input type="text" placeholder="@Localizer["Search"]...">
+                        <button type="submit"><i class="fa-solid fa-magnifying-glass ic-16-white"></i></button>
+                    </form>
+                </div>
+                <div class="line-horizontal-4"></div>
+                <div class="widget categories-widget">
+                    <div class="widget-title">@Localizer["Category"]<span></span></div>
+                    <ul class="custom mt-10">
+                        @foreach (var item in list)
+                        {
+                            <li>
+                                <a title="@item.Topic" href="/danh-muc-tin/@item.Id/@item.Slug">@item.Topic<span>@item.Total</span></a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="widget popular-feeds">
+                    <div class="widget-title">@Localizer["News"]<span></span></div>
+                    <div class="popular-feed-loop">
+                        @if (topNews.Count > 0)
+                        {
+                            for (int i = 0; i < topNews.Count && i < 3; i++)
+                            {
+                                <div class="single-popular-feed">
+                                    <div class="feed-desc">
+                                        <div class="feed-image">
+                                            <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@topNews[i].PictureTitle" src="@topNews[i].PictureTitle">
+                                        </div>
+                                        <div class="feed-text">
+                                            <h6 class="post-title">
+                                                <a href="/tin-tuc/@topNews[i].Id/@topNews[i].Slug" title="@topNews[i].Title">
+                                                    @topNews[i].Title
+                                                </a>
+                                            </h6>
+                                            <span class="time"><i class="lni lni-calendar"></i> @topNews[i].DateCreate.ToString("dd'/'MM'/'yyyy") </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="widget popular-tag-widget">
+                    <div class="widget-title">@Localizer["Popular"]<span></span></div>
+                    <div class="tags mt-10">
+                        <a href="/khach-san">@Localizer["Hotels"]</a>
+                        <a href="/Tours">Tour</a>
+                        <a href="javascript:void(0)">Tour Package</a>
+                        <a href="/Tickets">@Localizer["Filght ticket"]</a>
+                        <a href="javascript:void(0)">@Localizer["Shuttle car"]</a>
+                        <a href="javascript:void(0)">@Localizer["Travel"]</a>
+                        <a href="javascript:void(0)">@Localizer["Domestic"]</a>
+                        <a href="javascript:void(0)">@Localizer["Foreign"]</a>
+                        <a href="javascript:void(0)">Phú Quốc</a>
+                        <a href="javascript:void(0)">Đà Lạt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End Search Hotel Listing Pages -->
+<!-- Start Newsletter Area -->
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml")
+
+<!-- End Newsletter Area -->
+@section scripts{
+    <script>
+        function setData(obj){
+            var yyyy = obj.dateCreate.substring(0, 4);
+            var mm = obj.dateCreate.substring(5, 7);
+            var dd = obj.dateCreate.substring(8, 10);
+            var date = dd + "/" + mm + "/" + yyyy;
+            let titleNews = titleChange(obj.title);
+            let view = `<div class="bk-item mb-30">
+                                <div class="blog-list-images">
+                                                     <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/${obj.pictureTitle}" src="${obj.pictureTitle}" alt="Logo">
+                                </div>
+                                <div class="breaking-info mt-20">
+                                    <div class="bk-cat3 mb-10">
+                                        ${obj.category}
+                                    </div>
+                                    <h5>
+                                        <a href="/chi-tiet-tin/id=${obj.id}/${titleNews}" class="br-if-title format-router">${obj.title}</a>
+                                    </h5>
+                                    <div class="bk-des mt-20">
+                                        ${obj.description}
+                                    </div>
+                                    <div class="date36 mt-30">
+                                        <div class="bk-clock">
+                                            <i class="fa-regular fa-clock"></i>
+                                                 ${date}
+                                        </div>
+                                        <div class="bk-user35">
+                                            <i class="fa-solid fa-user"></i>
+                                            ${obj.userName}
+                                        </div>
+                                        <div class="bk-cmt35">
+                                            <i class="fa-solid fa-comment"></i>
+                                            0 Comment
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+            $('#add-data-news').append(view);
+        }
+        function setView(arr){
+            for (var i = 0; i < arr.length; i++) {
+                setData(arr[i]);
+            }
+        }
+        function getMoreNews(url) {
+            var pageIndex = parseInt($('#data-list-news').attr("data-page-index"));
+            var pageCategory = parseInt($('#data-list-news').attr("data-category"));
+            var strPathname = window.location.pathname;
+            var idTopic = strPathname.indexOf("idTopic=");
+            if (idTopic > 0){
+                idTopic = strPathname.substring(idTopic + 8, strPathname.length);
+                pageCategory = 0;
+            } else {
+                idTopic = 0;
+            }
+           
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: {
+                    idCategory: pageCategory,
+                    idTopic: idTopic,
+                    pageNumber: pageIndex,
+                },
+                dataType: "text",
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (result) {
+                    debugger;
+                    if (result) {
+                        //setView(data);
+                        results = JSON.parse(result);
+                        setView(results);
+                        if (results.length < 10) {
+                            $('div.button-loadmore2').hide();
+                        }
+                        $('#data-list-news').attr("data-page-index", pageIndex + 1)
+                    }
+                    else{
+                        console.log("lỗi");
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                },
+                complete: function (data){
+                    hideSearchLoader();
+                }
+            })
+
+        }
+        //function setCate(){
+        //    var strPathname = window.location.pathname;
+        //    var index = strPathname.lastIndexOf("/");
+        //    var cate = strPathname.substring(index + 1, strPathname.length);
+        //    var attr = $("#cate-title").attr("href");
+        //    $('#cate-title').attr("href", attr + cate);
+        //    $('#cate-title').text($("#add-data-news").attr("data-cata-title"));
+
+        //}
+        //$(document).ready(function () {
+        //    setCate();
+        //})
+    </script>
+}

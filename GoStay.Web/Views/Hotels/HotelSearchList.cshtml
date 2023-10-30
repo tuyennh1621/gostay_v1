@@ -1,0 +1,77 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.Web.Model
+@model HotelsModels;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="content_listing_page">
+    @foreach (var item in Model.hotels)
+    {
+        <div class="items-grid-listing">
+            <div class="col-4 items-grid-image">
+                <div class="heart2">
+                    <a href="#"><i class="fa-regular fa-heart"></i></a>
+                </div>
+                <div class="swiper mySwiper swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden">
+                    <div class="swiper-wrapper" id="swiper-wrapper-16f4c232b85c2e5f" aria-live="polite" style="transition-duration: 0ms; transform: translate3d(-255px, 0px, 0px);">
+                        @foreach (var img in item.Pictures)
+                        {
+                            <div class="swiper-slide">
+                                <a href="tour-detail.html"><img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=550,height=400,quality=80/@img" alt="#"></a>
+                            </div>
+                        }
+                    </div>
+                    <div class="swiper-pagination swiper-pagination-custom swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 1" aria-current="true"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 2"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 3"></span></div>
+                    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                </div>
+            </div>
+            <div class="col-5 listing-grid-text">
+                <div class="grid-listing-title">
+                    <h3><a href="hotel-detail.html">@item.HotelName</a></h3>
+                </div>
+                <div class="rate-list">
+                    <div class="rating-star-list">
+                        <ul class="star1">
+                            @for (int i = 0; i < item.Rating; i++)
+                            {
+                                <li><i class="fa-solid fa-star"></i></li>
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="user-review">
+                    <div class="label2">
+                        <i class="fa-solid fa-umbrella"></i> @item.Review_score
+                    </div>
+                    <a href="#">Tuyệt vời <span>(@item.NumberReviewers @Localizer["reviews"])</span></a>
+                </div>
+                <div class="sub-title grid-list-region">
+                    <a href="#">
+                        <span><i class="fa-solid fa-location-dot"></i></span>
+                        <span>@item.QuanHuyen - @item.TinhThanh</span>
+                        <span class="more-map">@Localizer["On map"]</span>
+                    </a>
+                </div>
+                <div class="sub-title grid-list-bed">
+                    <span><i class="fa-solid fa-bed"></i></span>
+                    <p>Phòng @item.PalletbedRoom người ( @Localizer["price for"] 1 @Localizer["guest"])</p>
+                </div>
+            </div>
+            <div class="col-3 grid-listing-price">
+                <p class="label_discount">@item.Discount %</p>
+                <p class="base_price"><span>@AppConfigs.FormatCurrency("VND", Math.Round(@item.OriginalPrice,0))</span></p>
+                <p class="price"><span>@AppConfigs.FormatCurrency("VND", Math.Round(@item.ActualPrice,0))</span></p>
+                <a href="~/khach-san/@item.Id/@item.Slug" class="btn-login-form btn-submit">
+                    @Localizer["Booking"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+
+                </a>
+            </div>
+        </div>
+    }
+    <div class="button-loadmore2">
+        <button class="loadmore" tabindex="0" type="button">
+            Xem thêm 366 khách sạn <i class="fa-solid fa-arrow-right-long"></i>
+        </button>
+    </div>
+</div>

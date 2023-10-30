@@ -1,0 +1,67 @@
+﻿@inject IViewLocalizer Localizer
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.DataDto.OrderDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@model RoomOrderDto
+
+@{
+    var maxPeople = Model.NumMature + Model.NumChild;
+}
+
+<div>
+    <div class="accordion-item2">
+        <div class="accordion-button accordion-button2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#Orderroom" aria-expanded="false" aria-controls="Orderroom">
+            <div class="booking-select" id="headingList">
+                <div id="panelsStayOpen-headingOne">
+                    <div class="text-16-b">@Model.RoomName</div>
+                    <div class="text-14-gray">@Model.NumRoom @Localizer["Rooms"], @Model.NumMature @Localizer["adult"] +  @Model.NumChild @Localizer["children"]</div>
+                    <ul class="check-in-out">
+@*                        <li class="text-14">@Localizer["Check in"]: @Model.ChechIn.ToString("dd/MM/yy")</li>
+                        <li class="text-14">@Localizer["Check out"]: @_rom.CheckOut.ToString("dd/MM/yy")</li>*@
+                        <li class="text-14">@Localizer["Nights"]: @Model.NumNight @Localizer["night"]</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="Orderroom" class="accordion-collapse collapse" data-bs-parent="#headingList" aria-labelledby="panelsStayOpen-headingOne">
+            <div class="accordion-body">
+                <div class="detail-room-info pt-20">
+                    <h3 class="text-16-b mb-15">@Localizer["Room details"]</h3>
+                    @if (@Model.Pictures.Count() > 1)
+                    {
+                        <img alt="@Model.RoomName" src="https://cdn.realtech.com.vn/@Model.Pictures[0]">
+                    }
+                    <div class="room-info info-sidebar">
+                        <div class="room-info-11">
+                            <i class="fa-solid fa-person ic-20"></i>
+                            <div class="text-list">
+                                <p>@Model.NumMature @Localizer["adult"]</p>
+                                <ul class="text-11-gray list-style">
+                                    <li>@Localizer["Maximum capacity of the room"] (@maxPeople)</li>
+                                    <li>@Localizer["Standard number of customers"] @Model.NumMature</li>
+                                    <li>@Localizer["Allow to add"] @Model.NumChild @Localizer["children"] @Localizer["satisfy"] (@maxPeople) @Localizer["Maximum guests may incur additional charges"].</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-bed"></i>
+                            <p>@Model.PalletbedText</p>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-vector-square"></i>
+                            <p>@Localizer["Room size"]: @Model.RoomSize m²</p>
+                        </div>
+                        <div class="room-info-1">
+                            <i class="fa-solid fa-square-arrow-up-right"></i>
+                            <p>@Localizer["View room"]: @Model.ViewDirection</p>
+                        </div>
+                        <div class="room-info-2" onclick="showService(@Model.Id)">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <a>@Localizer["Other facilities"]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

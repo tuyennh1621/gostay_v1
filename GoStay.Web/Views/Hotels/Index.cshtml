@@ -1,0 +1,217 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.Web.Model
+@using System.Globalization
+@model HotelsModels;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var page = 5;
+    var totalItems = 100;
+}
+<script src="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.js"></script>
+
+<form asp-action="Index" asp-controller="Hotels" id="fromParaSearch" enctype="multipart/form-data" method="get">
+
+    <section class="search-fitler-breadcrumns">
+        <div class="container-fluid sticky2">
+            <div class="search-filter-inner">
+                <div class="container">
+                    <div class="hotel-search-form">
+                        <div class="row search-filter1 align-items-center">
+                            <div class="col-12 p-0">
+                                @await Html.PartialAsync("~/Views/Shared/_HotelSearchPatical.cshtml",new MainSearchModels{style=1, strPlace=@Model.Para.TenTT, TT=@Model.Para.IDTinhthanh, PX =@Model.Para.IdPhuong })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <div class="breadcrumns">
+        <div class="container">
+            <div class="breadcrumns-1 mt-20 mb-30">
+                <div class="row">
+                    <div class="col-auto br-parent">
+                        <div class=""><a title="Trang chủ Gostay" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        <div class=""><a title="Khách sạn" asp-area="" asp-controller="Hotels" asp-action="Index">@Localizer["Hotels"]</a></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                    </div>
+                    <div class="col-auto br-parent">
+                        <div class=""><a asp-area="" title="Khách sạn tại @Model.Para.TenTT" asp-route-IdTinhthanh="@Model.Para.IDTinhthanh" asp-controller="Hotels" asp-action="Index">@Model.Para.TenTT</a></div>
+                    </div>
+                    @if (Model.Para.QuansChecked != null && Model.Para.QuansChecked.Count > 0)
+                    {
+
+                        <div class="col-auto br-parent">
+                            <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                        </div>
+                        <div class="col-auto br-parent">
+                            <div class="">
+                                <ul>
+                                    @foreach (var _q in Model.Para.QuansChecked)
+                                    {
+                                        <li>@_q.Text</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="listing-page">
+        <div class="hotel-result-page">
+            <div class="container">
+                <div class="title-hotel-result-page">
+                    <h3>@Model.Total @Localizer["Hotels in"] @Model.Para.TenTT @Model.Para.TenQuans</h3>
+                </div>
+                <div class="filter-mb-parent-responsive">
+                    <a class="btn btn-filter-custom" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                        <i class="fa-solid fa-arrow-down-wide-short ic-20"></i> @Localizer["Filter"]
+                    </a>
+                </div>
+                <div class="row row-col-12 hotel-content">
+                    @await Html.PartialAsync("~/Views/Hotels/PostParaSearch.cshtml",Model.Para)
+                    <div class="col-xxl-9 col-xl-9 col-lg-9 col-md-8 col-12 main-content-listing">
+
+                        <div class="content_listing2 show" id="MainDataSection">
+                            <div class="content_listing_page" style="display: block;">
+                                @if (Model.hotels != null)
+                                {
+                                    foreach (var item in Model.hotels)
+                                    {
+                                        <div class="items-grid-listing">
+                                            <div class="items-grid-image col-xxl-4 col-xl-4 col-lg-4 col">
+                                                <div class="heart2">
+                                                    <a href="#"><i class="fa-regular fa-heart"></i></a>
+                                                </div>
+                                                @if (@item.Review_score > 0)
+                                                {
+                                                    <div class="label">
+                                                        <ul class="label_review">
+                                                            <li><a href="javascript:void(0)"><i class="fa-solid fa-umbrella"></i> @item.Review_score</a></li>
+                                                        </ul>
+                                                        <ul class="text_review">
+                                                            <li><a href="javascript:void(0)">@AppConfigs.GetNameByPoint(@item.Review_score)</a></li>
+                                                        </ul>
+                                                    </div>
+                                                }
+                                                <div class="count-img">
+                                                    <i class="fa-solid fa-image"></i>
+                                                    <span>@item.TotalPicture</span>
+                                                </div>
+                                                <div class="swiper mySwiper7">
+                                                    <div class="swiper-wrapper">
+                                                        @foreach (var img in item.Pictures)
+                                                        {
+                                                            <div class="swiper-slide">
+                                                                <a title="@item.HotelName" href="~/khach-san/@item.Id/@item.Slug" class="format-router">
+                                                                    <img alt="@item.HotelName"
+                                                             data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=550,height=400,quality=80/@img"
+                                                             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                                                </a>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <div class="swiper-pagination swiper-pagination-custom"></div>
+                                                </div>
+                                            </div>
+                                            <div class="listing-grid-text col-xxl-5 col-xl-5 col-lg-5 col">
+                                                
+                                                <div class="grid-listing-title">
+                                                    <h3><a title="@item.HotelName" href="~/khach-san/@item.Id/@item.Slug" class="format-router">@item.HotelName</a></h3>
+                                                </div>
+                                                <div class="rate-list">
+                                                    <div class="rating-star-list">
+                                                        <div class="rating-@item.Rating-sao"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="sub-title grid-list-region">
+                                                    <a href="#">
+                                                        <span><i class="fa-solid fa-location-dot"></i></span>
+                                                        <span>@item.QuanHuyen - @item.TinhThanh</span>
+                                                    </a>
+                                                </div>
+                                               
+                                                @if (!string.IsNullOrEmpty(@item.TopService))
+                                                {
+                                                    <div class="advlevel-0">
+                                                        <span><i class="fa-solid fa-check"></i></span>
+                                                        <span>@item.TopService</span>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="grid-listing-price col-xxl-3 col-xl-3 col-lg-3 col">
+                                                @if (@item.Discount > 0)
+                                                {
+                                                    <p class="label_discount"><i class="fa-solid fa-arrow-down discount"> @item.Discount %</i></p>
+                                                    <p class="base_price"><span>@AppConfigs.FormatCurrency("VND", Math.Round(@item.OriginalPrice,0))</span></p>
+                                                }
+                                                <p class="price"><span>@AppConfigs.FormatCurrency("VND", Math.Round(@item.ActualPrice,0))</span></p>
+                                                <a title="Đặt phòng khách sạn: @item.HotelName" href="~/khach-san/@item.Id/@item.Slug#roomid-@item.IdRoom" class="btn-login-form btn-submit format-router">
+                                                    @Localizer["Booking"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="button-loadmore2">
+                                        <div id="pagination" class="tui-pagination"></div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="button-loadmore2" hidden>
+                                        <div id="pagination" class="tui-pagination"></div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- End Search Hotel Listing Pages -->
+<!-- Start Newsletter Area -->
+
+<script>
+    debugger;
+    var model = @Json.Serialize(Model);
+    var pagination = new tui.Pagination('pagination', {
+        totalItems: model.Total,
+        page: model.PageIndex,
+        itemsPerPage: model.PageSize,
+        visiblePages: 3
+    });
+    pagination.on('beforeMove', function (eventData) {
+
+
+        var rating = @Json.Serialize(Model.Para.Rating.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+        var quans = @Json.Serialize(Model.Para.Quans.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+        var types = @Json.Serialize(Model.Para.Types.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+        var serviceHotel = @Json.Serialize(Model.Para.ServiceHotel.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+        var serviceRoom = @Json.Serialize(Model.Para.ServiceRoom.Where(x => x.Selected == true).Select(x => x.Value).ToArray());
+
+        window.location = "/Hotels/Index?IdTinhthanh=@Model.Para.IDTinhthanh" + "&IdPhuong=@Model.Para.IdPhuong" + "&PriceMin=@Model.Para.PriceMin" + "&PriceMax=@Model.Para.PriceMax" + "&Rating=" + rating +
+            "&Quans=" + quans + "&Types=" + types + "&ServiceHotel=" + serviceHotel + "&ServiceRoom=" + serviceRoom + "&Palletbed=@Model.Para.Palletbed"
+            + "&NumMature=@Model.Para.NumMature" + "&NumChild=@Model.Para.NumChild" + "&CheckinDate=@Model.Para.CheckinDate" +
+            "&CheckoutDate=@Model.Para.CheckoutDate" + "&pageIndex=" + eventData.page;
+    });
+                //$(document).ready(function(){
+                //    console.log("test state: ");
+                //    setUrlProvince("khach-san");
+                //})
+</script>
+

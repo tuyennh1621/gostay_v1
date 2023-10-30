@@ -1,0 +1,67 @@
+﻿@using GoStay.Common.Configuration;
+@using GoStay.DataDto.TourDto;
+@model List<SearchTourDto>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="tabcontent_hotel 1">
+    <div class="single-head">
+        <div class="row row-cols-1 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-4">
+            @foreach(var tour in Model)
+            {
+                <div class="col mt-30 pt-mb-30">
+                    <!-- Start Single Grid -->
+                    <div class="single-grid">
+                        <div class="image">
+                            <div class="swiper SwiperToursHome">
+                                <div class="swiper-wrapper">
+                                    @for (int i = 0; i < tour.Pictures.Count(); i++)
+                                    {
+                                        <div class="swiper-slide">
+                                            <a title="@tour.TourName" href="/tours/@tour.Id/@tour.Slug"><img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=600,height=600,quality=80/@tour.Pictures[i]" alt="@tour.TourName"></a>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="swiper-pagination swiper-pagination-custom"></div>
+                            </div>
+                            <div class="top-info">
+                                <div class="icon-hover">
+                                    <div class="heart">
+                                        <a href="#"><i class="fa-regular fa-heart"></i></a>
+                                    </div>
+                                    <div class="hide-compare">
+                                        <div class="compare">
+                                            <a onclick="SubmitCompare(@tour.Id)"><i class="fa-solid fa-arrows-rotate"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="top-content">
+                                <h3 class="title">
+                                    <a title="@tour.TourName" href="/tours/@tour.Id/@tour.Slug">@tour.TourName</a>
+                                </h3>
+                                <div class="rating-@tour.Rating-sao"></div>
+                                <ul class="info-list">
+                                    <li><a href="javascript:void(0)"><i class="fa-solid fa-plane-departure"></i>@Localizer["Start"]: @tour.ProvinceTo</a></li>
+                                    <li><a href="javascript:void(0)"><i class="fa-regular fa-clock"></i>@tour.StartDate.ToShortDateString() - @tour.TourStyle - @Localizer["Start time"]: @tour.StartTime</a></li>
+                                </ul>
+                            </div>
+                            <div class="bottom-content-tour">
+                                <p class="base_price"><span>@AppConfigs.FormatCurrency("", (decimal)Math.Round(@tour.Price)) đ</span></p>
+                                <p class="price"><span>@AppConfigs.FormatCurrency("", (decimal)Math.Round(@tour.ActualPrice)) đ</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Single Grid -->
+                </div>
+            }
+        </div>
+    </div>
+    <div class="button-loadmore-product">
+        <a href="@Url.Action("Index", "Tours", new { area = ""})" class="loadmore" title="Tours">
+            @Localizer["See all"] <i class="fa-solid fa-arrow-right-long"></i>
+        </a>
+    </div>
+</div>

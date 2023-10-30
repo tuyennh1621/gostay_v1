@@ -1,0 +1,559 @@
+﻿@using GoStay.DataAccess.Entities;
+@{
+    ViewData["Title"] = "Video List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var data = ViewBag.ListVideo.Data;
+}
+
+<head>
+
+</head>
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "VIDEONEWS" })
+<!-- #page-title end -->
+<style>
+
+    .btn-select-video {
+        width: 100%;
+        border: 1px solid #fff;
+        background-image: linear-gradient(to right, #3B4371, #F3904F) !important;
+    }
+
+    .append-video, .append-picture {
+        height: 200px;
+    }
+
+        .append-video video, .append-picture img {
+            height: 150px;
+            max-height: 150px;
+            width: 100%;
+        }
+
+    .action-col-table a:first-child {
+        background: #1ac3c6;
+        border: none;
+        color: #fff;
+        padding: 1px 0.35rem;
+    }
+
+    .action-col-table button:last-child {
+        background: #dc3545;
+        border: none;
+        color: #fff;
+    }
+</style>
+<link rel="stylesheet" href="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.css" />
+
+<section id="content">
+
+    <div class="content-wrap pb-0">
+
+        <div class="container clearfix">
+
+            <div class="row gutter-40 col-mb-80">
+
+
+                <div class="special-div-less-margin">
+                    <div>
+                        <a class="button button-3d button-rounded gradient-grey-orange  float-right" href="/Admin/VideosHome/Create"><i class="icon-plus"></i> Thêm Mới</a>
+                    </div>
+                </div>
+                <div class="postcontent col-lg-12" id="MainDataSection">
+                    @*@await Html.PartialAsync("~/Areas/Admin/Views/NewsHome/NewsListPartial.cshtml", Model)*@
+                </div><!-- .postcontent end -->
+            </div>
+        </div>
+    </div>
+</section><!-- #content end -->
+
+<div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Add News</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <form action="BufferedSingleFileUploadPhysical/?handler=Upload"
+                      enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;"
+                      method="post">
+                    <dl>
+                        <dt>
+                            <label for="FileUpload_FormFile">File</label>
+                        </dt>
+                        <dd>
+                            <input id="FileUpload_FormFile" type="file"
+                                   name="FileUpload.FormFile" />
+                        </dd>
+                    </dl>
+
+                    <input class="btn" type="submit" value="Upload" />
+
+                    <div style="margin-top:15px">
+                        <output name="result"></output>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container py-4">
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h6 class="text-uppercase text-white">Danh sách bài viết chứa video</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="dt-dropdown">
+                        <label>
+                            <select class="dt-selector" id="page-size-common" onchange="getDataSearch(true)">
+                                <option value="10" selected="">10</option>
+                                <option value="5">5</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                                <option value="70">70</option>
+                                <option value="100">100</option>
+                            </select>
+                             bản ghi hiển thị
+                        </label>
+                    </div>
+                    <div class="dt-search">
+                        <input class="dt-input" id="search-common" placeholder="Search..." type="text">
+                    </div>
+                </div>
+               
+                <table id="my_table" class="table table-bordered table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th style=" max-width:400px">Tiêu đề</th>
+                            <th> Ngày tạo</th>
+                            <th> Loại video</th>
+                            <th> Ảnh minh họa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        @if(data.Count > 0)
+                        {
+                            @foreach (var item in data)
+                            {
+                                <tr id="record-@item.Id">
+                                    <td>@item.Id</td>
+                                    <td style="white-space:inherit !important; max-width:400px"><a target="_blank" href="/video/@item.Id/@item.Slug">@item.Title</a></td>
+                                    <td>@item.DateCreate.ToString("dd/MM/yyyy")</td>
+                                    <th> @item.Category </th>
+                                    <td><img src="@item.PictureTitle" style="width:150px;" /></td>
+                                    <td class="action-col-table">
+                                        <a type="button" href="/Admin/Edit/@item.Id" class="btn-icon-edit accordion-edit-@item.Id" data-item="@item.Id" data-show="1">
+                                            <i class="icon-edit" style="font-size:23px;"></i>
+                                        </a>
+                                        <button type="button" onclick="confirmDeleteVideo(@item.Id)"> <i class="icon-line-delete" style="font-size:23px;"></i> </button>
+                                            
+                                    </td>
+
+
+                                </tr>
+                                    
+                            }
+
+                        }
+                    </tbody>
+                </table>
+                <div class="dt-bottom">
+                    @if (data.Count > 0)
+                    {
+                        <div class="dt-info">Tổng: @data[0].Total bản ghi </div>
+                        <div class="dt-pagination">
+                            <ul id="page-index-common">
+                                @if (data[0].Total < 10)
+                                {
+                                    <li class="pager"><a href="#" data-page="1">‹‹</a></li>
+                                }
+                                <li class="active"><a href="#" data-page="1">1</a></li>
+                                @for (var i = 2; (data[0].Total - (10 * (i - 1)) > 0); i++)
+                                {
+                                    <li class=""><a href="#" data-page="@i">@i</a></li>
+                                    if ((data[0].Total - (10 * (i - 1)) <= 0))
+                                    {
+                                        <li class="pager"><a href="#" data-page="@i">››</a></li>
+                                    }
+                                }
+                                @if (data[0].Total < 21 && data[0].Total > 10)
+                                {
+                                    <li class="pager"><a href="#" data-page="2">››</a></li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+   
+
+</div>
+
+@section scripts{
+
+
+    <script>
+        var itemEdit = 0;
+        document.querySelector('#search-common').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                // code for enter
+                getDataSearch(false);
+            }
+        });
+        $(document).ready(function () {
+            $("#page-index-common li").click(function () {
+                debugger;
+                $("#page-index-common li").removeClass("active");
+                $(this).addClass("active");
+                getDataSearch(false);
+            });
+            $(".action-col-table .btn-icon-edit").click(function () {
+                debugger;
+                var show = $(this).attr("data-show");
+                var id = $(this).attr("data-item");
+                itemEdit = id;
+                $(".data-row-edit").addClass("d-none");
+                $(".data-row-edit").removeClass("row-selected");
+                if (show == 1) {
+                    $(this).attr("data-show", "0");
+                    $("#accordion-" + id).removeClass("d-none");
+                    $("#accordion-" + id).addClass("row-selected");
+                } else {
+                    $(this).attr("data-show", "1");
+                }
+            })
+        })
+        function loadJs(){
+            $("#page-index-common li").click(function () {
+                debugger;
+                $("#page-index-common li").removeClass("active");
+                $(this).addClass("active");
+                getDataSearch(false);
+            });
+            $(".action-col-table .btn-icon-edit").click(function () {
+                debugger;
+                var show = $(this).attr("data-show");
+                var id = $(this).attr("data-item");
+                itemEdit = id;
+                $(".data-row-edit").addClass("d-none");
+                $(".data-row-edit").removeClass("row-selected");
+                if (show == 1) {
+                    $(this).attr("data-show", "0");
+                    $("#accordion-" + id).removeClass("d-none");
+                    $("#accordion-" + id).addClass("row-selected");
+                } else {
+                    $(this).attr("data-show", "1");
+                }
+            })
+        }
+        function getDataSearch(isChangeSize) {
+            var param = new Object();
+            param.TextSearch = $("#search-common").val();
+            param.PageSize = parseInt($("#page-size-common option:selected").val());
+            if(isChangeSize == true){
+                param.PageIndex = 1;
+            } else{
+                param.PageIndex = parseInt($("#page-index-common li.active a").attr("data-page"));
+            }
+
+            console.log("param,.. ", param);
+            callAjax("@Url.Action("GetListVideo", "VideosHome")", "POST", param, isChangeSize);
+        }
+        function reloadPageIndex(total, size){
+            var pageDefault = ` <li class="pager"><a href="#" data-page="1">‹‹</a></li>
+                                            <li class="active"><a href="#" data-page="1">1</a></li>`;
+            
+            $('#page-index-common').html('');
+            $('#page-index-common').append(pageDefault);
+            for (var i = 2; (total - (size * (i - 1)) > 0); i++){
+                let page = `<li class=""><a href="#" data-page="${i}">${i}</a></li>`;
+                $('#page-index-common').append(page);
+                if ((total - (size * (i - 1)) <= 0)){
+                    let pageEnd = `<li class="pager"><a href="#" data-page="${i}">››</a></li>`;
+                    $('#page-index-common').append(pageEnd);
+                }
+            }
+            if (total < 10){
+                $(".pager").remove();
+            }
+            if(10 < total && total < 20){
+                let pageEnd2 = `<li class="pager"><a href="#" data-page="2">››</a></li>`;
+                $('#page-index-common').append(pageEnd2);
+
+            }
+        }
+        function callAjax(url, action, param, isChangeSize) {
+            $.ajax({
+                url: url,
+                type: action,
+                data: JSON.stringify(param),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.Code == 0){
+                        $("#my_table tbody").html('');
+                        console.log(data);
+                        setView(data.Data);
+                        var pageS = parseInt($("#page-size-common option:selected").val());
+                        if (isChangeSize){
+                            reloadPageIndex(data.Data[0].Total, param.PageSize)
+                        }
+                        
+
+                        //if (pageS != param.PageSize) {
+
+                        //}
+                        loadJs();
+                    }
+                    else
+                        alert("lỗi");
+                    
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+            })
+        }
+        function showInputPicture(option, id) {
+            if (option == "link") {
+                $("#use-link-img-" + itemEdit).css("display", "block");
+                $(".append-picture-" + itemEdit).css("display", "none");
+                $("#PictureTitle-" + itemEdit).val('');
+
+            } else {
+                $("#use-link-picture-" + itemEdit).css("display", "none");
+                $(".append-picture-" + itemEdit).css("display", "block");
+                $("#PictureTitle-" + itemEdit).val('');
+            }
+        }
+        function showInputVideo(option) {
+            if (option == "link") {
+                $("#use-link-video-" + itemEdit).css("display", "block");
+                $(".append-video-" + itemEdit).css("display", "none");
+                $("#Video-" + itemEdit).val('');
+
+            } else {
+                $("#use-link-video-" + itemEdit).css("display", "none");
+                $(".append-video-" + itemEdit).css("display", "block");
+                $("#Video-" + itemEdit).val('');
+            }
+        }
+        function showDiv() {
+            showSearchLoader();
+            setTimeout(function () {
+                hideSearchLoader();
+            }, 5000);
+        }
+        function selectVideo(id) {
+            console.log("itemEdit", itemEdit);
+            debugger;
+            var x = $(".data-video-item-" + id).html();
+            console.log(x);
+            $(".append-video-" + itemEdit).html('');
+            $(".append-video-" + itemEdit).html(x);
+            var res = $(".data-video-item-" + id).attr("data-src-video");
+            $("#Video-" + itemEdit).val(res);
+            $(".append-video-" + itemEdit + " .btn-select-video").remove();
+        }
+        function selectPictureTitle(id) {
+            var x = $(".data-picture-item-" + id).html();
+            console.log("itemEdit", itemEdit);
+            console.log(x);
+            $(".append-picture-" + itemEdit).html('');
+            $(".append-picture-" + itemEdit).html(x);
+            var res = $(".data-picture-item-" + id).attr("data-src-picture");
+            $("#PictureTitle-" + itemEdit).val(res);
+            $(".append-picture-" + itemEdit + ".btn-select-video").remove();
+        }
+
+        function deleteVideoId() {
+
+        }
+        function confirmDeleteVideo(Id) {
+            Id = parseInt(Id);
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteVideo", "VideosHome")",
+                data:
+                {
+                    Id: Id
+                },
+                success: function (data) {
+                    console.log("ôkok")
+                    $("#record-" + Id).remove();
+                    $("#accordion-" + Id).remove();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+        function setHtml(item){
+            var views = `
+                                 <tr id="record-${item.Id}">
+                                    <td>${item.Id}</td>
+                                    <td style="white-space:inherit !important"><a target="_blank" href="#">${item.Title}</a></td>
+                                    <td>${item.DateCreate}</td>
+                                    <th> ${item.Category} </th>
+                                    <td><img src="${item.PictureTitle}" style="width:150px;" /></td>
+                                    <td class="action-col-table">
+                                        <a type="button" href="/Admin/Edit/${item.Id}" class="btn-icon-edit accordion-edit-${item.Id}" data-item="${item.Id}" data-show="1">
+                                            <i class="icon-edit" style="font-size:23px;"></i>
+                                        </a>
+                                        <button type="button" onclick="confirmDeleteVideo(${item.Id})"> <i class="icon-line-delete" style="font-size:23px;"></i> </button>
+                                    </td>
+
+
+                                </tr>
+                                
+            `;
+            $("#my_table tbody").append(views);
+        }
+        function setView(arr) {
+            debugger;
+            for (var i = 0; i < arr.length; i++) {
+                setHtml(arr[i]);
+            }
+        }
+
+        function updateDesc(id){
+            var Url = '@Url.Action("VideoDetailPartial","VideosHome", new { area="Admin"})';
+            debugger;
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: {
+                    id : id
+                },
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#MainDataSection').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+
+
+        //Comment
+        //    < tr id = "accordion-${item.Id}" class="data-row-edit d-none" >
+        //        <td colspan="6" >
+        //            <div>
+        //            <div class="card" >
+
+
+        //                <div id="collapseOne-29" class="collapse show" aria - labelledby="headingOne" data - parent="#accordion" >
+        //                    <div class="card-body" >
+        //                        <form action="/Admin/VideosHome/EditVideo" area = "Admin" class="row" enctype = "multipart/form-data" method = "post" >
+        //                            <div class="col-12 col-lg-3" >
+        //                                <div class="append-video-${item.Id}" >
+        //                                    <video class="w-100" muted >
+        //                                        <source src="${item.Video}" type = "video/mp4" >
+        //                                            </video>
+        //                                            < /div>
+        //                                            < div class="" >
+
+        //                                                <a href="#" style = "margin-left: 27px; margin-bottom:10px;" type = "button" class="btn btn-danger rounded-0" data - toggle="modal" data - target="#UploadVideo" onclick = "showInputVideo('file')" >
+        //                                                    <i class="fa fa-plus-circle" > </i> Chọn video có sẵn
+        //                                                        < /a>
+        //                                                        < a href = "#" style = "margin-left: 27px; margin-bottom:10px;" type = "button" class="btn btn-primary rounded-0" onclick = "showInputVideo('link')" >
+        //                                                            <i class="fa fa-plus-circle" > </i> Sử dụng link linmk
+        //                                                                < /a>
+        //                                                                < /div>
+        //                                                                < /div>
+        //                                                                < div class="col-12 col-lg-3" >
+
+        //                                                                    <div class="append-picture" >
+        //                                                                        <img src="${item.PictureTitle}" >
+        //                                                                            </div>
+        //                                                                            < div class="" >
+
+        //                                                                                <a href="#" style = "margin-left: 27px; margin-bottom:10px;" type = "button" class="btn btn-danger rounded-0" data - toggle="modal" data - target="#UploadPicture" onclick = "showInputPicture('file')" >
+        //                                                                                    <i class="fa fa-plus-circle" > </i> Chọn ảnh có sẵn
+        //                                                                                        < /a>
+        //                                                                                        < a href = "#" style = "margin-left: 27px; margin-bottom:10px;" type = "button" class="btn btn-primary rounded-0" onclick = "showInputPicture('link')" >
+        //                                                                                            <i class="fa fa-plus-circle" > </i> Sử dụng link link
+        //                                                                                                < /a>
+        //                                                                                                < /div>
+        //                                                                                                < /div>
+        //                                                                                                < div class="col-12 col-lg-6" >
+        //                                                                                                    <div class="row" >
+        //                                                                                                        <div class="overwrite-class col-12 form-group" style = "display: none" >
+        //                                                                                                            <input type="number" name = "Id" class="sm-form-control border-form-control" value = "${item.Id}" >
+        //                                                                                                                <input type="text" name = "Name" class="sm-form-control border-form-control" value = "${item.Name}" >
+        //                                                                                                                    </div>
+        //                                                                                                                    < div class="overwrite-class col-12 form-group" id = "use-link-video-${item.Id}" style = "display: none" >
+        //                                                                                                                        <label for= "Title" > Link < small class= "text-danger" >* </small></label >
+        //                                                                                                                            <input type= "text" id = "Video-${item.Id}" name = "Video" class="sm-form-control border-form-control" value = "${item.Video}" placeholder = "Sử dụng đường dẫn video tuyệt đối" >
+        //                                                                                                                                </div>
+        //                                                                                                                                < div class="overwrite-class col-12 form-group" id = "use-link-img-${item.Id}" style = "display: none" >
+        //                                                                                                                                    <label for= "Title" > Link < small class= "text-danger" >* </small></label >
+        //                                                                                                                                        <input type= "text" id = "PictureTitle-${item.Id}" name = "PictureTitle" class="sm-form-control border-form-control" value = "${item.PictureTitle}" placeholder = "Sử dụng đường dẫn ảnh tuyệt đối" >
+        //                                                                                                                                            </div>
+        //                                                                                                                                            < div class="overwrite-class col-12 form-group" >
+        //                                                                                                                                                <label for= "Title" > Title < small class= "text-danger" >* </small></label >
+        //                                                                                                                                                    <input type= "text" name = "Title" value = "${item.Title}" class="sm-form-control border-form-control" >
+        //                                                                                                                                                        </div>
+        //                                                                                                                                                        < div class="overwrite-class col-12 form-group" >
+        //                                                                                                                                                            <label for= "category" > Loại tin tức < /label>
+        //                                                                                                                                                                < select class="box-on-stock-option-region headerLeft_select custom-select" name = "IdCategory" >
+        //                                                                                                                                                                    <option value="1" > Văn Hóa Lễ Hội < /option>
+        //                                                                                                                                                                        < option value = "2" > Ẩm Thực Ba Miền < /option>
+        //                                                                                                                                                                            < option value = "3" > Văn Hóa Phong Tục < /option>
+        //                                                                                                                                                                                < option value = "4" > Phóng Sự Ảnh < /option>
+        //                                                                                                                                                                                    < option value = "5" selected = "" > Tin Khuyến Mại < /option>
+        //                                                                                                                                                                                        < option value = "6" > Tin Tức Du Lịch < /option>
+
+        //                                                                                                                                                                                            < /select>
+        //                                                                                                                                                                                            < /div>
+        //                                                                                                                                                                                            < div class="overwrite-class col-12 form-group" >
+        //                                                                                                                                                                                                <label for= "category" > Ngôn ngữ < /label>
+        //                                                                                                                                                                                                    < select class= "box-on-stock-option-region headerLeft_select custom-select" name = "LangId" >
+        //                                                                                                                                                                                                        <option value="1" > Tiếng Việt < /option>
+        //                                                                                                                                                                                                            < option value = "2" > Tiếng Anh < /option>
+        //                                                                                                                                                                                                                < option value = "3" > Tiếng Trung < /option>
+
+        //                                                                                                                                                                                                                    < /select>
+        //                                                                                                                                                                                                                    < /div>
+        //                                                                                                                                                                                                                    < div class="overwrite-class col-12 form-group" style = "display: flex;justify-content: right;" >
+        //                                                                                                                                                                                                                        <button type="submit" tabindex = "6" class="button btn-sm button-3d button-rounded gradient-ocean" > <i class="icon-save" > </i> Save</button >
+        //                                                                                                                                                                                                                            </div>
+
+        //                                                                                                                                                                                                                            < /div>
+        //                                                                                                                                                                                                                            < /div>
+        //                                                                                                                                                                                                                            < /form>
+        //                                                                                                                                                                                                                            < /div>
+        //                                                                                                                                                                                                                            < /div>
+        //                                                                                                                                                                                                                            < /div>
+        //                                                                                                                                                                                                                            < /div>
+
+        //                                                                                                                                                                                                                            < /td>
+        //                                                                                                                                                                                                                            < /tr>
+    </script>
+    }

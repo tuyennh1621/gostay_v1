@@ -1,0 +1,71 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.DataDto.HotelDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model ParamSelectDateRoom
+<input type="hidden" id="idroom" value="@Model.IdRoom" />
+<input type="hidden" id="basePrice" value="@Model.BasePrice" />
+<input type="hidden" id="hiddenMinNight" value="@Model.MinNight" />
+<input type="hidden" id="hiddenSelectedNight" value="0"/>
+<input type="hidden" id="hiddenRangeDate" />
+<div>
+	
+	<div class="modal-dialog modal-dialog-centered modal-gallery-content-custom">
+		<div class="modal-content">
+			<div class="modal-header pd-10">
+				<h5 class="modal-title text-22 pl-10" id="select_date_modal">Select Check-In Date</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<section class="ftco-section">
+					<div class="calendar-section">
+						<div class="calendar calendar-first" id="calendar_first">
+							<div class="calendar_header">
+								<button class="switch-month switch-left">
+									<i class="fa fa-chevron-left"></i>
+								</button>
+								<h2></h2>
+								<button class="switch-month switch-right">
+									<i class="fa fa-chevron-right"></i>
+								</button>
+							</div>
+							<div class="calendar_weekdays"></div>
+							<div class="calendar_content"></div>
+						</div>
+						<div class="calendar calendar-second" id="calendar_second">
+							<div class="calendar_header">
+								<button class="switch-month switch-left">
+									<i class="fa fa-chevron-left"></i>
+								</button>
+								<h2></h2>
+								<button class="switch-month switch-right">
+									<i class="fa fa-chevron-right"></i>
+								</button>
+							</div>
+							
+							<div class="calendar_weekdays"></div>
+							<div class="calendar_content"></div>
+						</div>
+					</div> <!-- End Calendar -->
+				</section>
+				<div class="note-select-date">
+					<p>Điều kiện: <span>Chọn tối thiểu @Model.MinNight đêm</span></p>
+					<div class="d-flex gap-10 note-date">
+						<p>Ngày Checkin: <span id="lbFistCheck">22/06/20223</span></p>
+						<p>Ngày Checkout: <span id="lbSecondCheck">26/06/2023</span></p>
+					</div>
+					<p>Tổng số đêm: <span id="lbNumNight">Bạn chưa chọn đêm nào.</span></p>
+				</div>
+			</div>
+			<div class="modal-footer">
+				@*<a class="btn-login-form btn-submit mt-10 mb-10" href="#">Đặt phòng</a>*@
+				<div onclick="Booking(@Model.IdHotel,@Model.IdRoom)" class="btn-login-form btn-submit mt-10 mb-10">
+					@Localizer["Booking"]<i></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="~/assets/js/calendar.js?v=@AppConfigs.AppVersion" defer></script>

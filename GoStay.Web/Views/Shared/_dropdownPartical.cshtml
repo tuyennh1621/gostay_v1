@@ -1,0 +1,11 @@
+﻿@using GoStay.DataAccess.Entities
+@model List<MulltiKeyValue>
+
+@{
+    if (Model == null)
+        return;
+    foreach (var item in Model)
+    {
+        <option value="@item.TextValue">@item.Title</option>
+    }
+}

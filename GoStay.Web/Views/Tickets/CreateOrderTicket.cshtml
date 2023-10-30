@@ -1,0 +1,184 @@
+@using GoStay.Common.Configuration;
+@using GoStay.Data.Ticket
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model OrderTicketShowDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<head>
+    <link href="https://kendo.cdn.telerik.com/themes/6.3.0/default/default-main.css" rel="stylesheet" />
+    @{
+        var kendoVersion = "2022.2.510";
+    }
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+
+
+</head>
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    byte _active = 3;
+    ViewData["TitlePage"] = "Kết quả đặt vé: " + Model.TicketDetail.FlightNumber + " " + Model.StatusText;
+}
+@await Html.PartialAsync("~/Views/Shared/_statusTicketbooking.cshtml",_active )
+
+<section class="hotel-booking-payment">
+    <div class="container">
+        <div class="booking-payment-parent">
+            <div class="bk-success pb-80 pd-30">
+                <div class="bk-title-center">
+                    <i class="pt-10 fa-regular fa-circle-check ic-50"></i>
+                    <h3 class="pt-10 text-18">@Localizer["Successfully submitted booking request"]</h3>
+                    <div class="pt-10 text-14-gray">@Localizer["goStay will actively contact you within 30 minutes to confirm the ticket and payment instructions."]</div>
+                    <div class="qr-wrapper">
+                        <div class="demo-section">
+                            <h3></h3>
+                            <div id="qrUrl"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fl-bk-success-info">
+                    <h3 class="pt-10 text-16-b mb-10">@Localizer["Trip information"]</h3>
+                    <div class="fl-bk-success">
+                        <div class="fl-bk-departure">
+                            <div class="fl-top-select1">
+                                <label class="flight-departure-label text-14-white">@Localizer["Flight way"]</label>
+                                <div class="fl-top-content-listing">
+                                    <h3 class="title">
+                                        <a href="#">@Model.TicketDetail.StartPoint <span><i class="fa-solid fa-arrow-right-long"></i>@Model.TicketDetail.EndPoint</span></a>
+                                    </h3>
+                                    <ul class="fl-info-list">
+                                        <li>
+                                            <a>@Model.TicketDetail.StartDateText</a>
+                                            <span class="circle"></span>
+                                            <a>@Model.TicketDetail.Passengers.Count() @Localizer["passenger"]</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fl-bk-airline">
+                            <div class="flight fl-listing">
+                                <img src="~/@Model.TicketDetail.Logo" alt="#">
+                                <div>
+                                    <h3 class="text-14-b">@Model.TicketDetail.AirlineName</h3>
+                                    <p class="text-12">@Model.TicketDetail.AirlineCode / @Model.TicketDetail.FlightNumber</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fl-bk-date">
+                            <div class="fl-top-content-list">
+                                <div class="date-in">
+                                    <h3 class="text-16-b mb-10">@Model.TicketDetail.StartDateText.Split(" ")[1]</h3>
+                                    <p class="text-12">@Model.TicketDetail.StartPoint</p>
+                                </div>
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                                <div class="date-out">
+                                    <h3 class="text-16-b mb-10">@Model.TicketDetail.EndDateText.Split(" ")[1]</h3>
+                                    <p class="text-12">@Model.TicketDetail.EndPoint</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="fl-bk-code">
+                        <div class="bk-success-code">
+                            <div class="text-14">
+                                @Localizer["Booking code"]
+                            </div>
+                            <div class="text-16-b">@Model.Ordercode</div>
+                        </div>
+                        <div class="bk-success-date">
+                            <div class="text-14">
+                                @Localizer["Number of customer"]
+                            </div>
+                            <div class="text-16-b">@Model.TicketDetail.Passengers.Count() @Localizer["passenger"]</div>
+                        </div>
+
+                        <div class="bk-success-date">
+                            <div class="text-14">
+                                @Localizer["Class ticket"]
+                            </div>
+                            <div class="text-16-b">@Model.TicketDetail.Class</div>
+                        </div>
+
+                        <div class="bk-success-price">
+                            <div class="text-14">
+                                @Localizer["Total fare"]
+                            </div>
+                            <div class="text-16-b">
+                                @AppConfigs.FormatCurrency("", Math.Round((decimal)Model.TicketDetail.Price,0)) VND
+                            </div>
+                        </div>
+
+@*                        <div class="bk-success-price">
+                            <div class="text-14">
+                                @Localizer["Baggages"]
+                            </div>
+                            <div class="text-16-b">@Localizer["Length"]:@Model.TicketDetail.Barrage.Split("-")[0] cm, @Localizer["Width"]: @Model.TicketDetail.Barrage.Split("-")[1] cm, @Localizer["Height"]: @Model.TicketDetail.Barrage.Split("-")[2] cm</div>
+
+                        </div>*@
+                    </div>
+                    <div class="line-horizontal-primary mt-20 mb-20"></div>
+
+                </div>
+                <div class="mt-30 mb-30 bk-user-info">
+                    <div class="text-16-b">@Localizer["Contact Info"]</div>
+                    <div class="bk-phone-email">
+                        <div class="text-14-b">
+                            @Model.ContactInfor
+                        </div>
+                        <div class="text-14">/ @Model.Phone</div>
+                        <div class="text-14">/ @Model.Email</div>
+                    </div>
+                    <div class="mt-10 pl-20 guest-info-room">
+                        @for (int i = 1; i <= Model.TicketDetail.Passengers.Count(); i++)
+                        {
+                            <div class="text-14">@Localizer["Customer information"] @i:</div>
+                            <div class="tour-bk-guest mb-10">
+                                <div>
+                                    @Localizer["Fullname"]: <span class="text-14-b">
+                                        @Model.TicketDetail.Passengers[i-1].FullName
+                                    </span>
+                                </div>
+                                <div>@Localizer["Sex"]: <span class="text-14-b">@Model.TicketDetail.Passengers[i-1].Gen</span></div>
+                                <div>@Localizer["Date of birth"]: <span class="text-14-b">@Model.TicketDetail.Passengers[i-1].Birthday</span></div>
+                                <div class="text-12-blue"><i class="fa-solid fa-print ic-12-blue"></i>@Localizer["Print e-tickets"]</div>
+                            </div>
+                            <hr>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#qrUrl").kendoQRCode({
+            value: "https://gostay.realtech.com.vn/Tickets/showTicket/@Model.Id",
+            errorCorrection: "M",
+            size: 120,
+            border: {
+                color: "#000000",
+                width: 5
+            }
+        });
+    });
+
+</script>
+
+<style>
+    .demo-section {
+        display: inline-block;
+        margin: 15px 30px 15px 0;
+    }
+
+    .k-qrcode {
+        display: inline-block;
+        margin: 10px 0 0;
+        border: none;
+    }
+</style>

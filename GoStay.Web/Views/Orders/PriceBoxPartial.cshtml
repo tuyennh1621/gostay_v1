@@ -1,0 +1,38 @@
+﻿@inject IViewLocalizer Localizer
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.OrderDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@model OrderPriceBoxDto
+
+
+    <div class="room-price-sidebar">
+        <div class="bk-title-room">
+            @Model.Room.RoomName
+        </div>
+        <div class="bk-quality-room">
+            <div class="title-price text-14-gray">@Model.Room.NumRoom @Localizer["Rooms"] <span class="text-14"> x @Model.Room.NumNight @Localizer["night"]</span></div>
+            <div class="bk-room-price">
+                <div class="base-price">
+                @*@Model.Room.NumRoom X @Model.Room.NumNight X*@
+                @AppConfigs.FormatCurrency("VND", Math.Round(Model.Price,0))
+                    <p class="label_discount">-@Model.Room.Discount %</p>
+                </div>
+                <div class="sale-price">
+                    @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(@Model.ActualPrice),0))
+                    <div class="text-12">(@Localizer["Maximum"] @Model.Room.NumMature @Localizer["adult"], @Model.Room.NumChild @Localizer["children"])</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="room-price-total">
+    <div class="title-total">
+        <h3 class="text-14-b">@Localizer["Total payment"]</h3>
+        <h3 class="text-16-b">@AppConfigs.FormatCurrency("VND", Math.Round((decimal)(@Model.ActualPrice),0))</h3>
+    </div>
+    <div class="title-total-sub">
+        <div class="text-12">@Localizer["Including taxes, fees, VAT"]</div>
+    </div>
+    <div class="text-12-green">@Localizer["Clever choice! You save"] @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(@Model.ActualPrice - @Model.Price),0))</div>
+</div>

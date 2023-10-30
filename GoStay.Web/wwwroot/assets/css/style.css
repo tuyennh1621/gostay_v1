@@ -1,0 +1,227 @@
+
+/*.ftco-section {
+    padding: 1em 0;
+}*/
+
+.ftco-no-pt {
+    padding-top: 0;
+}
+
+.ftco-no-pb {
+    padding-bottom: 0;
+}
+
+.heading-section {
+    font-size: 28px;
+    color: #000;
+}
+.advlevel-0 {
+    color: var(--bs-primary);
+    font-weight:bold;
+}
+
+.img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.calendar-section {
+    margin-bottom: 20px;
+    display:flex;
+    gap:30px;
+}
+
+.calendar, .calendar_weekdays,
+.calendar_content {
+    max-width: 585px;
+}
+
+.calendar {
+    /*float: left;*/
+    margin: auto;
+    min-width: 320px;
+    font-weight: 400;
+    background: #fff;
+    padding: 10px;
+    -webkit-box-shadow: 0px 4px 26px -22px rgba(0, 0, 0, 0.14);
+    -moz-box-shadow: 0px 4px 26px -22px rgba(0, 0, 0, 0.14);
+    box-shadow: 0px 4px 26px -22px rgba(0, 0, 0, 0.14);
+}
+
+.calendar_weekdays {
+    color: #aaa;
+    font-weight: 300;
+}
+
+    .calendar_weekdays div {
+        display: inline-block;
+        vertical-align: top;
+        color: #000;
+        font-weight: 700;
+    }
+
+.calendar_content, .calendar_weekdays, .calendar_header {
+    position: relative;
+}
+
+    .calendar_content:after, .calendar_weekdays:after, .calendar_header:after {
+        content: ' ';
+        display: table;
+        clear: both;
+    }
+
+    .calendar_weekdays div, .calendar_content div {
+        /*border: 1px dotted #999;*/
+        width: 14.286%;
+        height: 68px;
+        overflow: hidden;
+        text-align: center;
+        background-color: transparent;
+    }
+
+    .calendar_content div {
+        float: left;
+        margin-left: -1px;
+        margin-top: -1px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+    }
+
+        .calendar_content div:hover {
+            border: 1px solid #ededed;
+            /*line-height: 68px;*/
+            cursor: pointer;
+        }
+
+        .calendar_content div.blank:hover {
+            cursor: default;
+            border: none;
+        }
+
+        .calendar_content div.past-date {
+            cursor: initial;
+            color: #d5d5d5;
+        }
+
+        .calendar_content div.select-date {
+            cursor: initial;
+            color: #d5d5d5;
+        }
+
+        .calendar_content div.today {
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+            background-color: var(--bs-primary);
+        }
+
+        .calendar_content div.selected {
+            background-color: rgba(206, 10, 170, 0.2);
+            /*rgba(170, 170, 176, .5) #aaaab0*/
+            border: 1px solid white;
+        }
+
+.calendar_header {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    height: 55px;
+    display: table;
+    vertical-align: middle;
+}
+
+    .calendar_header h2 {
+        margin-top: 15px;
+        padding: 0;
+        font-weight: 700;
+        font-size: 18px;
+        color: #000;
+        text-transform: uppercase;
+    }
+
+button.switch-month {
+    background-color: transparent;
+    padding: 0;
+    outline: none;
+    border: none;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color: #cccccc;
+    -webkit-transition: color .2s;
+    -o-transition: color .2s;
+    transition: color .2s;
+}
+
+    button.switch-month.switch-left {
+        left: 0;
+    }
+
+    button.switch-month.switch-right {
+        right: 0;
+    }
+
+    button.switch-month:hover {
+        color: #bd83ce;
+    }
+
+    button.switch-month:active {
+        background-color: transparent;
+    }
+
+.select-checkin .search-box input {
+    border: none !important;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #ebebeb;
+}
+
+.dropdown-menu {
+    background: var(--bs-white);
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2);
+    transform: translate(-70px, 5px);
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 20px 10px 20px;
+    clear: both;
+    font-weight: 400;
+    color: var(--bs-black);
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 0;
+}
+
+    .dropdown-item:focus,
+    .dropdown-item:hover {
+        color: var(--bs-primary);
+        background-color: #f5f5f5;
+    }
+
+.calendar {
+    padding: 0px !important;
+}
+
+.calendar_header {
+    background-color: #ce0aaa;
+}
+
+    .calendar_header h2 {
+        color: #fff !important;
+    }
+
+.calendar_weekdays div, .calendar_content div {
+    height: 60px !important;
+    line-height: 50px;
+}

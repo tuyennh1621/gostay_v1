@@ -1,0 +1,48 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.DataDto.Air
+@using GoStay.DataDto.Air.ExtDOMSearchFlightsShort
+@model TicketHomePage
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+@foreach (var item in Model.data)
+{
+    <div class="item">
+        
+        <div class="flight-single-grid flight-single-grid-mobile">
+            <div class="top-info">
+                <div class="flight">
+                    <img src="@item.LogoAirline" alt="@item.AirlineName">
+                    <h3 class="text-14">@item.AirlineName</h3>
+                </div>
+            </div>
+            <div class="fl-content mt-15" >
+                <div class="fl-top-content">
+                    <a title="@item.AirlineName: @item.StartPoint -> @item.EndPoint"
+                        href="@Url.Action("TicketOrder", "Tickets", new {DataSession = Model.DataSession,FlySession = item.FlightSession,
+                            Direction = item.Direction,Classtk = item.FareOptions.FirstOrDefault().Class,TkDate = "",adult = 1,child=0,infant=0})">
+                        <span class="text-16-b">@item.StartPoint</span>
+                        <i class="fa-solid fa-arrow-right-long"></i>
+                        <span class="text-16-b">@item.EndPoint</span>
+                    </a>
+                </div>
+                <div class="info-list mt-10">
+                    <i class="fa-solid fa-plane-departure ic-12"></i>@Localizer["Start"]: <span>@item.StartDate.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="fl-bottom-content">
+                    <p class="price">
+                        @AppConfigs.FormatCurrency("", (decimal)Math.Round((double)item.Price))
+                    </p>
+                    <p class="price2">
+                        @Localizer["Price after tax"]:<span>
+                            @AppConfigs.FormatCurrency("", (decimal)Math.Round((double)(item.Price+item.FareOptions.FirstOrDefault().IssueFee
+                        +item.FareOptions.FirstOrDefault().ServiceFee)))
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+}

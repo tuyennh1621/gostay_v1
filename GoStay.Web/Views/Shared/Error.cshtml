@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>goStay - Đặt phòng khách sạn, tour du lịch, vé máy bay uy tín và nhanh chóng </title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.svg" />
+    <!-- Place favicon.ico in the root directory -->
+    <!-- Web Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/main.css" />
+    <link rel="stylesheet" href="~/assets/css/animate.css" />
+    <link rel="stylesheet" href="~/assets/css/all.css" />
+    <link rel="stylesheet" href="~/assets/css/bootstrap-utilities.css" />
+    <link rel="stylesheet" href="~/assets/css/swiper-bundle.min.css" />
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+    <!--[if lte IE 9]>
+        <p class="browserupgrade">
+          You are using an <strong>outdated</strong> browser. Please
+          <a href="https://browsehappy.com/">upgrade your browser</a> to improve
+          your experience and security.
+        </p>
+      <![endif]-->
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- /End Preloader -->
+    <!-- Start Error Area -->
+    <div class="error-area">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="container">
+                    <div class="error-content">
+                        <h1>404</h1>
+                        <h2>Có lỗi xảy ra</h2>
+                        <p>Vui lòng trở lại trang chủ và đăng nhập lại hệ thống</p>
+                        <div class="button">
+                            <a onclick="reset()" class="btn">Về lại trang chủ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Error Area -->
+    <!-- ========================= JS here ========================= -->
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/wow.min.js"></script>
+    <script src="~/assets/js/tiny-slider.js"></script>
+    <script src="~/assets/js/glightbox.min.js"></script>
+
+    @*fire base*@
+    <script src="~/assets/js/main.js?v=57"></script>
+    <script src="~/assets/js/common.js?v=12"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js" ></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth-compat.js" ></script>
+    <script src="~/assets/js/configfirebase.js?v=26"></script>
+    <script>
+        window.onload = function () {
+            window.setTimeout(fadeout, 500);
+        }
+        function deleteAllCookies() {
+            const cookies = document.cookie.split(";");
+
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 2000 00:00:00 GMT";
+            }
+        }
+        function fadeout() {
+            document.querySelector('.preloader').style.opacity = '0';
+            document.querySelector('.preloader').style.display = 'none';
+        }
+        function reset(){
+            logout();
+        }
+    </script>
+</body>
+
+</html>

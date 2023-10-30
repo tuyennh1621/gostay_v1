@@ -1,0 +1,113 @@
+﻿@using Kendo.Mvc.UI
+@using GoStay.DataDto.Telerik
+
+
+@{
+    ViewData["Title"] = "Editor";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>All tools</title>
+    <meta charset="utf-8">
+    @{
+        var kendoVersion = "2022.2.510";
+    }
+    <link href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.material-main.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.aspnetmvc.min.js"></script>
+    <link rel="stylesheet" href="~/kendoui/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/kendoui/css/site.css" />
+
+</head>
+<body>
+    <div>
+        <div id="txtEditor">
+            @(Html.Kendo().Upload()
+                .Name("file").Messages(m => m.Select("Chọn ảnh"))
+                .Async(a => a
+                .Save("Uploadimg", "ImageBrowser", new { @Id = Model.Id, @Obj = "news" })
+                .Remove("Async_Remove", "Upload")
+                .AutoUpload(true)
+                )
+                )
+            @(Html.Kendo().Editor()
+                .Name("kendoEditor")
+                .HtmlAttributes(new { style = "width: 100%; height:700px" })
+                .StyleSheets(css => css
+                .Add(Url.Content("~/kendoui/examples/content/shared/styles/examples-offline.css"))
+                )
+                .ImageBrowser(imageBrowser => imageBrowser
+                //local
+                @*.Image("~/uploads/news"+$"/{Model.Id}"+ "/{0}")*@
+                //server
+                .Image("https://cdn.realtech.com.vn/uploads/1/news/2023/" + $"/{Model.Id}" + "/{0}")
+                .Read("Read", "ImageBrowser", new { @Id = Model.Id, @Obj = "news" })
+                .Create("Create", "ImageBrowser")
+                .Destroy("Destroy", "ImageBrowser")
+                .Upload("UploadImg", "ImageBrowser")
+                .Thumbnail("Thumbnail", "ImageBrowser", new { @Id = Model.Id, @Obj = "news" })
+                )
+                .Tools(tools => tools
+                .Clear()
+                .Bold().Italic().Underline().Strikethrough()
+                .Undo().Redo()
+                .JustifyLeft().JustifyCenter().JustifyRight().JustifyFull()
+                .InsertUnorderedList().InsertOrderedList().InsertUpperRomanList().InsertLowerRomanList()
+                .Outdent().Indent()
+                .CreateLink().Unlink()
+                .InsertImage()
+                .InsertFile()
+                .SubScript()
+                .SuperScript()
+                .TableEditing()
+                .ViewHtml()
+                .Formatting()
+                .CleanFormatting()
+                .FormatPainter()
+                .FontName()
+                .FontSize()
+                .ForeColor().BackColor()
+                .Print()
+                )
+                .Value(@<text>
+                    @Model.Content
+                </text>)
+                )
+        </div>
+        <div class="modal-footer">
+            <a class="button button-3d button-rounded gradient-grey-orange  float-right" href="@Url.Action("NewsList", "NewsHome")" btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"> Back</a>
+            <button type="button" onclick="Transit('@Model.Id','news')" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+        </div>
+    </div>
+</body>
+@section scripts{
+
+    <!--Following two scripts are for ajax begin form and other ajax calls-->
+    <script>
+
+        function Transit(id, obj) {
+
+            var editor = $("#kendoEditor").data("kendoEditor");
+            var editorContent = editor.value();
+
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    Id: id,
+                    Obj: obj,
+                    Content: editorContent,
+                },
+                url: "@Url.Action("TransitData", "Editor")",
+                success: function (data) {
+                    alert("Hoan thanh");
+                },
+            })
+        }
+
+
+    </script>
+}

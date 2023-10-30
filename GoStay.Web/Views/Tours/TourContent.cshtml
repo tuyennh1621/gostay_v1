@@ -1,0 +1,371 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.Apis
+@using GoStay.DataDto.TourDto
+@using GoStay.Web.Model
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model TourContentDto;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="breadcrumns pt-100">
+    <div class="container">
+        <div class="breadcrumns-1 mt-20 mb-30">
+            <div class="row">
+                <div class="col-auto br-parent">
+                    <div class=""><a href="@Url.Action("Index", "Home", new { area = ""})" title="Trang chủ">@Localizer["Home"]</a></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><a href="@Url.Action("Index", "Tours", new { area = ""})" title="Danh sách Tour">Tour</a></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><a href="#" title="@Model.outStyle">@Model.outStyle</a></div>
+                </div>
+
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+
+                <div class="col-auto br-parent">
+                    <div class=""><a href="#" title="Các Tour theo nhóm @Model.TourTopic">@Model.TourTopic</a></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="">@Model.TourName</div>
+                </div>
+                @*                <div class="col-auto br-parent">
+                <div class=""><a href="/khach-san/@Model.TinhThanh_url/@Model.QuanHuyen_url" title="Khách sạn tại @Model.QuanHuyen, @Model.TinhThanh">@Model.QuanHuyen</a></div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumns -->
+<!-- Hotel Detail-->
+<section class="tour_detail_parent">
+    <div class="container-fluid">
+        <div class="detail-tour-image-parent">
+            <div id="main-carousel-detailTour" class="owl-carousel mt-30">
+                @if (Model.Pictures == null)
+                    return;
+                @foreach (var item in Model.Pictures)
+                {
+                    <div class="item">
+                        <div class="tour-image">
+                            <img alt="@Model.TourName" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=888,height=678,quality=80/@item">
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<section class="description">
+    <div class="container">
+        <div id="url-title" data-id="@Model.Id" data-title="@Model.TourName" data-slug="@Model.Slug" hidden></div>
+        <div class="row tour-description mb-40">
+            <div id="lefcontentTour" class="col-xxl-8 col-xl-8 mt-30">
+                <div class="detail-tour-title">
+                    <div class="col hotel-title-left">
+                        <h3>@Model.TourName</h3>
+
+                        <div class="user-review">
+                            <div class="label2">
+                                <i class="fa-solid fa-umbrella"></i> @Model.Rating
+                            </div>
+                            <a href="#">Tuyệt vời <span>(231 @Localizer["reviews"])</span></a>
+                        </div>
+                        <div class="sub-title grid-list-region">
+                            <a href="#">
+                                <span><i class="fa-solid fa-location-dot"></i></span>
+                                <span>@Model.Locations</span>
+                                <span class="more-map">@Localizer["On map"]</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-12 mt-20">
+                    <div class="row advantages-list-tour">
+                        <div class="col-lg-3 col-6">
+                            <div class="advantages-title">
+                                <p>@Localizer["Tour duration"]</p>
+                                <a href="#" class="text-16-primary">@Model.TourStyle</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="advantages-title">
+                                <p>@Localizer["Type of Tour"]</p>
+                                <a href="#" class="text-16-primary">@Model.outStyle</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="advantages-title">
+                                <p>@Localizer["Tour applies from"] </p>
+                                <a href="#" class="text-16-primary">@Model.TourSize Người</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="advantages-title">
+                                <p>@Localizer["Destination"]</p>
+                                @if (Model.Style == 0)
+                                {
+                                    @foreach (var d in Model.IdDistrictTo.Values)
+                                    {
+                                        <label>@d</label>
+                                    }
+                                }
+                                else
+                                {
+
+                                    <label>@Model.Locations</label>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12" id="overview">
+                    <div class="sticky_nav_tab mt-30 mb-10 text-18">
+                        @Localizer["Introduction overview"]
+                    </div>
+                    <div class="nav_tab_content">
+                        <div class="des">
+                            @Html.Raw(Model.Descriptions)
+
+                        </div>
+                        <div class="cont">
+                            @Html.Raw(Model.Content)
+                        </div>
+                        <div class="click-more">
+                            <a href="#">@Localizer["See more"] <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="tour-schedule mt-20" id="tour-schedule">
+                        <h3 class="text-18">@Localizer["Tour schedule"]</h3>
+                        <div class="line-horizontal"></div>
+                        <div class="tour-schedule-content mt-20">
+                            <ul>
+                                @foreach (var lichtrinh in Model.TourDetails.Where(x => x.IdStyle == 1))
+                                {
+                                    <li class="time-line-day-1">
+                                        <div class="time-line-tour">
+                                            <div class="time-line-head"></div>
+                                            <div class="time-line-content"></div>
+                                        </div>
+                                        <div class="content-schedule">
+                                            <div class="schedule-title text-16 mb-20">@lichtrinh.Title</div>
+                                            <div class="schedule-content">
+                                                @Html.Raw(lichtrinh.Details)
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tour-policies-parent mt-20" id="tour-policies">
+                        <h3 class="text-18">@Localizer["Tour policy"]</h3>
+                        <div class="line-horizontal"></div>
+                        <div class="detail-tour-policies">
+                            <div class="accordion accordion5 accordion-flush" id="accordionFlushTour">
+                                <div class="row">
+                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                                        @for (int i = 0; i < (Model.TourDetails.Where(x => x.IdStyle == 2).Count() + 1) / 2; i++)
+                                        {
+                                            <div class="accordion-item mb-10">
+                                                <h2 class="accordion-header" id="flush-headingOne">
+                                                    <button class="accordion-button accordion-button-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-@i" aria-expanded="false" aria-controls="flush-collapseOne-@i">
+                                                        @Model.TourDetails.Where(x=>x.IdStyle==2).ToArray()[i].Title
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapseOne-@i" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushTour">
+                                                    <div class="accordion-body accordion-body-custom">
+                                                        @Html.Raw(Model.TourDetails.Where(x=>x.IdStyle==2).ToArray()[i].Details)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mobile-mb-10">
+                                        @for (int i = ((Model.TourDetails.Where(x => x.IdStyle == 2).Count() + 1) / 2);
+                                        i < Model.TourDetails.Where(x => x.IdStyle == 2).Count(); i++)
+                                        {
+                                            <div class="accordion-item mb-10">
+                                                <h2 class="accordion-header" id="flush-headingTwo">
+                                                    <button class="accordion-button accordion-button-custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo-@i" aria-expanded="false" aria-controls="flush-collapseTwo-@i">
+                                                        @Model.TourDetails.Where(x=>x.IdStyle==2).ToArray()[i].Title
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapseTwo-@i" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushTour">
+                                                    <div class="accordion-body accordion-body-custom">
+                                                        @Html.Raw(Model.TourDetails.Where(x=>x.IdStyle==2).ToArray()[i].Details)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xxl-4 col-xl-4 sidebar-sticky">
+                <div id="sidebar_tour">
+                    <div class="sidebar-inner">
+                        <div class="tour-price-parent">
+                            <div class="tour-price">
+                                <span class="text-14-gray">@Localizer["Price from"]</span>
+                                <span class="text-16-primary">@AppConfigs.FormatCurrency("VND", Math.Round((decimal)Model.ActualPrice,0))</span>
+                                <span class="text-12-line-through">@AppConfigs.FormatCurrency("VND", Math.Round((decimal)Model.Price,0))</span>
+                            </div>
+                            <p class="text-14-gray">@Localizer["The above price is inclusive of 1 person"]</p>
+                            <div class="date-tour-detail mt-10">
+                                <div class="">
+                                    @Localizer["Departure day"]
+                                </div>
+                                <div class="input-location">
+                                    @if (Model.StartTime != null)
+                                    {
+                                        <div>@Model.StartTime</div>
+                                    }
+                                    else
+                                    {
+                                        <div>@Model.StartDate.ToString("dd/MM/yyyy")</div>
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="person-tour-detail mt-10">
+                                <div class="person-2">
+                                    @Localizer["Adult"] x <span>@AppConfigs.FormatCurrency("VND", Math.Round((decimal)Model.ActualPrice,0))</span>
+                                </div>
+                                <div class="tour-quality">
+                                    <span id="btnsublbnumAdu"><i class="fa-solid fa-minus"></i></span>
+                                    <div>
+                                        <input id="numMature" style="width:30px;text-align:center;" type="number" value="1" name="NumMature" />
+                                    </div>
+                                    <span id="btnaddlbnumAdu"><i class="fa-solid fa-plus"></i></span>
+                                </div>
+                            </div>
+                            <div class="person-tour-detail mt-10">
+                                <div class="person-2">
+                                    @Localizer["Children"] x <span>@AppConfigs.FormatCurrency("VND", Math.Round((decimal)Model.ActualPrice*7/10,0))</span>
+                                </div>
+                                <div class="tour-quality">
+                                    <span id="btnsublbnumChi"><i class="fa-solid fa-minus"></i></span>
+                                    <div>
+                                        <input id="numChild" style="width:30px;text-align:center;" type="number" value="1" name="NumChild" />
+                                    </div>
+                                    <span id="btnaddlbnumChi"><i class="fa-solid fa-plus"></i></span>
+                                </div>
+                            </div>
+                            <div class="person-tour-detail mt-10">
+                                <div class="person-2">
+                                    @Localizer["Infant"] x<span>@Localizer["Free"]</span>
+                                </div>
+                                <div class="tour-quality">
+                                    <span id="btnsublbnumInf"><i class="fa-solid fa-minus"></i></span>
+                                    <div>
+                                        <input id="numInf" style="width:30px;text-align:center;" type="number" value="1" name="NumInf" />
+                                    </div>
+                                    <span id="btnaddlbnumInf"><i class="fa-solid fa-plus"></i></span>
+                                </div>
+                            </div>
+
+                            <a onclick="SubmitOrderTour(@Model.Id)" class="btn-login-form btn-submit mt-10">
+                                @Localizer["Booking Tour"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                            </a>
+                        </div>
+                        <a href="#" class="text-12-green mt-10">@Localizer["Not sure? You can cancel this reservation up to 24 hours in advance for a full refund."]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Start Newsletter Area -->
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml")
+<!-- End Newsletter Area -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            checkUrlTitle();
+        })
+
+        function addNum(id) {
+            var temp = parseInt($("#" + id).val()) || 0;
+            temp += 1;
+            $("#" + id).val(temp);
+            binCap();
+        }
+        function subNum(id) {
+            var temp = parseInt($("#" + id).val()) || 0;
+            temp -= 1;
+            if (temp < 0)
+                temp = 0;
+            $("#" + id).val(temp);
+
+            binCap();
+        }
+        function subNum2(id) {
+            var temp = parseInt($("#" + id).val()) || 0;
+            temp -= 1;
+            if (temp < 1)
+                temp = 1;
+            $("#" + id).val(temp);
+
+            binCap();
+        }
+        $("#btnaddlbnumInf").click(function () {
+            addNum('numInf');
+        });
+        $("#btnsublbnumInf").click(function () {
+            subNum('numInf');
+        });
+
+
+        $("#btnsublbnumAdu").click(function () {
+            subNum2('numMature');
+        });
+        $("#btnaddlbnumAdu").click(function () {
+            addNum('numMature');
+        });
+
+
+        $("#btnsublbnumChi").click(function () {
+            subNum('numChild');
+        });
+        $("#btnaddlbnumChi").click(function () {
+            addNum('numChild');
+        });
+
+        function SubmitOrderTour(_IdTour) {
+            
+            var numMature = $('#numMature').val();
+            var numChild = $('#numChild').val();
+            var numInf = $('#numInf').val();
+            window.location.href = '/Orders/OrderTour?IdTour=' + _IdTour + '&Adult=' + numMature + ' &Children=' + numChild +
+                '&Infant=' + numInf ;
+
+        };
+    </script>
+
+}

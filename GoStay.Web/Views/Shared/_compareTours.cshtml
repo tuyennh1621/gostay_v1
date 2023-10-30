@@ -1,0 +1,71 @@
+﻿@using GoStay.Common.Configuration;
+@using GoStay.DataDto.TourDto;
+@model List<TourInCompareDto>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="modal-dialog modal-dialog-centered compare-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="text-24">So sánh Tour</div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="compare-hotel-parent">
+                <div class="title-compare-hotel">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <ul class="mt-260 title-compare-hotel-left">
+                                    <li>@Localizer["Tour name"] </li>
+                                    <li class="mt-301">@Localizer["Price"] </li>
+                                    <li class="mt-20">@Localizer["Start"] </li>
+                                    <li class="mt-15">@Localizer["Destination"] </li>
+                                    <li class="mt-45">@Localizer["Rating"] </li>
+                                    <li class="mt-20">@Localizer["Tour Schedule"] </li>
+                                </ul>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @foreach (var Compare in Model)
+                {
+                    <div class="compare-hotel">
+                        <button onclick="this.parentNode.style.display='none'" class="btnClearKW btnCompareClearKW">
+                            <i class="fa-solid fa-xmark ic-16-gray"></i>
+                        </button>
+                        <div class="compare-img">
+                            <a href="#"><img src="https://cdn.realtech.com.vn/@Compare.Pictures[0]" alt="@Compare.TourName"></a>
+                        </div>
+                        <p class="compare-title-hotel">@Compare.TourName</p>
+                        <div class="compare-price">
+                            <p class="base_price">@AppConfigs.FormatCurrency("", (decimal)Math.Round(@Compare.Price)) đ</p>
+                            <p class="price">@AppConfigs.FormatCurrency("", (decimal)Math.Round(@Compare.ActualPrice)) đ</p>
+                        </div>
+                        <p>@Compare.ProvinceFrom</p>
+                        <p class="provinceTo">
+                            @string.Join( ",", @Compare.ProvinceTo.ToArray())
+                        </p>
+                        <div class="label_review">
+                            <i class="fa-solid fa-umbrella"></i>
+                            @Compare.Rating
+                        </div>
+                        <a class="text-14-b">@Localizer["Time"]: @Compare.TourStyle</a>
+                        <ul class="tour-date22">
+                            @foreach (var title in Compare.Title)
+                            {
+                                <li>- @title</li>
+                            }
+
+                        </ul>
+                        <div class="button-title">
+                            <a title="@Localizer["Booking now"]: @Compare.TourName" href="/tours/@Compare.Id/@Compare.Slug" class="btn-login-form btn-submit">
+                                @Localizer["Booking"] <i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

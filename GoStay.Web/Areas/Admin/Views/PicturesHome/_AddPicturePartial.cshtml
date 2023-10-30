@@ -1,0 +1,46 @@
+﻿@using DAL.Entities;
+@using GoStay.Common
+@using GoStay.DataAccess.Entities
+@using static GoStay.Web.Areas.Admin.Model.PictureModels
+@model AddPictureModels
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel">Add Pictures</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+</div>
+@using (Html.BeginForm("AddPictureNew", "PicturesHome", FormMethod.Post, new { area = "Admin", @id = "AddPictureTour_form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <input type="hidden" id="Type" name="Type" value="@Model.style" />
+        <input type="hidden" id="Id_Tour" value="@Model.IdType" name="IdType" />
+        <div class="overwrite-class col-12 form-group">
+            <label for="inputFileIMG">Img<small class="text-danger">*</small></label>
+            <input type="file" multiple="multiple" id="inputFileIMG" name="Img" class="sm-form-control border-form-control">
+        </div>
+
+        <div class="overwrite-class col-12 form-group">
+            <label for="Name">Tên<small class="text-danger">*</small></label>
+            <input value="Image Title" type="text" tabindex="1" id="Name" name="Name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+        </div>
+
+        <div class="overwrite-class col-12 form-group">
+            <label for="Type">Ảnh<small class="text-danger">*</small></label>
+        </div>
+        <div class="overwrite-class col-12 form-group">
+            <label for="Description">Mô tả<small class="text-danger">*</small></label>
+            <input type="text" tabindex="1" id="Description" name="Description" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+        </div>
+        <div class="overwrite-class col-12 form-group">
+            <label for="width">Độ rộng mong muốn<small class="text-danger">*</small></label>
+            <input value="1024" type="text" tabindex="1" id="width" name="width" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Đóng</button>
+        <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Thêm ảnh</button>
+    </div>
+}
+<div id="listPicture">
+    @await Html.PartialAsync("~/Areas/Admin/Views/PicturesHome/_ListPicturePartial.cshtml", Model.Picture)
+</div>

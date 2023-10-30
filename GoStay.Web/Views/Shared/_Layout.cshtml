@@ -1,0 +1,377 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.DataAccess.Entities
+@using GoStay.DataDto.Hành_Chính
+@using GoStay.Service
+@using GoStay.Service.Api.WebSupport
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IHttpContextAccessor sessonContext
+@inject IWebSupportApiServices _Tinh
+@{
+
+    List<TinhThanhBannerDto> tinhthanh = null;
+    tinhthanh = _Tinh.GetTopProvince();
+
+    var identityUser = ViewBag.IdentityUser;
+
+   
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>@ViewData["TitlePage"]</title>
+    <meta name="description" content="@ViewData["descriptionPage"]" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/favicon.svg" />
+    <meta property="og:image" content="/assets/images/logo/logo2.png" />
+    <meta property="og:image:secure_url" content="/assets/images/logo/logo2.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    @*<link href="~/assets/css/animate.css" rel="stylesheet" />
+    <link href="~/assets/css/all.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap-utilities.css" rel="stylesheet" />
+    *@
+    <link rel="stylesheet" href="~/assets/css/glightbox.min.css"/>
+    <link href="~/assets/css/ion.rangeslider.min.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="~/assets/css/classic.css?v=@AppConfigs.AppVersion">
+    <link rel="stylesheet" href="~/assets/css/classic.date.css?v=@AppConfigs.AppVersion">
+    <link rel="stylesheet" href="~/assets/css/style.css?v=@AppConfigs.AppVersion" />
+    <link rel="stylesheet" href="~/assets/css/select2.css?v=@AppConfigs.AppVersion" />
+    <link rel="stylesheet" href="~/css/main.min.css?v=@AppConfigs.AppVersion" />
+
+    
+    <link href="~/assets/owlcarousel/css/owl.carousel.min.css" rel="stylesheet"/>
+    <link href="~/assets/owlcarousel/css/owl.theme.default.min.css" rel="stylesheet"/>
+
+    <script src="~/assets/js/jquery.min.js"></script>
+    <style>
+    .modal-reviews1 {
+        max-width: 1000px !important;
+    }
+    </style>
+</head>
+<body>
+    
+    @*<div class="preloader"></div>*@
+    <div class="search-loader" id="search_loader">
+        <div class="loader"></div>
+    </div>
+    @await Html.PartialAsync("~/Views/Shared/_Header.cshtml")
+    @RenderBody()
+    <footer class="footer">
+        <!-- Start Footer Top -->
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="single-footer f-link">
+                            <div class="footer-title pb-10">
+                                <h3 class="text-18 mr-10">@Localizer["Top hotels"]</h3>
+                                <div class="bg-line-primary"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-6">
+                                    <ul>
+                                        @foreach(var item in tinhthanh.Take(8))
+                                        {
+                                            <li><a title="Khách sạn tại @item.TenTt" href="/khach-san/@item.SanitizedName">@item.TenTt</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-6">
+                                    <ul>
+                                        @foreach (var item in tinhthanh.Skip(8).Take(8))
+                                        {
+                                            <li><a title="Khách sạn tại @item.TenTt" href="/khach-san/@item.SanitizedName">@item.TenTt</a></li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <!-- Single Widget -->
+                        <div class="single-footer f-link">
+                            <div class="footer-title pb-10">
+                                <h3 class="text-18 mr-10">@Localizer["The Flight"]</h3>
+                                <div class="bg-line-primary"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-6">
+                                    <ul>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HAN", EndPoint = "PQC",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hà Nội - Phú Quốc
+                                            </a></li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "SGN", EndPoint = "HAN",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hồ Chí Minh - Hà Nội</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "DAD", EndPoint = "HAN",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Đà Nẵng - Hà Nội</a>
+                                        </li>
+                                        <li><a href="@Url.Action("Index", "Tickets", new {StartPoint = "CXR", EndPoint = "HAN",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Nha Trang - Hà Nội</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HPH", EndPoint = "DAD",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hải Phòng - Đà Nẵng</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "DLI", EndPoint = "HAN",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Đà Lạt - Hà Nội</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HPH", EndPoint = "DLI",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hải Phòng - Đà Lạt</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HPH", EndPoint = "UIH",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hải Phòng- Quy Nhơn</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-6">
+                                    <ul>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HAN", EndPoint = "SGN",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hà Nội - Tp.Hồ Chí Minh</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "SGN", EndPoint = "HPH",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Tp.Hồ Chí Minh - Hải Phòng</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HAN", EndPoint = "UIH",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hà Nội - Quy Nhơn</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "DAD", EndPoint = "SGN",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Đà Nẵng - Tp.Hồ Chí Minh</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "VII", EndPoint = "SGN",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Nghệ An - Tp.Hồ Chí Minh</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HAN", EndPoint = "CXR",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hà Nội - Nha Trang</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "HAN", EndPoint = "DLI",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Hà Nội - Lâm Đồng</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tickets", new {StartPoint = "DAD", EndPoint = "PQC",
+                                                                                            Adult = 1, Children = 0, Infant = 0})">Đà Nẵng - Phú Quốc</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Single Widget -->
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <!-- Single Widget -->
+                        <div class="single-footer f-link">
+                            <div class="footer-title pb-10">
+                                <h3 class="text-18 mr-10">@Localizer["Tours"]</h3>
+                                <div class="bg-line-primary"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-6">
+                                    <ul>
+                                        <li>
+                                            <a href="@Url.Action("Index", "Tours", new {IdTourStyle = 11 })">Tour 10 @Localizer["Days"] 9 @Localizer["Nights"]</a>
+                                        </li>
+                                        <li><a href="@Url.Action("Index", "Tours", new {IdTourStyle = 1 })">Tour 6 @Localizer["Days"] 5 @Localizer["Nights"]</a></li>
+                                        <li><a href="@Url.Action("Index", "Tours", new {IdTourStyle = 2 })">Tour 5 @Localizer["Days"] 4 @Localizer["Nights"]</a></li>
+                                        <li><a href="@Url.Action("Index", "Tours", new {IdTourStyle = 3 })">Tour 4 @Localizer["Days"] 3 @Localizer["Nights"]</a></li>
+                                        <li><a href="@Url.Action("Index", "Tours", new {IdTourStyle = 4 })">Tour 3 @Localizer["Days"] 2 @Localizer["Nights"]</a></li>
+                                        <li><a href="@Url.Action("Index", "Tours", new {IdTourStyle = 5 })">Tour 2 @Localizer["Days"] 1 @Localizer["Night"]</a></li>
+                                        <li><a href="@Url.Action("Index", "Tours", new {IdTourStyle = 6 })">Tour 1 @Localizer["Day"] 1 @Localizer["Night"]</a></li>
+                                        <li><a href="@Url.Action("Index", "Tours", new {IdTourStyle = 10 })">Tour 1 @Localizer["Day"]</a></li>
+
+                                    </ul>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-6">
+                                    <ul>
+                                        <li><a href="/tours/kien-giang">Tour Phú Quốc</a></li>
+                                        <li><a href="/tours/lao-cai">Tour Sa Pa</a></li>
+                                        <li><a href="/tours/da-nang">Tour Đà Nẵng</a></li>
+                                        <li><a href="/tours/binh-dinh">Tour Quy Nhơn</a></li>
+                                        <li><a href="/tours/ninh-binh">Tour Ninh Bình</a></li>
+                                        <li><a href="/tours/ha-giang">Tour Hà Giang</a></li>
+                                        <li><a href="/tours/lam-dong">Tour Đà Lạt</a></li>
+                                        <li><a href="/tours/khanh-hoa">Tour Nha Trang</a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Single Widget -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ End Footer Top -->
+        <!-- Start Footer Middle -->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-xxl-5 col-xl-5 col-lg-5 col-12">
+                            <div class="content">
+                                <h3 class="text-18 mb-20">GoStay - @Localizer["Vietnam's leading tourism e-commerce platform"]</h3>
+                                <ul class="footer-address">
+                                    <li><a href="#"><i class="fa-solid fa-location-dot ic-16"></i>@Localizer["Address"]: @Localizer["2nd floor, HPC Landmark 105 Shopping mall, To Huu Street, Ha Dong District, Hanoi"].</a></li>
+                                    <li><a href="#"><i class="fa-solid fa-envelope ic-16"></i>@Localizer["Email"]: gostay.services@gmail.com</a></li>
+                                    <li><a href="#"><i class="fa-solid fa-phone ic-16"></i>@Localizer["Phone"]: 19002167 / @Localizer["Hotline"]: 056.728.8999</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-xl-3 col-lg-3 col-12">
+                            <div class="content">
+                                <h3 class="text-18 mb-20">@Localizer["Contact Us"]</h3>
+                                <ul class="footer-social">
+                                    <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                                    <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-xl-3 col-lg-3 col-12">
+                            <div class="content">
+                                <h3 class="text-18 mb-20">@Localizer["Accept payment"]</h3>
+                                <ul class="payment">
+                                    <li><a href="#"><img data-src="/assets/images/payment/1.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a></li>
+                                    <li><a href="#"><img data-src="/assets/images/payment/2.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a></li>
+                                    <li><a href="#"><img data-src="/assets/images/payment/3.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a></li>
+                                    <li><a href="#"><img data-src="/assets/images/payment/4.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a></li>
+                                    <li><a href="#"><img data-src="/assets/images/payment/5.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Footer Middle -->
+        <!--/ End Footer Middle -->
+        <!-- Start Footer Bottom -->
+        <div class="footer-middle">
+            <div class="container">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-12">
+                            <p>@AppConfigs.buidinfo() Development by <a title="Realtech Inc" target="_blank" href="https://realtech.com.vn/">Realtech Inc</a></p>
+                            <p>©2023 Gostay. @Localizer["Copyright by Tourism Services and Exploitation Joint Stock SGO Company"]. MSDN: 0110037323 - @Localizer["Issued by"]: Phòng ĐKKD sở KH & ĐT TP Hà Nội.</p>
+                        </div>
+                        <div class="footter-botom-image">
+                            <p>(Lưu ý: Đây là phiên bản thử nghiệm và chưa chính thức hoạt động)</p>
+                           @* <a href="#"><img data-src="/assets/images/footer/logo-congthuong-2.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                            <a href="#"><img data-src="/assets/images/footer/logo-congthuong-1.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                        *@
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Footer Bottom -->
+    </footer>
+    <!--/ End Footer Area -->
+    <!-- ========================= scroll-top ========================= -->
+    <a href="#" class="scroll-top btn-hover">
+        <i class="fa-solid fa-chevron-up"></i>
+    </a>
+
+
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth-compat.js" defer></script>
+    <script src="~/assets/js/configfirebase.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js" defer></script>
+    <script src="~/assets/js/select2.min.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/ion.rangeslider.min.js" defer></script>
+
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js" defer></script>
+    <script src="~/assets/js/wow.min.js" defer></script>
+   
+    <script src="~/assets/js/verify-otp.js?v=@AppConfigs.AppVersion" defer></script>
+
+    <script src="~/assets/js/picker.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/picker.date.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/swipecarousel/swiper-bundle.min.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/swipecarousel/swipecarousel.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/owlcarousel/owl.carousel.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/owlcarousel/owl-carousel-custom.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/alpine.min.js" defer></script>
+    <script src="~/assets/js/sticky-sidebar.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/loadmoreresults.js?v=@AppConfigs.AppVersion" defer></script>
+    <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="~/assets/js/validate-input.js?v=@AppConfigs.AppVersion" defer></script>
+
+    <script src="~/assets/js/main.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/homepage.js?v=@AppConfigs.AppVersion" defer></script>
+   
+    <script src="~/assets/js/tab-search.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/hotel-rating.js?v=@AppConfigs.AppVersion" defer></script>
+    <script src="~/assets/js/common.js?v=@AppConfigs.AppVersion" defer></script>
+
+
+    <script type="text/javascript" defer>
+        function showSearchLoader() {
+            $("#search_loader").css("display", "block");
+        }
+
+        function hideSearchLoader() {
+            $("#search_loader").css("display", "none");
+        }
+        $(document).ready(function(){
+           function test() {
+                var to = $("#rangTo").val();
+                console.log("to:... ", to);
+                $("#maxPrice").text(formatMoney(to));
+            };
+            function formatMoney(amount, decimalCount = 0, decimal = ".", thousands = ",") {
+                try {
+                    decimalCount = Math.abs(decimalCount);
+                    decimalCount = isNaN(decimalCount) ? 0 : decimalCount;
+
+                    const negativeSign = amount < 0 ? "-" : "";
+
+                    let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+                    let j = (i.length > 3) ? i.length % 3 : 0;
+
+                    return negativeSign +
+                        (j ? i.substr(0, j) + thousands : '') +
+                        i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) +
+                        (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+                }
+                catch (e) {
+                }
+            };   
+            var urlHome = window.location.href;
+            if (urlHome.includes('#loginNow')) {
+                var isLoginNow = getCookie('CurrentUser');
+                if (isLoginNow == null || isLoginNow == "" || isLoginNow == undefined) {
+                    showPopupLogin();
+                }
+            }
+        })
+        
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

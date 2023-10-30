@@ -1,0 +1,491 @@
+﻿
+@using DAL
+@using DAL.Entities
+
+@using DAL.Helpers.PageHelpers
+@using GoStay.DataAccess.Entities
+@using GoStay.Service
+@using GoStay.Common
+@using goStayCore.CommonCode
+@model ResponseBase<PagingList<Picture>>
+
+@{
+    ViewData["Title"] = "Pictures List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <style>
+        /*ghi đè class*/
+        .overwrite-class{
+            display:flex;
+            gap: 10px !important;
+        }
+        
+        .overwrite-class label{
+            flex:1;
+        }
+        .overwrite-class input{
+            flex:1;
+            margin-top: -15px;
+        }
+
+        .box-on-stock-options {
+        }
+
+        .box-on-stock-options {
+        }
+
+        .box-on-stock-option-region {
+            padding: 0px 15px;
+            margin-top: -15px;
+            flex: 1;
+            border: 2px solid #DDD;
+            transition: box-shadow .3s ease-in;
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        select {
+            font-family: sans-serif !important;
+        }
+
+        select {
+            font-family: sans-serif !important;
+        }
+
+        .modal-content {
+            margin-left:-65px;
+            justify-content:center;
+            width: 800px;
+        }
+    </style>
+</head>
+
+<!-- Page Title
+============================================= -->
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "Pictures" })
+<!-- #page-title end -->
+<!-- Content
+============================================= -->
+
+
+<body>
+<section id="content">
+
+    <div class="content-wrap pb-0">
+
+        <div class="container clearfix">
+
+            <div class="row gutter-40 col-mb-80">
+
+                <!--error message section starts here-->
+
+                <div class="special-div-less-margin">
+                    @if (TempData["SuccessMsg"] != null)
+                    {
+                        if (!String.IsNullOrEmpty(TempData["SuccessMsg"].ToString()))
+                        {
+
+                                    <div class="style-msg successmsg">
+                                        <div class="sb-msg"><i class="icon-thumbs-up"></i>@TempData["SuccessMsg"]</div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    </div>
+                        }
+
+                    }
+                    @if (TempData["ErrorMsg"] != null)
+                    {
+
+                        if (!String.IsNullOrEmpty(TempData["ErrorMsg"].ToString()))
+                        {
+                                    <div class="style-msg errormsg">
+                                        <div class="sb-msg"><i class="icon-remove"></i>@TempData["ErrorMsg"]</div>
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    </div>
+                        }
+                    }
+
+                </div>
+
+                <!--error message section ends here-->
+
+                <div class="col-lg-12 " style="padding-bottom: 28px;">
+                    <div class="card p-3 bg-light">
+                        <div class="car-body">
+
+
+
+
+
+
+                            <form method="get" class="row" asp-area="Admin" asp-controller="PicturesHome" asp-action="PicturesList" id="search_form" enctype="multipart/form-data">
+
+                                @Html.AntiForgeryToken()
+
+                                <div class="col-md-3 form-group">
+                                    <label for="user_id_search">Pictures IDHotel</label>
+                                    <input type="number" id="user_id_search" tabindex="1" name="Idhotel" class="form-control input-sm  valid" value="" aria-invalid="false">
+
+                                </div>
+
+
+                                <div class="col-md-3 form-group">
+                                    <label for="user_name_search">Pictures Name</label>
+                                    <input type="text" id="user_name_search" tabindex="2" name="Name" class="form-control input-sm  valid" value="" aria-invalid="false">
+
+                                </div>
+
+                                <div class="col-md-3  form-group">
+                                    <label for="email_search">Pictures type</label>
+                                    <input type="text" id="email_search" tabindex="3" name="Type" class="form-control input-sm  valid" value="" aria-invalid="false">
+                                </div>
+
+
+
+
+
+                                <div class="col-md-3 form-group">
+                                    <br />
+
+
+                                    <button type="button" tabindex="3" onclick="SubmitSearchForm();" class="button button-3d button-rounded gradient-blue-green"><i class="icon-search"></i> Search</button>
+
+                                </div>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="special-div-less-margin">
+                    <div>
+
+
+                        <button class="button button-3d button-rounded gradient-grey-orange  float-right" data-toggle="modal" data-target="#myAddModal"><i class="icon-plus"></i> Add Pictures</button>
+
+                    </div>
+                </div>
+
+                <div class="postcontent col-lg-12" id="MainDataSection">
+
+
+
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mb-0">
+                            <thead>
+                                <tr>
+
+                                    <th>Pictures ID</th>
+                                    <th>Pictures Name</th>
+                                    <th>Pictures Url</th>
+                                    <th>Album Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (Model.Data.Items.Count > 0)
+                                    {
+                                        foreach (var item in Model.Data.Items)
+                                        {
+                                            <tr>
+                                                <td>@item.Id</td>
+                                                <td>@item.Name</td>
+                                                <td><img src="@item.UrlOut" style="width:150px;" /></td>
+                                                <td>@item.IdAlbum</td>
+
+                                                <td>
+                                                    <div class="justify-content-center">
+                                                        <a href="#" class="center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon-edit" style="font-size:23px;"></i></a>
+                                                        <ul class="dropdown-menu dropdown-menu-right" style="">
+                                                            <li>
+                                                            <a class="dropdown-item" href="#!" onclick="EditItem('@item.Id', '@item.Name', '@item.Description',
+                                                                                '@item.Type','@item.IdAlbum','@item.IdType');
+                                                                " data-toggle="modal" data-target="#myEditModal"><span class="icon-line-plus"></span> Edit</a>
+
+                                                                <a class="dropdown-item" href="#!" onclick="DeleteItem('@item.Id');" data-toggle="modal" data-target="#myDeleteModal"><span class="icon-line-delete"></span> Delete</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        }
+
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="line"></div>
+
+
+
+                </div><!-- .postcontent end -->
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+</section><!-- #content end -->
+<!--Save Modal -->
+<div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Add Pictures</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+
+
+
+
+                @using (Html.BeginForm("AddPicture", "PicturesHome", FormMethod.Post, new { area = "Admin", @id = "TeacherAdd_form", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                        <div class="modal-body">
+
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="Img">Img<small class="text-danger">*</small></label>
+                            <input type="file" multiple="multiple" id="Img" name="Img" class="sm-form-control border-form-control">
+                        </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Name">Name<small class="text-danger">*</small></label>
+                                <input type = "text" tabindex="1" id="Name" name="Name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Type">Ảnh của <small class="text-danger">*</small></label>
+                                <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="Type" name="Type">
+                                    <option selected="selected" input type="number" value="0">Khách sạn</option>
+                                    <option input type="number" value="1">Phòng</option>
+
+
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="IdType">Chọn Khách Sạn<small class="text-danger">*</small></label>
+                                <select class="form-control input-sm  valid" autocomplete="off" id="IdHotel" name="IdType">
+                                    @{
+                                            <option>Select</option>
+
+                                        foreach (var item in ViewBag.listHotel as IQueryable<Hotel>)
+                                        {
+                                                <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="IdType">Chọn Phòng <small class="text-danger">*</small></label>
+                                <select class="form-control input-sm  valid" autocomplete="off" id="IdRoom" name="IdType">
+                                    @{
+                                            <option>Select</option>
+
+                                        foreach (var item in ViewBag.listRoom as IQueryable<HotelRoom>)
+                                        {
+                                                <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Description">Description<small class="text-danger">*</small></label>
+                                <input type = "text" tabindex="1" id="Description" name="Description" autocomplete="off" class="sm-form-control border-form-control " placeholder=""  />
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                            <label for="width">width<small class="text-danger">*</small></label>
+                            <input type="text" tabindex="1" id="width" name="width" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Id Album ">Chọn Album <small class="text-danger">*</small></label>
+                                <select class="form-control input-sm  valid" autocomplete="off" id="IdAlbum" name="IdAlbum">
+                                    @{
+                                            <option>Select</option>
+
+                                        foreach (var item in ViewBag.listAlbum as IQueryable<Album>)
+                                        {
+                                                <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+                            <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+
+                        </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Edit Modal -->
+<div class="modal fade" id="myEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Edit Pictures</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                @using (Html.BeginForm("EditPicture", "PicturesHome", FormMethod.Post, new { area = "Admin", @id = "TeacherEdit_form", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+
+
+
+                        <div class="modal-body">
+
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="Name">Name<small class="text-danger">*</small></label>
+                            <input type="text" tabindex="1" id="Name" name="Name" autocomplete="off" class="sm-form-control border-form-control " placeholder=""  />
+                            <input type="hidden" id="Id" name="Id" />
+                        </div>
+
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="Type">Type<small class="text-danger">*</small></label>
+                            <input type="text" tabindex="1" id="Type" name="Type" autocomplete="off" class="sm-form-control border-form-control " placeholder=""  />
+                        </div>
+
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="Description">Description<small class="text-danger">*</small></label>
+                            <input type="text" tabindex="1" id="Description" name="Description" autocomplete="off" class="sm-form-control border-form-control " placeholder=""  />
+                        </div>
+
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+                            <button type="submit" tabindex="4" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-edit"></i> Update</button>
+
+                        </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Delete Modal -->
+<div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Delete Pictures</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+
+
+
+                @using (Html.BeginForm("DeletePicture", "PicturesHome", FormMethod.Post, new { area = "Admin", @id = "CourseDelete_form", enctype = "multipart/form-data" }))
+                {
+
+                    @Html.AntiForgeryToken()
+
+
+                        <div class="modal-body">
+
+
+
+                            <div class="col-12 form-group">
+                                <div class="entry-title">
+                                    <h4><a href="demo-news-single.html">Do you want to delete this record?</a></h4>
+                                </div>
+
+
+                            </div>
+                            <div>
+                            <input type="hidden" id="Id_delete" name="Id" />
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Cancel</button>
+
+                            <button type="submit" tabindex="1" class="button  btn-sm button-3d button-rounded gradient-horizon"><i class="icon-trash2"></i> Delete</button>
+
+                        </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+@section scripts{
+
+    <!--Following two scripts are for ajax begin form and other ajax calls-->
+
+
+
+    <script>
+
+        function EditItem(Id, Name, Description,Type) {
+            debugger
+            $('#Id').val(Id);
+
+            $('#Name').val(Name);
+            $('#Description').val(Description);
+            $('#Type').val(Type);
+        }
+
+
+
+        function DeleteItem(Id) {
+            $('#Id_delete').val(Id);
+
+        }
+
+    </script>
+
+
+
+}

@@ -1,0 +1,1281 @@
+﻿@using DAL
+@using DAL.Entities
+
+@using DAL.Helpers.PageHelpers
+@using GoStay.DataAccess.Entities
+@using GoStay.DataDto.HotelDto
+@using GoStay.Service
+@using GoStay.Common
+@using goStayCore.CommonCode
+@model ResponseBase<HotelListAdmin>
+
+@{
+    ViewData["Title"] = "Hotel List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color:rebeccapurple;
+        color: white;
+    }
+</style>
+<!-- Page Title
+============================================= -->
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "Hotel" })
+<!-- #page-title end -->
+<!-- Content
+============================================= -->
+<body>
+<section id="content">
+
+        <div class="content-wrap pb-0">
+            
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <!--error message section starts here-->
+
+                    <div class="special-div-less-margin">
+                        @if (TempData["SuccessMsg"] != null)
+                        {
+                            if (!String.IsNullOrEmpty(TempData["SuccessMsg"].ToString()))
+                            {
+
+                                <div class="style-msg successmsg">
+                                    <div class="sb-msg"><i class="icon-thumbs-up"></i>@TempData["SuccessMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+
+                        }
+                        @if (TempData["ErrorMsg"] != null)
+                        {
+
+                            if (!String.IsNullOrEmpty(TempData["ErrorMsg"].ToString()))
+                            {
+                                <div class="style-msg errormsg">
+                                    <div class="sb-msg"><i class="icon-remove"></i>@TempData["ErrorMsg"]</div>
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                    <!--error message section ends here-->
+
+                    <div class="col-lg-12 " style="padding-bottom: 28px;">
+                        <div class="card p-3 bg-light">
+                            <div class="car-body">
+
+                                
+                                <form method="get" class="row" asp-area="Admin" asp-controller="HotelHome" asp-action="HotelList" id="search_form" enctype="multipart/form-data">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="col-md-3 form-group">
+                                        <label for="user_name_search">Tỉnh thành</label>
+                                        <select class="select2 select2-container form-control" id="cboTinhthanh" onchange="changeTinhthanh(this)" name="IdTinhThanh">
+                                            @{
+                                                <option value="0"></option>
+                                                if (ViewBag.listTinhThanh == null)
+                                                    return;
+                                                foreach (var item in ViewBag.listTinhThanh as List<TinhThanh>)
+                                                {
+                                                    <option value="@item.Id">@item.TenTt</option>
+                                                }
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="user_name_search">Hotel Name</label>
+                                        <input type="text" id="name_hotel" tabindex="2"  class="form-control input-sm  valid" value="" aria-invalid="false">
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <br />
+                                        <button type="button" tabindex="3" onclick="SubmitSearchForm();" class="button button-3d button-rounded gradient-blue-green"><i class="icon-search"></i> Search</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="special-div-less-margin">
+                        <div>
+                            <button class="button button-3d button-rounded gradient-grey-orange  float-right" data-toggle="modal" data-target="#myAddModal"><i class="icon-plus"></i> Add Hotel</button>
+                        </div>
+                    </div>
+                    <div class="postcontent col-lg-12" id="MainDataSection">
+                        @await Html.PartialAsync("~/Areas/Admin/Views/HotelHome/HotelListPartial.cshtml", Model)
+
+                    </div><!-- .postcontent end -->
+
+                    <div class="line"></div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </section><!-- #content end -->
+
+    <div class="modal fade" id="myAddRoom" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+            <div class="modal-content" id="MainAddRoomHotel">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myAddService" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content" id="MainAddServiceHotel">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myAddAlbum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Add Album</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    @using (Html.BeginForm("AddAlbumHotel", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "TeacherAdd_form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <input type="hidden" name="Type" value="0" />
+                            <input type="hidden" id="Id_Hotel_Album" name="IdType" />
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Name">Name<small class="text-danger">*</small></label>
+                                <input value="title" type="text" tabindex="1" id="Name" name="Name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+                            <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myEditmap" tabindex="-1" role="dialog" aria-labelledby="myEditmap" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Cập nhật Map</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body" id="myEditmapmodalbody">
+                        @*@await Html.PartialAsync("~/Areas/Admin/Views/HotelHome/_AddMapPartial.cshtml", new { IDHotel =1})*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myAddPicture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content" id="MainAddPictureHotel">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Save Modal -->
+    <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Add Hotel</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    @using (Html.BeginForm("AddHotel", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "TeacherAdd_form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="modal-body">
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Name">Tên Khách Sạn<small class="text-danger">*</small></label>
+                                <label for="Rating">Hạng sao</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="name_ks" name="Name" class="sm-form-control border-form-control" placeholder="Tên khách sạn" required />
+                                <select class="box-on-stock-option-region headerLeft_select" id="Rating" name="Rating">
+                                    <option value="0">Không sao</option>
+                                    <option value="1">1 sao</option>
+                                    <option value="2">2 sao</option>
+                                    <option value="3">3 sao</option>
+                                    <option value="4">4 sao</option>
+                                    <option value="5">5 sao</option>
+                                    <option value="6">6 sao</option>
+                                </select>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Address">Địa chỉ</label>
+                                <label for="Meals">Bữa ăn kèm</label>
+                                <input type="hidden" id="IdTinhThanh" name="IdTinhThanh" />
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="Address" name="Address" autocomplete="off" class="sm-form-control border-form-control " placeholder="Địa chỉ khách sạn" />
+                                <select class="box-on-stock-option-region headerLeft_select" id="meal_ks" required name="Meals">
+                                    <option value="true">Có</option>
+                                    <option  value="false">Không</option>
+                                </select>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Type">Loại Khách Sạn<small class="text-danger">*</small></label>
+                                <label for="IdPriceRange">Khoảng giá TB<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <div style="width:50%">
+                                    <select style="width:100%" class="select2 select2-container sm-form-control" required id="Type_ID" name="Type">
+                                        @{
+                                            foreach (var item in ViewBag.listType as List<TypeHotel>)
+                                            {
+                                                <option value="@item.Id">@item.Type</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div style="width:50%">
+                                    <select style="width:100%" class="select2 select2-container sm-form-control" required id="Priece_ID" name="IdPriceRange">
+                                        @{
+                                            foreach (var item in ViewBag.listPrice as IQueryable<PriceRange>)
+                                            {
+                                                <option value="@item.Id">@item.TitleVnd</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label>Quận huyện<small class="text-danger">*</small></label>
+                                <label>Phường xã<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <div style="width:50%">
+                                    <select id="divCboQuan" required onchange="changeQuanHuyen(this)" name="IdQuan" style="width:100%" class="sm-form-control"></select>
+                                </div>
+                                <div style="width:50%">
+                                    <select id="divCboPhuong" required name="IdPhuong" style="width:100%" class="sm-form-control"></select>
+                                </div>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Description">Mô tả Khách sạn<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea type="text" id="Description" name="Description" class="sm-form-control border-form-control "></textarea>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label>Nội dung<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea rows="5" id="Content" name="Content" class="sm-form-control border-form-control"></textarea>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="LatMap">LatMap</label>
+                                <label for="LonMap">LonMap</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="LatMap" name="LatMap" autocomplete="off" class="sm-form-control border-form-control" placeholder="Tọa độ LAT" />
+                                <input type="text" tabindex="1" id="LonMap" name="LonMap" autocomplete="off" class="sm-form-control border-form-control " placeholder="Tọa độ LON" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+                            <button type="button" onclick="AddHotel()" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Edit Modal -->
+    <div class="modal fade" id="myEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Edit Hotel</h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    @using (Html.BeginForm("EditHotel", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "TeacherEdit_form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="modal-body">
+
+                            <div class="col-12 form-group">
+                                <input type="hidden" id="Id_edit" name="Id" />
+                                <input type="hidden" id="IdTinhThanh_edit" name="IdTinhThanh" />
+
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Name">Tên Khách Sạn<small class="text-danger">*</small></label>
+                                <label for="Name">Hạng sao<small class="text-danger">*</small></label>
+
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="Name_edit" name="Name" class="sm-form-control border-form-control" placeholder="Tên khách sạn" required />
+                                <select class="box-on-stock-option-region headerLeft_select" id="Rating_edit" name="Rating">
+                                    <option value="0">Không sao</option>
+                                    <option value="1">1 sao</option>
+                                    <option value="2">2 sao</option>
+                                    <option value="3">3 sao</option>
+                                    <option value="4">4 sao</option>
+                                    <option value="5">5 sao</option>
+                                    <option value="6">6 sao</option>
+                                </select>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Address">Địa chỉ</label>
+                                <label for="Meals">Bữa ăn kèm</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="Address_edit" name="Address" autocomplete="off" class="sm-form-control border-form-control " placeholder="Địa chỉ khách sạn" />
+                                <select class="box-on-stock-option-region headerLeft_select" id="Meals_edit" name="Meals">
+                                    <option value="true">Có</option>
+                                    <option value="false">Không</option>
+                                </select>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Type">Loại Khách Sạn<small class="text-danger">*</small></label>
+                                <label for="IdPriceRange">Khoảng giá TB<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <div style="width:50%">
+                                    <select style="width:100%" class="sm-form-control" required id="Type_edit" name="Type">
+                                        @{
+                                            foreach (var item in ViewBag.listType as List<TypeHotel>)
+                                            {
+                                                    <option value="@item.Id">@item.Type</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                                <div style="width:50%">
+                                    <select style="width:100%" class="sm-form-control" required id="IdPriceRange_edit" name="IdPriceRange">
+                                        @{
+                                            foreach (var item in ViewBag.listPrice as IQueryable<PriceRange>)
+                                            {
+                                                    <option value="@item.Id">@item.TitleVnd</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label>Quận huyện<small class="text-danger">*</small></label>
+                                <label>Phường xã<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <div style="width:50%">
+                                    <select id="IdQuan_edit" onchange="changeQuanHuyenEdit(this)" name="IdQuan" style="width:100%" class="sm-form-control"></select>
+                                </div>
+
+                                <div style="width:50%">
+                                    <select id="IdPhuong_edit" name="IdPhuong" style="width:100%" class="sm-form-control"></select>
+                                </div>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="Description">Mô tả Khách sạn<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea type="text" id="Description_edit" name="Description" class="sm-form-control border-form-control "></textarea>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label>Nội dung<small class="text-danger">*</small></label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea rows="5" id="Content_edit" name="Content" class="sm-form-control border-form-control"></textarea>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="LatMap">LatMap</label>
+                                <label for="LonMap">LonMap</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <input type="text" tabindex="1" id="LatMap_edit" name="LatMap" autocomplete="off" class="sm-form-control border-form-control" placeholder="Tọa độ LAT" />
+                                <input type="text" tabindex="1" id="LonMap_edit" name="LonMap" autocomplete="off" class="sm-form-control border-form-control " placeholder="Tọa độ LON" />
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+                            <button type="submit" tabindex="4" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-edit"></i> Update</button>
+
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Delete Modal -->
+    <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Delete Hotel</h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+
+
+
+                    @using (Html.BeginForm("DeleteHotel", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "CourseDelete_form", enctype = "multipart/form-data" }))
+                    {
+
+                        @Html.AntiForgeryToken()
+
+
+                        <div class="modal-body">
+
+
+
+                            <div class="col-12 form-group">
+                                <div class="entry-title">
+                                    <h4><a href="demo-news-single.html">Do you want to delete this record?</a></h4>
+                                </div>
+
+
+                            </div>
+                            <div>
+                                <input type="hidden" id="Id_delete" name="Id" />
+                            </div>
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Cancel</button>
+
+                            <button type="submit" tabindex="1" class="button  btn-sm button-3d button-rounded gradient-horizon"><i class="icon-trash2"></i> Delete</button>
+
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('.select2').select2()
+        });
+        $(document).ready(function () { $("#select2_example").select2(); });
+
+        $(".chosen-select").chosen({
+            no_results_text: "Oops, nothing found!"
+        })
+
+        function NextPreData(pagesize, pageindex) 
+          {
+            var _idTinhthanh = $('#cboTinhthanh').val();
+            var Url = '@Url.Action("HotelListPartial","HotelHome", new { area="Admin"})';
+
+             var param = {
+                PageIndex: pageindex,
+                PageSize: pagesize,
+                IdProvince: _idTinhthanh,
+                NameSearch: "",
+            } 
+
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { "paramJson": JSON.stringify(param),
+                },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#MainDataSection').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+
+
+        function AddHotel() {
+            debugger
+            var name = document.getElementById("name_ks").value;
+            var rating = document.getElementById("Rating").value;
+            var address = document.getElementById("Address").value;
+            var meals = document.getElementById("meal_ks").value;
+            var idTinhThanh = document.getElementById("IdTinhThanh").value;
+            var type = document.getElementById("Type_ID").value;
+            var idPriceRange = document.getElementById("Priece_ID").value;
+            var description = document.getElementById("Description").value;
+            var cboQuan = document.getElementById("divCboQuan").value;
+            var cboPhuong = document.getElementById("divCboPhuong").value;
+            var content = document.getElementById("Content").value;
+            var latMap = document.getElementById("LatMap").value;
+            var lonMap = document.getElementById("LonMap").value;
+
+            var hotel = {
+                Name: name,
+                Rating : rating,
+                Address: address,
+                Meals: meals,
+                IdTinhThanh : idTinhThanh,
+                Type : type,
+                IdPriceRange : idPriceRange,
+                Description : description,
+                IdQuan : cboQuan,
+                IdPhuong : cboPhuong,
+                Content : content,
+                LatMap : latMap,
+                LonMap : lonMap,
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "hotelJson": JSON.stringify(hotel),
+                },
+                url: "@Url.Action("AddHotel", "HotelHome")",
+                success: function (data) {
+                    SubmitSearchForm();
+                    alert("Hoan thanh");
+                    $('#name_ks').val('');
+                    $('#Address').val('');
+                    
+                },
+            })
+        }
+
+
+        $(function () {
+            $('#cboTinhthanh').select2();
+        });
+
+        $(document).ready(function () {
+
+
+            
+           
+        });
+
+   
+        function changeTinhthanh(selectOS) {          
+            var _idTinhthanh = document.getElementById("cboTinhthanh").value;
+
+            var Url = '@Url.Action("binDropdownAjax","HotelHome", new { area="Admin"})';
+            $('#IdTinhThanh').val(_idTinhthanh);
+
+            showSearchLoader();
+
+             var _idTinhthanh = $('#cboTinhthanh').val();
+
+
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { obj: _idTinhthanh, style: 2 },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#divCboQuan').html(data);
+                    $('#IdQuan_edit').html(data);
+
+                    $('#divCboQuan').select2({
+                        dropdownParent: $('#myAddModal'),
+                        allowClear: true
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+        function changeQuanHuyen(selectOS) {
+            var _idQuanHuyen = document.getElementById("divCboQuan").value;
+
+            var Url = '@Url.Action("binDropdownAjax","HotelHome", new { area="Admin"})';
+            //$('#IdTinhThanh').val(_idTinhthanh);
+            showSearchLoader();
+
+            var _idQuanHuyen = $('#divCboQuan').val();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { obj: _idQuanHuyen, style: 3 },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#divCboPhuong').html(data);
+
+                    $('#divCboPhuong').select2({
+                        dropdownParent: $('#myAddModal'),
+                        allowClear: true
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+        function changeQuanHuyenEdit(selectOS) {
+            var _idQuanHuyen = document.getElementById("IdQuan_edit").value;
+
+            var Url = '@Url.Action("binDropdownAjax","HotelHome", new { area="Admin"})';
+
+            showSearchLoader();
+
+            var _idQuanHuyen = $('#IdQuan_edit').val();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { obj: _idQuanHuyen, style: 3 },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#IdPhuong_edit').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+        function SubmitSearchForm() 
+          {           
+            var _idTinhthanh = $('#cboTinhthanh').val();
+            var _hotelname = document.getElementById("name_hotel").value;
+            var Url = '@Url.Action("HotelListPartial","HotelHome", new { area="Admin"})';
+
+            showSearchLoader();
+            var param = {
+                PageIndex: 1,
+                PageSize: 25,
+                IdProvince: _idTinhthanh,
+                NameSearch: _hotelname,
+            } 
+
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { "paramJson": JSON.stringify(param),
+                },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+
+                    $('#MainDataSection').html(data);
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+       
+        function EditItem(Id, Name, Rating, Address, Meals, IdTinhThanh, Type, IdPriceRange, IdQuan, IdPhuong, Description, Content, LatMap, LonMap) {
+
+            $('#Id_edit').val(Id);
+            $('#Name_edit').val(Name);
+            $('#Rating_edit').val(Rating);
+            $('#Address_edit').val(Address);
+            $('#Meals_edit').val(Meals);
+            $('#IdTinhThanh_edit').val(IdTinhThanh);
+            $('#Type_edit').val(Type);
+            $('#IdPriceRange_edit').val(IdPriceRange);
+            
+            $('#Description_edit').val(Description);
+            $('#Content_edit').val(Content);
+            $('#LatMap_edit').val(LatMap);
+            $('#LonMap_edit').val(LonMap);
+
+            
+            var Url = '@Url.Action("binDropdownAjax","HotelHome", new { area="Admin"})';
+           
+            showSearchLoader();
+
+         
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { obj: IdTinhThanh, style: 2 },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+                    $('#IdQuan_edit').html(data);
+                    $('#IdQuan_edit').val(IdQuan);
+                    
+                    $('#IdQuan_edit').select2({
+                        dropdownParent: $('#myEditModal'),
+                        allowClear: true
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { obj: IdQuan, style: 3 },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+
+                    hideSearchLoader();
+                    $('#IdPhuong_edit').html(data);
+                    $('#IdPhuong_edit').val(IdPhuong);
+
+                    $('#IdPhuong_edit').select2({
+                        dropdownParent: $('#myEditModal'),
+                        allowClear: true
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+        
+        
+         function UpdateMAP(IDHotel) {
+         //   alert(IDHotel + $("#txtLAT").val());
+         debugger
+            var Url = '@Url.Action("CapNhatToaDo","HotelHome", new { area="Admin"})';
+            var lat = $("#txtLAT").val();
+            var lon = $("#txtLON").val();
+            $.ajax({
+                type: "POST",
+                url: Url,
+                data:
+                {
+                    IdHotel: IDHotel,
+                    LAT: lat,
+                    LON: lon
+                },
+                cache: false,
+                async: false,
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("An error occured. Please try again!" + thrownError + Url);
+                }
+            })
+        }
+        function EditMap(_IdHotel, _hotelName,_lat,_lon) {
+
+            var Url = '@Url.Action("_AddMapPartial","HotelHome", new { area="Admin"})';
+             $.ajax({
+                type: "POST",
+                url: Url,
+                data:
+                {
+                    IdHotel: _IdHotel,
+                    hotelName: _hotelName,
+                    Lat:_lat,
+                    Lon:_lon
+                },
+                cache: false,
+                async: false,
+                success: function (data) {
+                    $('#myEditmapmodalbody').html(data);
+                    $('#myEditmap').modal('show');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("An error occured. Please try again!" + thrownError + Url);
+                }
+            })
+
+
+        }
+
+        function AddPicture(Id, Type_upload) {
+            
+            var Url = '@Url.Action("TransitParamPicture","HotelHome", new { area="Admin"})';
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: {Type:Type_upload, IDObj: Id },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+                    hideSearchLoader();
+
+                    $('#MainAddPictureHotel').html(data);
+
+                    $("#Type_upload").val(Type_upload);
+
+                    $("#from_addpictureHotel").submit(function (e) {
+                        e.preventDefault();
+
+                        if ($("#inputFileIMG").val() == '') {
+                            alert('Bạn cần chọn ít nhất 01 ảnh');
+                            return;
+                        }
+                        var _submit = $(this).find(":submit");
+                        var formData = new FormData(this);
+                        var formAction = $(this).attr("action");
+
+                        $.ajax({
+                            type: "POST",
+                            beforeSend: function () {
+                                showSearchLoader();
+                            },
+                            traditional: true,
+                            data: formData,
+                            url: formAction,
+                            cache: false,
+                            contentType: false,
+                            processData: false
+
+                        }).done(function (result) {
+                            $("#inputFileIMG").val('');
+                            hideSearchLoader();
+                            AddPicture(Id, Type_upload);
+                            
+                        });
+
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+        function AddPicturePartial() {
+            debugger
+            var name = document.getElementById("name_ks").value;
+            var rating = document.getElementById("Rating").value;
+            var address = document.getElementById("Address").value;
+            var meals = document.getElementById("meal_ks").value;
+            var idTinhThanh = document.getElementById("IdTinhThanh").value;
+            var type = document.getElementById("Type_ID").value;
+            var idPriceRange = document.getElementById("Priece_ID").value;
+            var description = document.getElementById("Description").value;
+            var cboQuan = document.getElementById("divCboQuan").value;
+            var cboPhuong = document.getElementById("divCboPhuong").value;
+            var content = document.getElementById("Content").value;
+            var latMap = document.getElementById("LatMap").value;
+            var lonMap = document.getElementById("LonMap").value;
+
+
+
+            var hotel = {
+                Name: name,
+                Rating: rating,
+                Address: address,
+                Meals: meals,
+                IdTinhThanh: idTinhThanh,
+                Type: type,
+                IdPriceRange: idPriceRange,
+                Description: description,
+                IdQuan: cboQuan,
+                IdPhuong: cboPhuong,
+                Content: content,
+                LatMap: latMap,
+                LonMap: lonMap,
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "hotelJson": JSON.stringify(hotel),
+                },
+                url: "@Url.Action("AddHotel", "HotelHome")",
+                success: function (data) {
+                    SubmitSearchForm();
+                    alert("Hoan thanh");
+                    $('#name_ks').val('');
+                    $('#Address').val('');
+
+                },
+            })
+        }
+
+        function AddRoom(Id) {
+            debugger
+            var Url = '@Url.Action("TransitParamRoom","HotelHome", new { area="Admin"})';
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { IdHotel: Id },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+                    hideSearchLoader();
+                    $('#MainAddRoomHotel').html(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+
+        }
+        function AddRoomPartial() {
+            debugger
+            var idhotel = document.getElementById("roomIdhotel").value;
+            var name = document.getElementById("roomName").value;
+            var roomSize = document.getElementById("roomSize").value;
+            var description = document.getElementById("roomDescription").value;
+            var status = document.getElementById("roomStatus").value;
+            var priceValue = document.getElementById("roomPriceValue").value;
+            var discount = document.getElementById("roomDiscount").value;
+            var numMature = document.getElementById("roomNumMature").value;
+            var numChild = document.getElementById("roomNumChild").value;
+            var palletbed = $("#roomPalletbed").val();
+            var viewDirection =$("#roomView").val();
+            var service = $("#roomService").val();
+            
+
+            var room = {
+                Idhotel: idhotel,
+                Name: name,
+                RoomSize: roomSize,
+                Description: description,
+                RoomStatus: status,
+                PriceValue: priceValue,
+                Discount: discount,
+                NumMature: numMature,
+                NumChild: numChild,
+                Palletbed: palletbed,
+                ViewRoom: viewDirection,
+                ServiceRoom: service
+
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "roomdto": JSON.stringify(room),
+                },
+                url: "@Url.Action("AddHotelRoom", "HotelHome")",
+                success: function (data) {
+                    AddRoom(idhotel)
+                    alert("Hoan thanh");
+                    $('#Name_Room').val('');
+                    $('#Description_Room').val('');
+
+                },
+            })
+        }
+
+        function EditRoomJs() {
+            debugger
+            var id = document.getElementById("roomId_edit").value;
+            var idhotel = document.getElementById("roomIdHotel_edit").value;
+            var name = document.getElementById("roomName_edit").value;
+            var roomSize = document.getElementById("roomSize_edit").value;
+            var description = document.getElementById("roomDescription_edit").value;
+            var status = document.getElementById("roomStatus_edit").value;
+            var priceValue = document.getElementById("roomPriceValue_edit").value;
+            var discount = document.getElementById("roomDiscount_edit").value;
+            var numMature = document.getElementById("roomNumMature_edit").value;
+            var numChild = document.getElementById("roomNumChild_edit").value;
+            var palletbed = $("#roomPalletbed_edit").val();
+            var viewDirection = $("#roomView_edit").val();
+            var service = $("#roomService_edit").val();
+
+
+            var room = {
+                Id:id,
+                Idhotel: idhotel,
+                Name: name,
+                RoomSize: roomSize,
+                Description: description,
+                RoomStatus: status,
+                PriceValue: priceValue,
+                Discount: discount,
+                NumMature: numMature,
+                NumChild: numChild,
+                Palletbed: palletbed,
+                ViewRoom: viewDirection,
+                ServiceRoom: service
+
+            }
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "roomedit": JSON.stringify(room),
+                },
+                url: "@Url.Action("EditHotelRoom", "HotelHome")",
+                success: function (data) {
+                    AddRoom(idhotel)
+                    alert("Hoan thanh");
+                    $('#Name_Room').val('');
+                    $('#Description_Room').val('');
+
+                },
+            })
+        }
+
+        function AddService(Id) {
+            $('#IdHotel_Service').val(Id);
+            var Url = '@Url.Action("TransitParamServiceHotel","HotelHome", new { area="Admin"})';
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { IDHotel: Id },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+                    hideSearchLoader();
+
+                    $('#MainAddServiceHotel').html(data);
+
+                    $('#IdService_add').select2({
+                        dropdownParent: $('#myAddService'),
+                        allowClear: true
+                    });
+                    document.getElementById('btnAddServicesHotels').addEventListener('click', ServiceHotel);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+        function ServiceHotel() {
+            var idServices = $("#IdService_add").val();
+                
+            if (idServices == '') {
+                alert('Bạn cần chọn ít nhất 1 Services');
+                return;
+            }
+            var service = {
+                IdServices:  $("#IdService_add").val(),
+                IdHotelorRoom: $("#IdHotel_add").val()
+            }
+                       
+            ServiceHotel_CALLAJAX(service);
+        }
+
+        function ServiceHotel_CALLAJAX(service) {
+            showSearchLoader();
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                    {
+                        "fromdata": JSON.stringify(service),
+                    },
+                url: "@Url.Action("AddServiceHotel", "HotelHome")",
+                success: function (data) {
+                    AddService(service.IdHotelorRoom);
+                    //AddService(service.IdHotelorRoom);
+                },
+            })
+
+        }
+        function AddAlbum(Id) {
+            $('#Id_Hotel_Album').val(Id);
+
+        }
+        function DeleteItem(Id) {
+            $('#Id_delete').val(Id);
+        }
+
+        function DeletePicture(IDPic) {
+
+            if (confirm("Bạn muốn xóa ảnh ID " + IDPic) == true) {
+                var Url = '@Url.Action("DeletePicture","PicturesHome", new { area="Admin"})';
+
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    data:
+                    {
+                        "Id": IDPic,
+                    },
+                    url: Url,
+                }).done(function (result) {
+                    console.log(result);
+                    $('#trpic_' + IDPic).hide();
+                });
+            }
+        }
+
+         function RemoveServicesHotel(_IdService, _IdHotelorRoom) {
+
+              if (confirm("Bạn muốn xóa Services ID " + _IdService) == true) {
+                var Url = '@Url.Action("RemoveService","ServicesHome", new { area="Admin"})';
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    data:
+                    {
+                        IdService: _IdService,
+                        IdHotelorRoom: _IdHotelorRoom
+                    },
+                    url: Url,
+                }).done(function (result) {
+                    AddService(_IdHotelorRoom);
+                });
+            }
+            
+        }
+    </script>
+}

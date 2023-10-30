@@ -1,0 +1,17 @@
+﻿@using GoStay.DataDto.Apis;
+@model HotelRoomDto
+
+
+<div class="benefits-list">
+    <div class="row">
+        @foreach (var _service in @Model.Services)
+        {
+        <div class="col-6">
+            <div class="benefits-icon">
+                    <i class="fa-solid @_service.Icon"> </i>@_service.NameLang
+            </div>
+        </div>
+        }
+        </div>
+    </div>
+</div>

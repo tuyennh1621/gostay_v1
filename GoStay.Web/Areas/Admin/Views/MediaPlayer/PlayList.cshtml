@@ -1,0 +1,135 @@
+﻿@using GoStay.Web.Areas.Admin.Controllers
+@using Kendo.Mvc.UI
+@using GoStay.DataDto.Telerik
+
+
+@{
+    ViewData["Title"] = "Editor";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>All tools</title>
+    <meta charset="utf-8">
+    @{
+        var kendoVersion = "2022.2.510";
+    }
+    <link href="https://kendo.cdn.telerik.com/@kendoVersion/styles/kendo.material-main.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/kendo.aspnetmvc.min.js"></script>
+    <link rel="stylesheet" href="~/kendoui/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/kendoui/css/site.css" />
+
+</head>
+
+<body>
+    <div>
+        <div class="demo-section wide" style="max-width: 925px;">
+            @(Html.Kendo().MediaPlayer()
+                .Name("mediaPlayer")
+                .AutoPlay(true)
+                .HtmlAttributes(new { style = "height:360px" })
+                )
+
+            <div class="k-list-container playlist">
+                @(Html.Kendo().ListView<Video>()
+                    .Name("listView")
+                    .TagName("ul")
+                    .ClientTemplateId("template")
+                    .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Read(read => read.Action("Videos_Read", "MediaPlayer"))
+                    )
+                    .Selectable(true)
+                    .Events(e => e
+                    .Change("onChange")
+                    .DataBound("onDataBound"))
+                    )
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function onChange() {
+        var index = this.select().index();
+        var dataItem = this.dataSource.view()[index];
+        $("#mediaPlayer").data("kendoMediaPlayer").media(dataItem);
+    }
+
+    function onDataBound() {
+        this.select(this.content.children().first());
+    }
+</script>
+<script type="text/x-kendo-template" id="template">
+    <li class="k-item k-state-default" onmouseover="$(this).addClass('k-hover')"
+        onmouseout="$(this).removeClass('k-hover')">
+        <span>
+            <img alt="Telerik UI for ASP.NET Core MediaPlayer #:title# thumbnail" src="#:poster#" />
+            <h5>#:title#</h5>
+        </span>
+    </li>
+</script>
+
+<style>
+    .k-mediaplayer {
+        float: left;
+        box-sizing: border-box;
+        width: 70%;
+    }
+
+    .playlist {
+        float: left;
+        height: 360px;
+        overflow: auto;
+        width: 30%;
+    }
+
+    @@media(max-width: 800px) {
+        .playlist,
+        .k-mediaplayer {
+            width: 100%;
+        }
+    }
+
+    .playlist ul, .playlist li {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .playlist .k-item {
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        padding: 14px 15px;
+    }
+
+        .playlist .k-item:last-child {
+            border-bottom-width: 0;
+        }
+
+    .playlist span {
+        cursor: pointer;
+        display: block;
+        overflow: hidden;
+        text-decoration: none;
+    }
+
+        .playlist span img {
+            border: 0 none;
+            display: block;
+            height: 56px;
+            object-fit: cover;
+            width: 100px;
+            float: left;
+        }
+
+    .playlist h5 {
+        display: block;
+        font-weight: normal;
+        margin: 0;
+        overflow: hidden;
+        padding-left: 10px;
+        text-align: left;
+    }
+</style>

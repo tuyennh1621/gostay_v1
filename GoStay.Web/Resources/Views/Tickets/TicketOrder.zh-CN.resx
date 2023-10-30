@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add extra baggage" xml:space="preserve">
+    <value>添加额外行李</value>
+  </data>
+  <data name="Add extra baggage for a more convenient trip. Buy now with a lower price!" xml:space="preserve">
+    <value>添加额外的行李，让旅行更方便。现在以更低的价格购买！</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Adult" xml:space="preserve">
+    <value>成人</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>申请</value>
+  </data>
+  <data name="Booking" xml:space="preserve">
+    <value>预订确认通知</value>
+  </data>
+  <data name="Buy insurance" xml:space="preserve">
+    <value>买保险</value>
+  </data>
+  <data name="Child" xml:space="preserve">
+    <value>孩子们</value>
+  </data>
+  <data name="Class ticket" xml:space="preserve">
+    <value>班票</value>
+  </data>
+  <data name="Clicking this button, you acknowledge that you have read and agree to our Terms and Conditions" xml:space="preserve">
+    <value>单击此按钮，即表示您确认已阅读并同意我们的条款和条件</value>
+  </data>
+  <data name="Contact information" xml:space="preserve">
+    <value>联系信息</value>
+  </data>
+  <data name="Date of birth" xml:space="preserve">
+    <value>出生日期</value>
+  </data>
+  <data name="Discount code" xml:space="preserve">
+    <value>优惠码</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>女性</value>
+  </data>
+  <data name="Flight" xml:space="preserve">
+    <value>航班</value>
+  </data>
+  <data name="Flight details" xml:space="preserve">
+    <value>航班详情</value>
+  </data>
+  <data name="Fullname" xml:space="preserve">
+    <value>全名</value>
+  </data>
+  <data name="Includes taxes, fees and surcharges" xml:space="preserve">
+    <value>包括税费、费用和附加费</value>
+  </data>
+  <data name="Infant" xml:space="preserve">
+    <value>婴儿</value>
+  </data>
+  <data name="Insert code" xml:space="preserve">
+    <value>插入代码</value>
+  </data>
+  <data name="is incorrect" xml:space="preserve">
+    <value>是不正确的</value>
+  </data>
+  <data name="is required" xml:space="preserve">
+    <value>是必须的</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>男性</value>
+  </data>
+  <data name="Passenger" xml:space="preserve">
+    <value>乘客</value>
+  </data>
+  <data name="Passenger information" xml:space="preserve">
+    <value>乘客信息</value>
+  </data>
+  <data name="Passenger information is contact information" xml:space="preserve">
+    <value>旅客信息为联系方式</value>
+  </data>
+  <data name="Phone number" xml:space="preserve">
+    <value>电话号码</value>
+  </data>
+  <data name="Plase enter fullname" xml:space="preserve">
+    <value>请输入全名</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>价格</value>
+  </data>
+  <data name="Price details" xml:space="preserve">
+    <value>价格详情</value>
+  </data>
+  <data name="Price for" xml:space="preserve">
+    <value>价格</value>
+  </data>
+  <data name="Request a VAT invoice" xml:space="preserve">
+    <value>索取增值税发票</value>
+  </data>
+  <data name="See more regulations on checked baggage" xml:space="preserve">
+    <value>查看更多关于托运行李的规定</value>
+  </data>
+  <data name="Service charge" xml:space="preserve">
+    <value>服务费</value>
+  </data>
+  <data name="Sex" xml:space="preserve">
+    <value>性别</value>
+  </data>
+  <data name="Sign in to get more preferred" xml:space="preserve">
+    <value>登录以获得更多优惠</value>
+  </data>
+  <data name="Tax and Fee" xml:space="preserve">
+    <value>税费</value>
+  </data>
+  <data name="Total amount" xml:space="preserve">
+    <value>总金额</value>
+  </data>
+  <data name="Total fare" xml:space="preserve">
+    <value>总票价</value>
+  </data>
+  <data name="Type in Vietnamese without accents and special characters, your full name matches on your ID." xml:space="preserve">
+    <value>输入没有重音和特殊字符的越南语，您的全名与您的 ID 匹配。</value>
+  </data>
+  <data name="Under" xml:space="preserve">
+    <value>在下面</value>
+  </data>
+  <data name="Years old" xml:space="preserve">
+    <value>岁</value>
+  </data>
+</root>

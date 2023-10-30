@@ -1,0 +1,44 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<!-- Start Newsletter Area -->
+<style>
+    .mail-valid{
+        position:absolute;
+        top: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+</style>
+<div class="newsletter">
+    <div class="container">
+        <div class="inner-content">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-md-7 col-12">
+                    <div class="title">
+                        <a href="#"><img data-src="/assets/images/newsletter/icon.png" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                        <div class="title-newsletter">
+                            <h3>@Localizer["You want to save up to 50% on hotel and flight bookings?"]</h3>
+                            <div>@Localizer["Enter your phone number/email so we can send you the latest promotions!"]</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-5 col-12">
+                    <div class="form">
+                        <form action="#" method="get" target="_blank" class="newsletter-form">
+                            <input name="EMAIL" placeholder="@Localizer["Enter your email..."]" id="test-email" type="email" onblur="preCheckEmail2('test-email')">
+                            <div class="button">
+                                <button class="btn">@Localizer["Sign up"]<span class="dir-part"></span></button>
+                            </div>
+                            <div class="color-primary mail-valid">Email không hợp lệ</div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

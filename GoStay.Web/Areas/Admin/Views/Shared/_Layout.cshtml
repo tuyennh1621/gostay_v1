@@ -1,0 +1,270 @@
+﻿@using GoStay.Common
+@using GoStay.Common.Configuration
+@using goStayCore.CommonCode
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Gostay Admin</title>
+    <script src="~/admintheme/vendor/jquery/jquery.min.js"></script>
+    <script src="~/admintheme/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom fonts for this template-->
+    <link href="~/admintheme/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="~/admintheme/css/sb-admin-2.css?v=8" rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="/Content/ThemeContent/css/bootstrap.css" type="text/css" />
+    <link href="~/Content/ThemeContent/Style/style.css" rel="stylesheet" />
+    <link href="~/assets/css/loader.css" rel="stylesheet" />
+    <link href="~/assets/css/select2.css?v=2" rel="stylesheet" />
+    @*<link rel="stylesheet" href="~/assets/css/bootstrap-utilities.css" />
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />*@
+
+
+    <link rel="stylesheet" href="/Content/ThemeContent/css/dark.css" type="text/css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/font-icons.css" type="text/css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/components/bs-switches.css" type="text/css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/components/datepicker.css" type="text/css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/components/timepicker.css" type="text/css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/components/daterangepicker.css" type="text/css" />
+    <link rel="stylesheet" href="/Content/ThemeContent/css/custom.css" type="text/css" />
+
+    @*<style>
+
+        .box-logout{
+            background-color: #F8F8FF;
+            width:200px!important;
+            display:flex!important;
+            gap:10px!important;
+            cursor:pointer!important;
+            align-items: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .box-logout img{
+            max-width: 100%;
+            height: auto;
+        }
+        .box-logout span{
+
+        }
+        .sidebar-dark #sidebarToggle::after {
+            display:none;
+        }
+    </style>*@
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <li>
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="@Url.Action("Dashboard", "AdminHome", new { area = "Admin" })">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <i class="fas fa-laugh-wink"></i>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">GoStay <sup>Admin</sup></div>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="@Url.Action("Dashboard", "AdminHome", new { area = "Admin" })">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            @if (AppConfigs.permission == 0)
+            {
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                        <i class="fas fa-hotel"></i>
+                        <span>Hotels</span>
+                    </a>
+                    <div id="collapseTwo" aria-expanded="true" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("HotelList", "HotelHome", new { area = "Admin"})">+ Hotel</a>
+                            <a class="collapse-item" href="@Url.Action("HotelRoomList", "HotelHome", new { area = "Admin" })">Room</a>
+                            <a class="collapse-item" href="@Url.Action("ServicesList", "ServicesHome", new { area = "Admin" })">Service</a>
+                            <a class="collapse-item" href="@Url.Action("RatingList", "HotelHome", new { area = "Admin" })">Rating-Comment</a>
+
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTours"
+                   aria-expanded="true" aria-controls="collapseTours">
+                        <i class="fas fa-route"></i>
+                        <span>Tours</span>
+                    </a>
+                    <div id="collapseTours" aria-expanded="true" class="collapse" aria-labelledby="headingTours" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("TourList", "TourHome", new { area = "Admin" })">+ Tour</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders"
+                   aria-expanded="true" aria-controls="collapseTours">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Orders</span>
+                    </a>
+                    <div id="collapseOrders" aria-expanded="true" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("OrderList", "OrderHome", new { area = "Admin" })">Order List</a>
+                            <a class="collapse-item" href="@Url.Action("Chart", "AdminOrders", new { area = "Admin" })">Chart</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTicket"
+                   aria-expanded="true" aria-controls="collapseTours">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Ticket</span>
+                </a>
+                <div id="collapseTicket" aria-expanded="true" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("OrderTicketList", "TicketHome", new { area = "Admin" })">Ticket Order List</a>
+                    </div>
+                </div>
+            </li>
+            }
+            @if (AppConfigs.permission == 0 || AppConfigs.permission >10)
+            {
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNews"
+                   aria-expanded="true" aria-controls="collapseTours">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>News</span>
+                </a>
+                <div id="collapseNews" aria-expanded="true" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("NewsList", "NewsHome", new { area = "Admin" })">News List</a>
+                    </div>
+                </div>
+                <div id="collapseNews" aria-expanded="true" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("Index", "VideosHome", new { area = "Admin" })">List Video </a>
+                    </div>
+                </div>
+            </li>
+            }
+            @if (AppConfigs.permission == 0)
+            {
+                <li class="nav-item">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a style="color: #1ABC9C" class="collapse-item" href="@Url.Action("Index", "Scheduler", new { area = "Admin" })">Scheduler</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser"
+                   aria-expanded="true" aria-controls="collapseTours">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>User</span>
+                    </a>
+                    <div id="collapseUser" aria-expanded="true" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("UserList", "UserHome", new { area = "Admin" })">User List</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSetting"
+                   aria-expanded="true" aria-controls="collapseSetting">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Setting</span>
+                </a>
+                <div id="collapseSetting" aria-expanded="true" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("MulltiKeyValueList", "AdminHome", new { area = "Admin" })">Mullti Table</a>
+                        <a class="collapse-item" href="@Url.Action("PicturesList", "PicturesHome", new { area = "Admin" })">Pictures Table</a>
+                        <a class="collapse-item" href="@Url.Action("AlbumList", "PicturesHome", new { area = "Admin" })">Album Table</a>
+                    </div>
+                </div>
+            </li>
+            }
+            <li class="nav-item">
+                <hr class="sidebar-divider d-none d-md-block">
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+            </li>
+           
+        </ul>
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <div id="content">
+                @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminHeader.cshtml")
+                @RenderBody()
+                @await Html.PartialAsync("~/Views/Shared/_Loader.cshtml")
+            </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>@AppConfigs.buidinfo() Development by <a target="_blank" title="Realtech Inc" href="https://realtech.com.vn/">Realtech Inc</a></span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/admintheme/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+   
+
+  <script src="/assets/helpers/JSTable-master/JSTable-master/src/jstable.js?v=1"></script>
+    <script src="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.es5.min.js"></script>
+    <script src="/assets/helpers/JSTable-master/JSTable-master/dist/polyfill-fetch.min.js"></script>
+
+
+    <script src="~/admintheme/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/select2.min.js"></script>
+    <script src="~/admintheme/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/admintheme/js/sb-admin-2.js?v=17"></script>
+    <script src="~/ckeditor2/ckeditor.js"></script>
+    <script src="~/ckeditor/ckfinder/ckfinder.js"></script>
+ 
+
+
+    <!-- Page level plugins -->
+    <script type="text/javascript">
+        function logout() {
+            debugger
+            window.location = "/Home/Logout";
+        }
+        function showSearchLoader() {
+
+            $("#search_loader").css("display", "block");
+        }
+
+        function hideSearchLoader() {
+            $("#search_loader").css("display", "none");
+        }
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

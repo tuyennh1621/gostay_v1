@@ -1,0 +1,44 @@
+﻿@using DAL
+@using DAL.Entities
+
+@using DAL.Helpers.PageHelpers
+@using GoStay.DataAccess.Entities
+@using GoStay.Service
+@using GoStay.Common
+@using goStayCore.CommonCode
+@model PagingList<Picture>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover  mb-0">
+        <thead>
+            <tr>
+
+                <th>ID</th>
+                <th>Pictures</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model == null)
+                    return;
+                if (Model.Items.Count > 0)
+                {
+                    foreach (var item in Model.Items)
+                    {
+                        <tr id="trpic_@item.Id">
+                            <td>@item.Id</td>
+                            <td><img src="@item.UrlOut" style="width:150px;" /></td>
+                            <td>
+                                <div class="justify-content-center">
+                                    <a class="dropdown-item" href="#!" onclick="DeletePicture('@item.Id');" data-toggle="modal" data-target="#myDeletePictureModal"><span class="icon-line-delete"></span> Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+

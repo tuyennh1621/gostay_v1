@@ -1,0 +1,248 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.Web.Model
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model TicketSearchModels
+
+@{
+
+}
+<div class="search">
+    <div class="search-form">
+        <div class="row margin-zero">
+            <div class="from-to col-xxl-5 col-xl-5 col-lg-12 col-md-12">
+                <div class="row align-items-center">
+                    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-5">
+                        <div class="title-location">
+                            @Localizer["From"]
+                        </div>
+                        <div class="form-floating">
+                            <div class="d-flex align-items-center justify-between">
+                                <select id="StartPoint" name="StartPoint" value="" style="width:100%" required class="form-control single-select2">
+                                    @{
+                                        foreach (var item in Model.startPoints)
+                                        {
+                                            <option value="@item.Key">@item.Value</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                        <div class="arrow-exchange">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        </div>
+                    </div>
+                    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-5 col-5">
+                        <div class="title-location">
+                            @Localizer["To"]
+                        </div>
+                        <div class="form-floating">
+                            <div class="d-flex align-items-center justify-between">
+                                <select id="EndPoint" name="EndPoint" value="" style="width:100%" required class="form-control">
+                                    @{
+                                        foreach (var item in Model.endPoints)
+                                        {
+                                            <option value="@item.Key">@item.Value</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="date-room col-xxl-7 col-xl-7 col-lg-12 col-md-12">
+                <div class="select-date col-xxl-6 col-xl-7 col-12 bd-left pl-20">
+                    <div class="row align-items-center">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-6">
+                            <div class="title-date">
+                                @Localizer["Arrival day"]
+                            </div>
+                            <div class="input-date">
+                                <input type="text" value="@AppConfigs.DepartureDate" class="InputDate_from" id="DepartureDate" name="DepartureDate" placeholder="Chọn ngày đi">
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-6">
+                            <div class="title-date">
+                                @Localizer["Departure day"]
+                            </div>
+                            <div class="input-date">
+                                <input type="text" value="@AppConfigs.ReturnDate" class="InputDate_to" id="ReturnDate" name="ReturnDate" placeholder="Chọn ngày về">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-room col-xxl-6 col-xl-5 col-12 bd-left pl-20">
+                    <div class="col-9">
+                        <div class="title-date">
+                            @Localizer["Passengers & Seat Class"]
+                        </div>
+                        <div class="input-location">
+                            <input type="text" readonly="readonly" class="w-100" id="txtInputSeatSearch" name="InputTicketSearch" value="@AppConfigs.TextTicketSearchBar" placeholder="@Localizer["Select number of passengers"]">
+                            <input hidden type="number" id="inputAdult" name="Adult">
+                            <input hidden type="number" id="inputChildren" name="Children">
+                            <input hidden type="number" id="inputInfant" name="Infant">
+                        </div>
+                    </div>
+
+                    <div class="col-3">
+                        @if (Model.IsHomePage == true)
+                        {
+                            <div class="button-search">
+                                <button onclick="checkTicket()" class="btn-search" type="submit" id="btnSubmitSearch"><i class="fa-solid fa-magnifying-glass ic-16-white"></i></button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="button-search">
+                                <a onclick="checkTicket()" id="btnSearchVeMB" class="btn-search"><i class="fa-solid fa-magnifying-glass ic-16-white"></i></a>
+                            </div>
+                        }
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="result_search_seat">
+    <div class="result_search_seat select-seat-parent">
+        <div class="select-seat">
+            <h3>@Localizer["Number of customers"]</h3>
+            <div class="family-room room">
+                <div class="family-title">
+                    @Localizer["Adult"] (@Localizer["From"] 12 @Localizer["years old"])
+                </div>
+                <div class="family-quality">
+                    <span id="btnsublbnumAdult"><i class="fa-solid fa-minus"></i></span>
+                    <div>
+                        <input id="adult" style="width:30px;text-align:center;" type="number" value="@AppConfigs.Adult" name="Adult" disabled />
+                    </div>
+                    <span id="btnaddlbnumAdult"><i class="fa-solid fa-plus"></i></span>
+                </div>
+
+            </div>
+            <div class="family-room person">
+                <div class="family-title">
+                    @Localizer["Children"] (2-11 @Localizer["years old"])
+                </div>
+                <div class="family-quality">
+                    <span id="btnsublbnumChildren"><i class="fa-solid fa-minus"></i></span>
+                    <div>
+                        <input id="children" style="width:30px;text-align:center;" type="number" value="@AppConfigs.Children" name="Children" disabled />
+                    </div>
+                    <span id="btnaddlbnumChildren"><i class="fa-solid fa-plus"></i></span>
+                </div>
+            </div>
+            <div class="family-room child">
+                <div class="family-title">
+                    @Localizer["Infant"] ( @Localizer["Less than 2 years old"])
+                </div>
+                <div class="family-quality">
+                    <span id="btnsublbnumInfant"><i class="fa-solid fa-minus"></i></span>
+                    <div>
+                        <input id="infant" style="width:30px;text-align:center;" type="number" value="@AppConfigs.Infant" name="Infant" disabled />
+                    </div>
+                    <span id="btnaddlbnumInfant"><i class="fa-solid fa-plus"></i></span>
+                </div>
+
+            </div>
+        </div>
+        <div class="select-ticket">
+            <h3>@Localizer["Ticket class"]</h3>
+            <div class="title-ticket">
+                <a>@Localizer["Business"]</a>
+                <p>@Localizer["Fly at the lowest cost, with all your basic needs covered"]</p>
+
+            </div>
+            <div class="title-ticket">
+                <a>@Localizer["Premium economy"]</a>
+                <p>@Localizer["An affordable way to fly, with tasty meal and bigger legroom"].</p>
+            </div>
+            <div class="title-ticket">
+                <a>@Localizer["Economy"]</a>
+                <p>@Localizer["Fly in style, with exclusive check-in counters and seating."].</p>
+            </div>
+            <div class="title-ticket">
+                <a>@Localizer["Firstclass"]</a>
+                <p>@Localizer["The most luxurious class, with personalized five-star services."].</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#txtInputSeatSearch").val($("#adult").val() + " @Localizer["Adult"] " + $("#children").val() + " @Localizer["Children"] " + $("#infant").val() + " @Localizer["Infant"]");
+    $("#inputAdult").val($("#adult").val());
+    $("#inputChildren").val($("#children").val());
+    $("#inputInfant").val($("#infant").val());
+    function checkTicket() {
+        var from = document.getElementById("StartPoint").value;
+        var to = document.getElementById("EndPoint").value;
+
+        if ( from == to ) {
+            alert("@Localizer["Destination and departure cannot be the same"]");
+        }
+    }
+
+    function binCap2() {
+        $("#txtInputSeatSearch").val($("#adult").val() + " @Localizer["Adult"] " + $("#children").val() + " @Localizer["Children"] " + $("#infant").val() + " @Localizer["Infant"]");
+        $("#inputAdult").val($("#adult").val());
+        $("#inputChildren").val($("#children").val());
+        $("#inputInfant").val($("#infant").val());
+    }
+    function addNum2(id) {
+        debugger
+        var temp = parseInt($("#" + id).val()) || 0;
+        temp += 1;
+        $("#" + id).val(temp);
+        binCap2();
+    }
+    function subNum2(id) {
+        debugger
+        var temp = parseInt($("#" + id).val()) || 0;
+        temp -= 1;
+        if (temp < 0)
+            temp = 0;
+        $("#" + id).val(temp);
+
+        binCap2();
+    }
+    function subNumA2(id) {
+        debugger
+        var temp = parseInt($("#" + id).val()) || 0;
+        temp -= 1;
+        if (temp < 1)
+            temp = 1;
+        $("#" + id).val(temp);
+
+        binCap2();
+    }
+    $("#btnaddlbnumAdult").click(function () {
+        addNum2('adult');
+    });
+    $("#btnsublbnumAdult").click(function () {
+        subNumA2('adult');
+    });
+
+
+    $("#btnaddlbnumChildren").click(function () {
+        addNum2('children');
+    });
+    $("#btnsublbnumChildren").click(function () {
+        subNum2('children');
+    });
+
+
+    $("#btnaddlbnumInfant").click(function () {
+        addNum2('infant');
+    });
+    $("#btnsublbnumInfant").click(function () {
+        subNum2('infant');
+    });
+</script>

@@ -1,0 +1,148 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.Air.ExtDOMSearchFlightsShort
+@model AirSearchInOut
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    var j = 0;
+}
+<div class="fl-price text-16">
+    @Localizer["Show"] @Model.Present/@Model.Total
+</div>
+@foreach (var item in Model.Data.Flights.Skip(Model.PageIndex * Model.PageSize).Take(Model.PageSize))
+{
+    <div class="fl-items-grid-listing mt-10 mb-30">
+        <div class="fl-item-grid">
+            <div class="top-info">
+                <div class="fl-listing">
+                    <img src="/@item.Value.LogoAirline" alt="#">
+                    <div class="fl-title">
+                        <h3 class="text-14-b">@item.Value.AirlineName</h3>
+                        <p class="text-12">@item.Value.FlightNumber</p>
+                    </div>
+                </div>
+            </div>
+            <div class="fl-top-content-list">
+                <div class="date-in">
+                    <h3 class="text-16-b mb-10">@item.Value.StartDate.ToString("hh:mm")</h3>
+                    <p class="text-12">@item.Value.StartPoint</p>
+                </div>
+                <div class="start-end-point">
+                    <i class="fa-solid fa-plane-up fa-custom ic-12-blue"></i>
+                    <div class="line-horizontal-4">
+                        <div class="center-point-text">
+                            @item.Value.Duration <span>@Localizer["Direct"]</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-location-dot ic-12-blue"></i>
+                </div>
+                <div class="date-out">
+                    <h3 class="text-16-b mb-10">@item.Value.EndDate.ToString("hh:mm")</h3>
+                    <p class="text-12">@item.Value.EndPoint</p>
+                </div>
+            </div>
+            <div class="ticket-price-parent">
+                <div class="ticket-price">
+                    <p class="text-16-primary">
+                        @AppConfigs.FormatCurrency("VND", Math.Round((decimal)@item.Value.Price,0))
+                    </p>
+
+                </div>
+                <div class="ticket-button active">
+                    <a class="btn-ticket collapsed" data-bs-toggle="collapse" href="#flight_collapse_@item.Value.FlightNumber" role="button" aria-expanded="false" aria-controls="flight_collapse_vietjet">
+                        @Localizer["Select"]<i class="fa-solid fa-chevron-down pl-10"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="collapse flight_collapse_select_parent" id="flight_collapse_@item.Value.FlightNumber">
+
+            @foreach (var ve in item.Value.FareOptions)
+            {
+                j++;
+                <div class="card-2 card-body-2">
+                    <div class="economy-ticket">
+                        <div class="collapse_select_left">
+                            <p class="text-14-b" id="class_tk" value="@ve.Class">@ve.Class</p>
+
+                            <a class="collapsed text-14-b" data-bs-toggle="collapse" href="#collapse-vietjet-economy-ticket_@j" role="button" aria-expanded="false" aria-controls="collapse-vietjet-economy-ticket">
+                                @Localizer["Details"] <i class="fa-solid fa-chevron-down pl-10"></i>
+                            </a>
+                        </div>
+                        <div class="collapse_select-right">
+                            <div class="collapse_price">
+                                <a class="text-16-primary">
+                                    @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(ve.PriceAdult+ve.TaxAdult+ve.FeeAdult),0))
+                                </a>
+                            </div>
+
+                            <a title="@Localizer["Select ticket"]" class="collapse_btn active" target="_blank" href="@Url.Action("TicketOrder", "Tickets",new
+                                    { DataSession = Model.Data.DataSession,FlySession = item.Value.FlightSession,Direction = item.Value.Direction
+                                        , Classtk = ve.Class , TkDate= ve.Class,adult = Model.Adult,child= Model.Children, infant = Model.Infant })">
+                                @Localizer["Select ticket"]
+                            </a>
+
+                        </div>
+                    </div>
+                    <div class="collapse" id="collapse-vietjet-economy-ticket_@j">
+                        <div class="card-3 card-body-3">
+                            <div class="collapse_select_3">
+                                <div class="collapse_select_3_left">
+                                    <p class="text-14-b mb-10"> @Localizer["Other information"]</p>
+                                    <div class="fl-info-extra text-12-primary">
+                                        <svg width="16" height="16" fill="none" class="svgFillAll" style="height: 16px; width: auto; margin-right: 5px; stroke: rgb(229, 62, 62);"><path d="M10 7.333v1.334M10 11.333v1.334M12.5 3.333H3.333A1.333 1.333 0 002 4.667v2a1.333 1.333 0 110 2.666v2a1.333 1.333 0 001.333 1.334h9.334A1.334 1.334 0 0014 11.333v-2a1.333 1.333 0 110-2.666V5.5" stroke="#5F007C" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15 1.5L2.5 12" stroke="#5F007C" stroke-linecap="round"></path></svg>
+                                        @Localizer["Non-Refundable"]
+                                    </div>
+                                </div>
+                                <div class="collapse_select_3_right">
+                                    <p class="text-14-b mb-10">@Localizer["Ticket information"]: @Localizer["Fare"]</p>
+                                    <ul>
+                                        <li class="collapse_select_person">
+                                            <div>@Localizer["Adult"]</div>
+                                            <div>
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(ve.PriceAdult+ve.FeeAdult+ve.TaxAdult),0))
+
+                                            </div>
+                                        </li>
+                                        <li class="collapse_select_person">
+                                            <div>@Localizer["Child"]</div>
+                                            <div>
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(ve.PriceChild+ve.FeeChild+ve.TaxChild),0))
+                                            </div>
+                                        </li>
+                                        <li class="collapse_select_person">
+                                            <div>@Localizer["Infant"]</div>
+                                            <div>
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(ve.PriceInfant+ve.FeeInfant+ve.TaxInfant),0))
+                                            </div>
+                                        </li>
+                                        <li class="collapse_select_person">
+                                            <div>@Localizer["Service charge"]</div>
+                                            <div>
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)ve.ServiceFee,0))
+                                            </div>
+                                        </li>
+                                        <li class="collapse_select_person">
+                                            <div>@Localizer["Ticketing fee"]</div>
+                                            <div>
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)ve.IssueFee,0))
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+}
+<input type="hidden" value="@Model.Total" id="txtTotalItem" />

@@ -1,0 +1,133 @@
+﻿@using DAL.Entities;
+@using GoStay.DataAccess.Entities
+@using GoStay.DataDto.Service
+@model List<ServiceDto>;
+
+
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+
+<style>
+
+
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+</style>
+
+<body>
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Add Service</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    </div>
+
+
+@using (Html.BeginForm("AddServiceRoom", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "AddServiceRoom_form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <input type="hidden" id="IdRoom_add" value="@Model.First().IdHotelorRoom" name="IdRoom" />
+
+        <div class="overwrite-class col-12 form-group">
+            <label for="Service">Service<small class="text-danger">*</small></label>
+            <div style="width:100%">
+                <select style="width:100%" class="select2 select2-container form-control" name="states[]" id="IdService_addRoom" multiple="multiple" name="IdService">
+                    @{
+                        if (ViewBag.listServiceNotAssignedRoom == null)
+                            return;
+                        foreach (var NotAssigned in ViewBag.listServiceNotAssignedRoom as List<ServiceDto>)
+                        {
+                            <option value="@NotAssigned.Id">@NotAssigned.Name</option>
+
+                        }
+                    }
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+        <button type="button" id="btnAddServicesRooms" tabindex="7" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover  mb-0">
+        <thead>
+            <tr>
+                <th>Services ID</th>
+                <th>Services Name</th>
+                <th>IdStyle</th>
+                <th>Icon</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                    if (Model == null)
+                    return;
+                    if (Model.Count > 0)
+                {
+                        foreach (var item in Model)
+                    {
+
+                        <tr>
+                            <td>@item.Id </td>
+                            <td>@item.Name</td>
+                            @if (item.IdStyle == 0)
+                            {
+                                <td>Khách Sạn</td>
+                            }
+                            else
+                            {
+                                <td>Phòng</td>
+                            }
+                            <td>@item.Icon</td>
+                            <td>
+                                <div class="justify-content-center">
+
+                                    <a href="#" class="center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon-edit" style="font-size:23px;"></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-right" style="">
+                                        <li>
+                                                <a class="dropdown-item" href="#!" onclick="RemoveServicesRoom('@item.Id','@item.IdHotelorRoom');"><span class="icon-line-delete"></span> Remove </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+    
+</body>
+
+@section scripts{
+
+    <!--Following two scripts are for ajax begin form and other ajax calls-->
+
+    <script>
+
+        $(function () {
+            $('.select2').select2()
+        });
+        $(document).ready(function () { $("#select2_example").select2(); });
+
+        $(".chosen-select").chosen({
+            no_results_text: "Oops, nothing found!"
+        })
+
+       
+
+    </script>
+
+
+
+}

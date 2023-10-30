@@ -1,0 +1,96 @@
+﻿@using DAL
+@using DAL.Entities
+
+@using DAL.Helpers.PageHelpers
+
+@using goStayCore.CommonCode
+@model BasicDataModels
+
+@{
+    ViewData["Title"] = "Add Service ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<table class="table table-bordered table-hover mb-0">
+    <p class="stdformbutton" style="margin-bottom: 10px;">
+        <input type="button" value="Thêm" onclick="window.location.href = '/Areas/Admin/AdminHome/AddServices';" class="btn btn-primary" style="width:100px;" />
+
+        @*<input type="button" value="Xóa" onclick="DeleteMultiple()" class="btn btn-primary" style="width:100px;" />*@
+        @*<input hidden id="lstCode" />*@
+    </p>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>##</th>
+            <th>##</th>
+            <th>##</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-body">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Add Teacher</h4>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        @using (Html.BeginForm("AddServices", "AdminHome", FormMethod.Post, new { area = "Admin", @id = "TeacherAdd_form", enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="modal-body">
+                                <div class="col-12 form-group">
+                                    <label for="first_name">First Name<small class="text-danger">*</small></label>
+                                    <input type="text" tabindex="1" id="first_name" name="first_name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                                </div>
+                                <div class="col-12 form-group">
+                                    <label for="last_name">Last Name<small class="text-danger">*</small></label>
+                                    <input type="text" tabindex="1" id="last_name" name="last_name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+
+
+                                </div>
+                                <div class="col-12 form-group">
+                                    <label for="user_name">User Name<small class="text-danger">*</small></label>
+                                    <input type="text" tabindex="1" id="user_name" name="user_name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+
+
+                                </div>
+
+
+                                <div class="col-12 form-group">
+                                    <label for="email">Email<small class="text-danger">*</small></label>
+                                    <input type="email" tabindex="1" id="email" name="email" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+
+
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="is_active">Is Active<small class="text-danger">*</small></label>
+                                    <select id="is_active" name="is_active" class="sm-form-control border-form-control ">
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+                            <div class="modal-footer">
+
+                                <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+                                <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+
+                            </div>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </tbody>
+</table>

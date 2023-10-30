@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Video List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="card-body">
+    @using (Html.BeginForm("CreateDataFireBase", "VideosHome", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data", @class = "row" }))
+    {
+        
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <div class="overwrite-class col-12 form-group"  >
+                    <label for="Title">Link<small class="text-danger">*</small></label>
+                    <input type="text" id="Id" name="Id" class="sm-form-control border-form-control" value="" placeholder="Id">
+                </div>
+                <div class="overwrite-class col-12 form-group" >
+                    <label for="Title">Link<small class="text-danger">*</small></label>
+                    <input type="text" id="Time" name="Time" class="sm-form-control border-form-control" value="" placeholder="Time">
+                </div>
+                <div class="overwrite-class col-12 form-group"  >
+                    <label for="Title">Name<small class="text-danger">*</small></label>
+                    <input type="text" id="Name" name="Name" class="sm-form-control border-form-control" value="" placeholder="Name">
+                </div>
+                <div class="overwrite-class col-12 form-group"  >
+                    <label for="Title">Mess<small class="text-danger">*</small></label>
+                    <input type="text" id="Mess" name="Mess" class="sm-form-control border-form-control" value="" placeholder="Mess">
+                </div>
+                <div class="overwrite-class col-12 form-group" style="display: flex;justify-content: right;">
+                    <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@section scripts{
+
+
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgYLUomIjhs4uA2imn5GZpF3YgyJp8hS8",
+      authDomain: "gostay-1ae07.firebaseapp.com",
+      databaseURL: "https://gostay-1ae07-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "gostay-1ae07",
+      storageBucket: "gostay-1ae07.appspot.com",
+      messagingSenderId: "565579751675",
+      appId: "1:565579751675:web:08ff3773f89159a438905e",
+      measurementId: "G-NK9LLCYW8H"
+    };
+}

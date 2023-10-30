@@ -1,0 +1,103 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="modal fade" id="gallery_modal_room" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-gallery-content-custom">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="gallery-room-modal">
+                    <div class="gallery-room-image">
+                        <div class="swiper mySwiper5">
+                            <div class="swiper-wrapper swiper-wrapper-custom">
+                                <div class="swiper-slide swiper-slide-custom">
+                                    <img src="assets/images/items-grid/img1.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-slide-custom">
+                                    <img src="assets/images/items-grid/img2.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-slide-custom">
+                                    <img src="assets/images/items-grid/img3.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-slide-custom">
+                                    <img src="assets/images/items-grid/img4.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-slide-custom">
+                                    <img src="assets/images/items-grid/img5.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-slide-custom">
+                                    <img src="assets/images/items-grid/img6.jpg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-button-next swiper-button-next-custom"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="swiper-button-prev swiper-button-prev-custom"><i class="fa-solid fa-arrow-left"></i></div>
+                        <div thumbsSlider="" class="swiper mySwiper6 mt-10">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide swiper-thumbslide-custom">
+                                    <img src="assets/images/items-grid/img1.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-thumbslide-custom">
+                                    <img src="assets/images/items-grid/img2.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-thumbslide-custom">
+                                    <img src="assets/images/items-grid/img3.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-thumbslide-custom">
+                                    <img src="assets/images/items-grid/img4.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-thumbslide-custom">
+                                    <img src="assets/images/items-grid/img5.jpg">
+                                </div>
+                                <div class="swiper-slide swiper-thumbslide-custom">
+                                    <img src="assets/images/items-grid/img6.jpg">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="gallery-room-info">
+                        <h4 class="text-16">Bliss Suite (1 @Localizer["bedroom"])</h4>
+                        <div class="room-info">
+                            <div class="room-info-1">
+                                <i class="fa-solid fa-person ic-20"></i>
+                                <p>2 @Localizer["adult"]</p>
+                            </div>
+                            <div class="room-info-1">
+                                <i class="fa-solid fa-wifi"></i>
+                                <p>@Localizer["Free wifi"]</p>
+                            </div>
+                            <div class="room-info-1">
+                                <i class="fa-solid fa-bed"></i>
+                                <p>1 @Localizer["big bed"]</p>
+                            </div>
+                            <div class="room-info-1">
+                                <i class="fa-solid fa-vector-square"></i>
+                                <p>@Localizer["Room size"]: 65 m²</p>
+                            </div>
+                            <div class="room-info-1">
+                                <i class="fa-solid fa-square-arrow-up-right"></i>
+                                <p>@Localizer["Room direction"]: @Localizer["City"]</p>
+                            </div>
+                            <div class="room-info-1">
+                                <i class="fa-solid fa-ban-smoking"></i>
+                                <p>@Localizer["No smoking"]</p>
+                            </div>
+                            <div class="room-info-2">
+                                <i class="fa-solid fa-circle-plus"></i>
+                                <a href="#">@Localizer["Other facilities"]</a>
+                            </div>
+                        </div>
+                        <div class="gallery-room-price">
+                            <p class="label_discount">-51%</p>
+                            <p class="text-12-line-through">1.056.279đ</p>
+                            <p class="text-16-primary">1.003.465đ</p>
+                            <a href="hotel-booking-multiple.html" class="btn-login-form btn-submit" type="submit">
+                                @Localizer["Select"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>   

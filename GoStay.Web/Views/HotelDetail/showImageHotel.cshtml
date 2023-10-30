@@ -1,0 +1,57 @@
+﻿@using GoStay.DataDto.HotelDto;
+@model List<string>;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="collapse-gallery-header sticky4">
+    <button class="button-close-menu" data-bs-toggle="collapse" data-bs-target="#galeryforHotel" type="button" aria-label="close" aria-expanded="true">
+        <span>
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 4; overflow: visible;">
+                <g fill="none"><path d="m20 28-11.29289322-11.2928932c-.39052429-.3905243-.39052429-1.0236893 0-1.4142136l11.29289322-11.2928932"></path></g>
+            </svg>
+        </span>
+        <div class="text-hide">
+            @Localizer["Back"]
+        </div>
+    </button>
+    <div class="tab-product tab-gallery">
+        <button class="tablinks active" onclick="openCity(event, 'city1','tabproduct')" id="defaultOpen2">@Localizer["Hotels photo"]</button>
+        <button class="tablinks" onclick="openCity(event, 'city2','tabproduct')">@Localizer["Customer review photos"]</button>
+    </div>
+    <a class="d-flex align-items-center gap-10" data-bs-toggle="modal" data-bs-target="#gallery_btn_share">
+        <i class="fa-solid fa-share-from-square"></i>
+        <div class="text-hide">
+            @Localizer["Share"]
+        </div>
+    </a>
+</div>
+<div id="galeryforHotelBody">
+    <div class="tabcontent_hotel">
+        <div class="collapse-gallery-grid">
+            @{
+                int count = 0;
+            }
+            @foreach (var item in Model)
+            {
+                count++;
+
+                if (count % 2 == 0)
+                {
+                    <div class="gallery-grid-expand noexpand" data-bs-toggle="modal" data-bs-target="#gallery_modal">
+                        <img src="@item">
+                    </div>
+                }
+                else
+                {
+                    <div class="gallery-grid-expand" data-bs-toggle="modal" data-bs-target="#gallery_modal">
+                        <img src="@item">
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="tabcontent_hotel">
+    </div>
+</div>
+<div class="btn-loading btn-loading-2 text-center mt-20">
+</div>

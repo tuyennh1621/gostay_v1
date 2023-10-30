@@ -1,0 +1,42 @@
+﻿@model int
+
+<head>
+    <title> CONTENT NEWS</title>
+    <script src="~/ckeditor2/ckeditor.js"></script>
+    <script src="~/ckeditor/ckfinder/ckfinder.js"></script>
+    <script src="~/admintheme/vendor/jquery/jquery.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            CKEDITOR.replace("content");
+        });
+
+        function ContentNews(Id) {
+            debugger
+
+            var content = CKEDITOR.instances['content'].getData();
+
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    NewsId: Id,
+                    content: content,
+                },
+                url: "@Url.Action("EditContentNews", "NewsHome")",
+                success: function (data) {
+                    alert("Hoan thanh");
+                },
+            })
+        }
+    </script>
+</head>
+<body>
+    <textarea rows="50" id="content" class="ckeditor"></textarea>
+    <div class="modal-footer">
+        <button class="button" btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+        <button type="button" onclick="ContentNews(@Model)" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+    </div>
+
+</body>

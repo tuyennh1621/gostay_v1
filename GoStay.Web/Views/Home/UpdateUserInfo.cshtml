@@ -1,0 +1,65 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model GoStay.DataAccess.Entities.User;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="modal fade" id="registeremail" tabindex="-1" aria-labelledby="registeremail" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-14-b pl-10" id="registerlabel">@Localizer["Complete registration"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-info">
+                    <div class="text-18 pb-10">@Localizer["Add profile picture"]</div>
+                    <div class="notification-avata">
+                        <img data-src="@Model.Picture" src="/assets/images/profile-user.png">
+                    </div>
+                    <form class="form-floating-custom">
+                        <div class="noti-btn-1 mt-10">
+                            <input class="form-control" type="file" id="formFile">
+                        </div>
+                    </form>
+                </div>
+                <div class="login-form">
+                    <form asp-action="UpdateUserInfo" id="form_UpdateUserInfo" asp-area="" asp-controller="Home">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="Picture" />
+                        <div class="form-floating mb-3">
+                            <input class="form-control form-control-custom" id="txtFulname" asp-for="UserName" type="text" placeholder="@Localizer["Fullname"]" required>
+                            <label for="txtFulname">@Localizer["Fullname"]</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control form-control-custom" asp-for="MobileNo" id="txtMobile" type="text" placeholder="@Localizer["Phone"]" required>
+                            <label for="txtMobile">@Localizer["Phone"]</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control form-control-custom" asp-for="Email" id="txtEmail" type="text" placeholder="Email" required>
+                            <label for="txtEmail">Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control form-control-custom" id="txtAddress" asp-for="Address" type="text" placeholder="@Localizer["Address"]">
+                            <label for="txtAddress">@Localizer["Address"]</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control form-control-custom" id="txtPass" asp-for="Password" type="password" placeholder="@Localizer["Password"]" required>
+                            <label for="txtPass">@Localizer["Password"]</label>
+                        </div>
+
+                        @*<div class="form-check pt-10">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label text-12" for="flexCheckDefault">
+                        Bằng việc chọn Đồng ý và tiếp tục, <span class="text-12-green">tôi đồng ý với Điều khoản dịch vụ</span>, <span class="text-12-green">Điều khoản dịch vụ thanh toán</span> và <span class="text-12-green">Chính sách không phân biệt của goStay</span>, đồng thời chấp thuận Chính sách về quyền riêng tư.
+                        </label>
+                        </div>*@
+                        <button class="btn-login-form btn-submit mt-10" type="submit">@Localizer["Update"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

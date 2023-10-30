@@ -1,0 +1,32 @@
+﻿@using GoStay.DataAccess.Entities;
+@{
+    ViewData["Title"] = "Video SMS";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Registration", "VideosHome", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data", @class = "row" }))
+{
+    
+    <div class="col-12 col-lg-6">
+        <div class="row">
+            <div class="overwrite-class col-12 form-group" id="use-link-video">
+                <label for="Title">Email<small class="text-danger">*</small></label>
+                <input type="text" id="Email" name="Email" class="sm-form-control border-form-control" value="" placeholder="Sử dụng đường dẫn video tuyệt đối">
+            </div>
+            <div class="overwrite-class col-12 form-group" id="use-link-img">
+                <label for="Title">Mobile<small class="text-danger">*</small></label>
+                <input type="text" id="Mobile" name="Mobile" class="sm-form-control border-form-control" value="" placeholder="Sử dụng đường dẫn ảnh tuyệt đối">
+            </div>
+            <div class="overwrite-class col-12 form-group">
+                <label for="Title">Name<small class="text-danger">*</small></label>
+                <input type="text" id="Name" name="Name" class="sm-form-control border-form-control">
+            </div>
+           
+          
+            <div class="overwrite-class col-12 form-group" style="display: flex;justify-content: right;">
+                <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+            </div>
+
+        </div>
+    </div>
+}

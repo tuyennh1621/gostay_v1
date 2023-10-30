@@ -1,0 +1,163 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var list = ViewBag.TotalTopic;
+    var topNews = ViewBag.TopNews.Data;
+}
+<style>
+    .detail-blog-info .blog-description .fck_detail{
+        width: auto !important;
+    }
+</style>
+<!-- Breadcrumns -->
+<div class="breadcrumns pt-95">
+    <div class="container">
+        <div class="breadcrumns-1 mt-20 mb-30">
+            <div class="row">
+                <div class="col-auto br-parent">
+                    <div class="">
+                        <a href="/">@Localizer["Home"]</a>
+                    </div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">
+                        <a href="/tin-tuc" class="color-primary">@Localizer["News"]</a>
+                    </div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">
+                        <a href="/danh-muc-tin/@ViewBag.CateTitle" class="color-primary"ss id="cate-title">@Model.Data.Category</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumns -->
+<!-- Search Hotel Listing Pages -->
+<div class="detail-blog-page">
+    @if(Model.Data != null)
+    {
+        <div id="url-title" data-id="@Model.Data.Id" data-title="@Model.Data.Title" data-slug="@Model.Data.Slug" hidden></div>
+    }
+    <div class="container">
+        <div class="row row-col-12 hotel-content">
+            <div class="col-xxl-8 col-xl-8 col-lg-8 col-12 mb-100">
+                <div class="detail-main-listing-blog">
+                    @if (Model.Data != null)
+                    {
+                        <div class="detail-blog">
+                            <div class="detail-blog-title">
+                                <h3 class="text-18 mb-10">@Model.Data.Title</h3>
+                                <p><i class="fa-regular fa-clock pdr-10"></i>@Model.Data.DateCreate.ToString("dd'/'MM'/'yyyy") - @Model.Data.UserName</p>
+                            </div>
+                           @* <div class="detail-main-image">
+                        <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.Data.PictureTitle" src="@Model.Data.PictureTitle">
+                            </div>*@
+                            <div class="detail-blog-info">
+                                <div class="blog-description">
+                                    <p class="text-italic mb-4">@Model.Data.Description </p>
+                                    @if (Model.Data.Content != null)
+                                    {
+                                        @Html.Raw(Model.Data.Content)
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="blog-social-share">
+                                <p>@Localizer["Share"]:</p>
+                                <div class="social-share-btn">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://@Context.Request.Host@Context.Request.Path" title="@Localizer["Share on Facebook"]" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://@Context.Request.Host@Context.Request.Path&title=@Model.Data.Title&summary=&source=" title="@Localizer["Share on Linkedin"]" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                                    <a href="http://twitter.com/share?text=@Model.Data.Title&url=https://@Context.Request.Host@Context.Request.Path" title="@Localizer["Share on Twitter"]" target="_blank"><i class="fa-brands fa-square-twitter"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-12 sidebar">
+                <div class="widget search-widget">
+                    <form action="#">
+                        <input type="text" placeholder="@Localizer["Search"]...">
+                        <button type="submit"><i class="fa-solid fa-magnifying-glass ic-16-white"></i></button>
+                    </form>
+                </div>
+                <div class="line-horizontal-4"></div>
+                <div class="widget categories-widget">
+                    <div class="widget-title">@Localizer["Category"]<span></span></div>
+                    <ul class="custom mt-10">
+                        @foreach (var item in list)
+                        {
+                            <li>
+                                <a href="/danh-muc-tin/@item.Id/@item.Slug">@item.Topic<span>@item.Total</span></a>
+                            </li>
+                        }
+                        
+                    </ul>
+                </div>
+                <div class="widget popular-feeds">
+                    <div class="widget-title">@Localizer["News"]<span></span></div>
+                    <div class="popular-feed-loop">
+                        @if (topNews.Count > 0)
+                        {
+                            for (int i = 0; i < topNews.Count && i < 3; i++)
+                            {
+                                <div class="single-popular-feed">
+                                    <div class="feed-desc">
+                                        <div class="feed-image">
+                                            <img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@topNews[i].PictureTitle" src="@topNews[i].PictureTitle">
+                                        </div>
+                                        <div class="feed-text">
+                                            <h6 class="post-title">
+                                                <a href="/tin-tuc/@topNews[i].Id/@topNews[i].Slug" title="@topNews[i].Title">
+                                                    @topNews[i].Title
+                                                </a>
+                                            </h6>
+                                            <span class="time"><i class="lni lni-calendar"></i> @topNews[i].DateCreate.ToString("dd'/'MM'/'yyyy") </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+               <div class="widget popular-tag-widget">
+                    <div class="widget-title">@Localizer["Popular"]<span></span></div>
+                    <div class="tags mt-10">
+                        <a href="/khach-san">@Localizer["Hotels"]</a>
+                        <a href="/Tours">Tour</a>
+                        <a href="/Tickets">@Localizer["Filght ticket"]</a>
+                        <a href="javascript:void(0)">@Localizer["Shuttle car"]</a>
+                        <a href="javascript:void(0)">@Localizer["Travel"]</a>
+                        <a href="javascript:void(0)">@Localizer["Domestic"]</a>
+                        <a href="javascript:void(0)">@Localizer["Foreign"]</a>
+                        <a href="javascript:void(0)">Phú Quốc</a>
+                        <a href="javascript:void(0)">Đà Lạt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- End Search Hotel Listing Pages -->
+<!-- Start Newsletter Area -->
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml")
+<!-- End Newsletter Area -->
+@section scripts{
+    <script>
+        $(document).ready(function(){
+            checkUrlTitle();
+        })
+    </script>
+
+}

@@ -1,0 +1,273 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.Air.ExtDOMSearchFlightsShort
+@model AirSearchInOut
+@using GoStay.Web.Model
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- suggest-->
+<section class="search-fitler-breadcrumns">
+    <div class="search-filter-inner">
+        <div class="container">
+            <div class="hotel-search-form">
+                <div class="row search-filter1 align-items-center">
+                    <div class="col-12 p-0">
+                        <div id="Plane" class="show">
+                            <form id="formSearch_Plane">
+                                @await Html.PartialAsync("~/Views/Shared/_TicketSearchPartial.cshtml",new TicketSearchModels{
+                                IsHomePage = false,
+                                startPoints = new Dictionary<string, string>()
+                                {
+                                    { "HAN", "Hà Nội (HAN)"},
+                                    { "SGN", "TPHCM (SGN)"},
+                                    { "DAD", "Đà Nẵng (DAD)"},
+                                    { "VCS", "Bà Rịa Vũng Tàu (VCS)"},
+                                    { "UIH", "Bình Định (UIH)"},
+                                    { "CAH", "Cà Mau (CAH)"},
+                                    { "VCA", "Cần Thơ (VCA)"},
+                                    { "BMV", "Đắk Lăk (BMV)"},
+                                    { "DIN", "Điện Biên (DIN)"},
+                                    { "PXU", "Gia Lai (PXU)"},
+                                    { "HPH", "Hải Phòng (HPH)"},
+                                    { "HUI", "Huế (HUI)"},
+                                    { "CXR", "Khánh Hòa (CXR)"},
+                                    { "PQC", "Kiên Giang (PQC)"},
+                                    { "VKG", "Kiên Giang (VKG)"},
+                                    { "DLI", "Lâm Đồng (DLI)"},
+                                    { "VII", "Nghệ An (VII)"},
+                                    { "TBB", "Phú Yên (TBB)"},
+                                    { "VDH", "Quảng Bình (VDH)"},
+                                    { "VCL", "Quảng Nam (VCL)"},
+                                    { "VDO", "Quảng Ninh (VDO)"},
+                                    { "THD", "Thanh Hóa (THD)"},
+                                },
+                                endPoints = new Dictionary<string, string>()
+                                {
+                                    { "SGN", "TPHCM (SGN)"},
+                                    { "HAN", "Hà Nội (HAN)"},
+                                    { "DAD", "Đà Nẵng (DAD)"},
+                                    { "VCS", "Bà Rịa Vũng Tàu (VCS)"},
+                                    { "UIH", "Bình Định (UIH)"},
+                                    { "CAH", "Cà Mau (CAH)"},
+                                    { "VCA", "Cần Thơ (VCA)"},
+                                    { "BMV", "Đắk Lăk (BMV)"},
+                                    { "DIN", "Điện Biên (DIN)"},
+                                    { "PXU", "Gia Lai (PXU)"},
+                                    { "HPH", "Hải Phòng (HPH)"},
+                                    { "HUI", "Huế (HUI)"},
+                                    { "CXR", "Khánh Hòa (CXR)"},
+                                    { "PQC", "Kiên Giang (PQC)"},
+                                    { "VKG", "Kiên Giang (VKG)"},
+                                    { "DLI", "Lâm Đồng (DLI)"},
+                                    { "VII", "Nghệ An (VII)"},
+                                    { "TBB", "Phú Yên (TBB)"},
+                                    { "VDH", "Quảng Bình (VDH)"},
+                                    { "VCL", "Quảng Nam (VCL)"},
+                                    { "VDO", "Quảng Ninh (VDO)"},
+                                    { "THD", "Thanh Hóa (THD)"},
+                                }
+                                })
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /End Searh Form Area -->
+<!-- Breadcrumns -->
+<div class="breadcrumns">
+    <div class="container">
+        <div class="breadcrumns-1 mt-20 mb-30">
+            <div class="row">
+                <div class="col-auto br-parent">
+                    <div class="">@Localizer["Home"]</div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">@Localizer["Flight ticket"]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="flight-listing-page">
+    <!-- top 1-->
+    @*    <div class="container select-flight-parent" id="showSelectTicket">
+
+    </div>*@
+    <div class="hotel-result-page mt-30">
+        <div class="container">
+            <div class="row row-col-12 hotel-content">
+                <!-- search param-->
+                <div class="col-3 left-sidebar">
+                    <div class="hotel-filter-sidebar">
+                        <div class="title-filter-sidebar">
+                            <h4>@Localizer["Filter"]</h4>
+                            <a title="Danh sách Vé máy bay" href="/Tickets">@Localizer["Delete all filter"]</a>
+                        </div>
+                        <div class="filter-sidebar1 extra-services">
+                            <a>@Localizer["Flight way"]</a>
+                            <div class="parent">
+                                @for (int m = 0; m < Model.searchAirParam.Direction.Count(); m++)
+                                {
+                                    <div class="form-check filter-child">
+                                        <input class="form-check-input" type="checkbox" id="Direction_@m"
+                                           name="Direction[]" value="@Model.searchAirParam.Direction[m].Value" checked="@Model.searchAirParam.Direction[m].Selected" />
+                                        <label for="Direction_@m">
+                                            @Model.searchAirParam.Direction[m].Text
+                                        </label>
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="filter-sidebar price">
+                            <a>@Localizer["Price range"]</a>
+                            <div class="filter level-filter level-req">
+                                <div id="rangeSlider" class="range-slider">
+                                    <div class="number-group">
+                                        @Localizer["From"]: <span id="minPrice">0</span><input class="number-input" type="number" value="0" min="0" max="5000000" id="rangFrom2" hidden />đ <br />
+                                        @Localizer["To"]: <span id="maxPrice">5,000,000</span> <input class="number-input" type="number" value="5000000" min="0" max="5000000" id="rangTo2" hidden />đ
+                                    </div>
+
+                                    <div class="range-group">
+                                        <input class="range-input" value="0" min="0" max="5000000" step="500000" id="rangFrom" type="range" onmousemove="changePrice()" />
+                                        <input class="range-input" value="5000000" min="0" max="5000000" step="500000" id="rangTo" type="range" onmousemove="changePrice()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-sidebar user-review-sidebar">
+                            <a>@Localizer["Airlines"]</a>
+                            <div class="parent">
+                                @for (int m = 0; m < Model.searchAirParam.Airlines.Count(); m++)
+                                {
+                                    <div class="form-check filter-child">
+                                        <input class="form-check-input" type="checkbox" id="Airline_@m"
+                                           name="Airline[]" value="@Model.searchAirParam.Airlines[m].Value" checked="@Model.searchAirParam.Airlines[m].Selected" />
+                                        <label for="Airline_@m">
+                                            @Model.searchAirParam.Airlines[m].Text
+                                        </label>
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="filter-sidebar hotel-type">
+                            <a>@Localizer["Take-off time"]</a>
+                            <div class="parent">
+                                @for (int m = 0; m < Model.searchAirParam.StartTime.Count(); m++)
+                                {
+                                    <div class="form-check filter-child">
+                                        <input class="form-check-input" type="checkbox" id="StartTime_@m"
+                                           name="StartTime[]" value="@Model.searchAirParam.StartTime[m].Value" checked="@Model.searchAirParam.StartTime[m].Selected" />
+                                        <label for="StartTime_@m">
+                                            @Model.searchAirParam.StartTime[m].Text
+                                        </label>
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="filter-sidebar region">
+                            <a>@Localizer["Ticket class"]</a>
+                            <div class="parent">
+                                @for (int m = 0; m < Model.searchAirParam.ClassTk.Count(); m++)
+                                {
+                                    <div class="form-check filter-child">
+                                        <input class="form-check-input" type="checkbox" id="ClassTk_@m"
+                                           name="ClassTk[]" value="@Model.searchAirParam.ClassTk[m].Value" checked="@Model.searchAirParam.ClassTk[m].Selected" />
+                                        <label for="ClassTk_@m">
+                                            @Model.searchAirParam.ClassTk[m].Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="filter-sidebar1 extra-services">
+                            <a>@Localizer["Stop"]</a>
+                            <div class="parent">
+                                @for (int m = 0; m < Model.searchAirParam.TypeFlight.Count(); m++)
+                                {
+                                    <div class="form-check filter-child">
+                                        <input class="form-check-input" type="checkbox" id="TypeFlight_@m"
+                                           name="TypeFlight[]" value="@Model.searchAirParam.TypeFlight[m].Value" checked="@Model.searchAirParam.TypeFlight[m].Selected" />
+                                        <label for="TypeFlight_@m">
+                                            @Model.searchAirParam.TypeFlight[m].Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- showKetQua-->
+                <div class="col-xxl-9 col-xl-9 col-lg-9 col-md-8 col-12">
+                    <div class="main-content-listing" id="showKetQuaTKVeMayBay"></div>
+                    <div class="button-loadmore2 mt-30 mb-60">
+                        <button style="display:none" class="btn-view loadmore">@Localizer["See more"]
+                            <i class="fa-solid fa-arrow-right-long"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/assets/js/Tickers.js?v=6" defer></script>
+<script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script id="rendered-js">
+    //debugger
+    //$('#StartPoint').val('@Model.StartPoint');
+    //$('#EndPoint').val('@Model.EndPoint');
+    //(function () {
+
+    //    var parent = document.querySelector("#rangeSlider");
+    //    if (!parent) return;
+
+    //    var
+    //        rangeS = parent.querySelectorAll("input[type=range]"),
+    //        numberS = parent.querySelectorAll("input[type=number]");
+
+    //    rangeS.forEach(function (el) {
+    //        el.oninput = function () {
+    //            var slide1 = parseFloat(rangeS[0].value),
+    //                slide2 = parseFloat(rangeS[1].value);
+
+    //            if (slide1 > slide2) {
+    //                [slide1, slide2] = [slide2, slide1];
+    //            }
+
+    //            numberS[0].value = slide1;
+    //            numberS[1].value = slide2;
+    //        };
+    //    });
+
+    //    numberS.forEach(function (el) {
+    //        el.oninput = function () {
+    //            var number1 = parseFloat(numberS[0].value),
+    //                number2 = parseFloat(numberS[1].value);
+
+    //            if (number1 > number2) {
+    //                var tmp = number1;
+    //                numberS[0].value = number2;
+    //                numberS[1].value = tmp;
+    //            }
+
+    //            rangeS[0].value = number1;
+    //            rangeS[1].value = number2;
+
+    //        };
+    //    });
+
+    //})();
+</script>

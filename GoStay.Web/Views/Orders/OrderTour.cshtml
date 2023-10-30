@@ -1,0 +1,205 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.DataDto.OrderDto
+@using GoStay.Web.Model
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model OrderGetInfoDto
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    ViewData["TitlePage"] = "Xác nhận đặt Tours: " + Model.Title;
+}
+}
+@await Html.PartialAsync("~/Views/Shared/_statusTourbooking.cshtml",Model.Status)
+<section class="tour-booking">
+    <div class="container">
+        <div class="row">
+            <div class="col-xxl-8 col-xl-8 col-lg-12 col-12">
+                <div class="booking-room">
+                    <div class="booking-items">
+                        <div class="row">
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-12 booking-image">
+                                @if (@Model.Tour.Pictures.Count() > 1)
+                                {
+                                    <img alt="@Model.Tour.TourName" 
+                                    data-src="https://cdn.realtech.com.vn/@Model.Tour.Pictures[1]"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" />
+                                }
+                                
+                            </div>
+                            <div class="col-xxl-9 col-xl-9 col-lg-9 col-12 booking-items-info">
+                                <h3 class="text-16-b">@Model.Tour.TourName</h3>
+                                <div class="rating-booking">
+                                    <div class="rating-@Model.Tour.Rating-sao"></div>
+                                </div>
+                                <a title="Đặt tour khác" href="@Url.Action("Index", "Tours")" class="btn-add-room">
+                                    <i class="fa-solid fa-plus"></i>
+                                    @Localizer["Choose Another Tour"]
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tour-booking-date">
+                        <div class="check-in">
+                            <a class="text-14">@Localizer["Start"]</a>
+                            @if (Model.Tour.StartTime != null)
+                            {
+                                <div>@Model.Tour.StartTime</div>
+                            }
+                            else
+                            {
+                                <div>@Model.Tour.StartDate.ToString("dd/MM/yyyy")</div>
+                            }
+                            @*<div class="text-16-b">@Model.ListOrderDetails.FirstOrDefault().Tours.StartDate</div>*@
+                        </div>
+                        <div class="check-out">
+                            <a class="text-14">@Localizer["Departure point"]</a>
+                            <div class="text-16-b">@Model.Tour.ProvinceFrom</div>
+                        </div>
+                        <div class="check-out1">
+                            <a class="text-14">@Localizer["Arrival point"]</a>
+                            @foreach (var item in Model.Tour.ProvinceTo)
+                            {
+                                <div class="text-16-b">
+                                    @item
+                                </div>
+                            }
+                        </div>
+                        <div class="night-sleeps">
+                            <a class="text-14">@Localizer["Time"]</a>
+                            <div class="text-16-b">@Model.Tour.TourStyle</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+
+            <div class="col-xxl-4 col-xl-4 col-lg-12 col-12">
+                <div id="sidebar">
+                    <div class="sidebar_innner">
+                        <div class="hotel-detail-info-sidebar">
+                            <div class="detail-price-sidebar">
+                                <h3 class="text-14-b title-info-sidebar">@Localizer["Tour price details"]</h3>
+                                <div class="room-price-parent">
+                                    <div class="room-price-sidebar2">
+                                        <div class="title-price text-14-gray">@Localizer["Adult"] ( >12 @Localizer["Years old"])<span class="text-14"> x @Model.Tour.Adult</span></div>
+                                        <div class="bk-room-price">
+                                            <div class="sale-price">
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(Model.Tour.Price*(100-Model.Tour.Discount)/100)*Model.Tour.Adult,0))
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="room-price-sidebar2">
+                                        <div class="title-price text-14-gray">@Localizer["Children"] (4 - 11 @Localizer["Years old"])<span class="text-14"> x @Model.Tour.Children</span></div>
+                                        <div class="bk-room-price">
+                                            <div class="price-parent text-14">
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)(Model.Tour.PriceChild*(100-Model.Tour.Discount)/100)*Model.Tour.Children,0))
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="room-price-sidebar2">
+                                        <div class="title-price text-14-gray">@Localizer["Infant"] (@Localizer["Under"] 4 @Localizer["Years old"])<span class="text-14"> x @Model.Tour.Infant</span></div>
+                                        <div class="bk-room-price">
+                                            <div class="price-parent text-14-green">
+                                                @Localizer["Free"]
+                                            </div>
+                                        </div>
+                                    </div>
+@*                                    <div class="room-price-sidebar3">
+                                        <div class="title-price text-14-gray">@Localizer["Discount code"]</div>
+                                        <div class="bk-room-cod">
+                                            <input type="text" class="form-control form-control1 text-12" placeholder="@Localizer["Insert code"]">
+                                        </div>
+                                        <div class="bk-room-button">
+                                            <button class="btn btn-primary button-custom text-12-white" type="button">@Localizer["Apply"]</button>
+                                        </div>
+                                    </div>*@
+                                    <div class="room-price-total">
+                                        <div class="title-total">
+                                            <h3 class="text-14-b">@Localizer["Total payment"]</h3>
+                                            <h3 class="text-16-b">
+                                                @AppConfigs.FormatCurrency("VND", Math.Round((decimal)Model.TotalAmount,0))
+                                            </h3>
+                                        </div>
+                                        <div class="title-total-sub">
+                                            <div class="text-12">@Localizer["Including taxes, fees, VAT"]</div>
+                                            <div class="text-12">(@Localizer["Price for"] @Model.Tour.Adult @Localizer["Adult"], <br> @Model.Tour.Children @Localizer["Children"])</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="total-parent mt-20">
+@*                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label text-14-gray" for="flexCheckDefault">
+                                        @Localizer["Request a VAT invoice"]
+                                    </label>
+                                </div>*@
+                                <a href="/order/payments?orderId=@Model.Id" title="Đi đến bước xác nhận phương thức thanh toán" class="btn-login-form btn-submit mt-10 mb-10">
+                                    @Localizer["Tour booking"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                                </a>
+                                <div class="text-12">
+                                    Bằng cách nhấn vào nút này, bạn công nhận mình đã đọc và đồng ý với
+                                    <a href="#" title="Điều khoản dịch vụ" class="text-12-primary">Điều kiện</a> và <a href="#" class="text-12-primary">Điều khoản</a> của chúng tôi
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @section scripts{
+
+        
+        <script>
+
+          
+            function AddMoreInfo(Id) {
+                var numAdult = document.getElementById("numAdult").value;
+                var num411 = document.getElementById("num411").value;
+                var num24 = document.getElementById("num24").value;
+                var num02 = document.getElementById("num02").value;
+                var Url = '@Url.Action("TransitMoreInfo", "Orders")';
+                showSearchLoader();
+                var param = {
+                    Id: Id,
+                    NumAdult: numAdult,
+                    Num411: num411,
+                    Num24: num24,
+                    Num02: num02
+                }
+                $.ajax({
+                    type: "GET",
+                    url: Url,
+                    data:
+                    {
+                        "param": JSON.stringify(param),
+                    },
+                    // datatype: "json",
+                    cache: false,
+                    async: false,
+                    beforeSend: function () {
+                        showSearchLoader();
+                    },
+                    success: function (data) {
+                        hideSearchLoader();
+
+                        $('#MainAddMoreInfo').html(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        hideSearchLoader();
+                        alert("An error occured. Please try again!");
+                    }
+                })
+            }
+
+        </script>
+
+    }
+</section>
+

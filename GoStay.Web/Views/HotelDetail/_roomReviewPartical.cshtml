@@ -1,0 +1,314 @@
+﻿@using GoStay.DataDto.Apis
+@model HotelDetailDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+
+    string GetNameByPoint(decimal? point)
+    {
+        var nameRating = "";
+        if (point is null) return nameRating;
+        if (point >= 0 && point < 3) nameRating = "Kém";
+        else if (point >= 3 && point < 7) nameRating = "Trung bình";
+        else if (point >= 7 && point < 9) nameRating = "Tốt";
+        else if (point >= 9 && point <= 10) nameRating = "Tuyệt vời";
+
+        return nameRating;
+    }
+    decimal GetProcessBarWithPoint(decimal? point)
+    {
+        decimal value = 0;
+        if (point is null) return value;
+        else value = (point ?? 0) * 10;
+
+        return Math.Round(value,0);
+    }
+    // điểm trung bình
+    decimal? totalPoint = (Model.LocationScore + Model.ServiceScore + Model.RoomsScore + Model.CleanlinessScore + Model.ValueScore) / 5;
+
+}
+
+<input type="hidden" id="hotelId" name="HotelId" value="@Model.Id">
+
+<section class="hotel-review-parent" id="hotel-reviews">
+    <div class="hotel-review-title">
+        <div class="hotel-review-title-left">
+            <h3 class="text-18">@Localizer["Evaluate"]</h3>
+            <p class="text-14-3">100% @Localizer["reviews from customers booking on"] goStay</p>
+        </div>
+        @if (Model.Ordered == 1)
+        {
+            <div class="hotel-review-title-right">
+                <div class="btn-login-form btn-submit" data-bs-toggle="modal" data-bs-target="#write_reviews">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    @Localizer["Write a review"]
+                </div>
+            </div>
+        }
+        else
+        {
+            if (Model.Ordered == 2)
+            {
+               @* <div class="hotel-review-title-right">
+                    <div class="btn-login-form btn-submit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                        @Localizer["Write a review"]
+                    </div>
+                </div>*@
+            }
+            else
+            {
+                <div class="hotel-review-title-right">
+                    <div class="btn-login-form btn-submit" >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        @Localizer["You have not booked this hotel"]
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="user-reviews">
+        <div class="user-reviews-range">
+
+            <div class="range-left">
+                <div class="range-circle">
+                    <div class="range-circle-text">
+                        <div class="text-40">@totalPoint</div>
+                        <div class="text-18">@GetNameByPoint(totalPoint)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="range-right">
+                <div class="rating-range-parent">
+                    <div>
+                        <div class="rating-range">
+                            <div>
+                                @Localizer["Location"]: <label class="text-14-gray">@GetNameByPoint(@Model.LocationScore)</label> 
+                            </div>
+                            <div>@Model.LocationScore/10</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.LocationScore)%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="rating-range">
+                            <div>@Localizer["Price"]: <label class="text-14-gray">@GetNameByPoint(@Model.ValueScore)</label> </div>
+                            <div>@Model.ValueScore/10</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.ValueScore)%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="rating-range">
+                            <div>@Localizer["Serve"]: <label class="text-14-gray">@GetNameByPoint(@Model.ServiceScore)</label> </div>
+                            <div>@Model.ServiceScore/10</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.ServiceScore)%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="rating-range">
+                            <div>@Localizer["Cleanup"]: <label class="text-14-gray">@GetNameByPoint(@Model.CleanlinessScore)</label> </div>
+                            <div>@Model.CleanlinessScore/10</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.CleanlinessScore)%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="rating-range">
+                            <div>@Localizer["Comfortable"] <label class="text-14-gray">@GetNameByPoint(@Model.RoomsScore)</label> </div>
+                            <div>@Model.RoomsScore/10</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.RoomsScore)%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="user-reviews-comment">
+            <h3 class="text-16">@Localizer["User ratings"]</h3>
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active filtercenter" id="pills-moinhat-tab" data-bs-toggle="pill" data-bs-target="#pills-moinhat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">@Localizer["Latest"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link  filtercenter" id="pills-vitri-tab" data-bs-toggle="pill" data-bs-target="#pills-vitri" type="button" role="tab" aria-controls="pills-home" aria-selected="true">@Localizer["Location"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link filtercenter" id="pills-giaca-tab" data-bs-toggle="pill" data-bs-target="#pills-giaca" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">@Localizer["Price"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link filtercenter" id="pills-phucvu-tab" data-bs-toggle="pill" data-bs-target="#pills-phucvu" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">@Localizer["Serve"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link filtercenter" id="pills-vesinh-tab" data-bs-toggle="pill" data-bs-target="#pills-vesinh" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">@Localizer["Cleanup"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link filtercenter" id="pills-tiennghi-tab" data-bs-toggle="pill" data-bs-target="#pills-tiennghi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">@Localizer["Comfortable"]</button>
+                </li>
+            </ul>
+
+        </div>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-moinhat" role="tabpanel" aria-labelledby="pills-home-tab">
+                @await Html.PartialAsync("~/Views/HotelDetail/_reviewBoxPartical.cshtml",new {id = "Newest" })
+            </div>
+            <div class="tab-pane fade " id="pills-vitri" role="tabpanel" aria-labelledby="pills-home-tab">
+                @await Html.PartialAsync("~/Views/HotelDetail/_reviewBoxPartical.cshtml",new {id = "LocationScore" })
+            </div>
+            <div class="tab-pane fade" id="pills-giaca" role="tabpanel" aria-labelledby="pills-profile-tab">
+                @await Html.PartialAsync("~/Views/HotelDetail/_reviewBoxPartical.cshtml",new {id = "ValueScore" })
+            </div>
+            <div class="tab-pane fade" id="pills-phucvu" role="tabpanel" aria-labelledby="pills-contact-tab">
+                @await Html.PartialAsync("~/Views/HotelDetail/_reviewBoxPartical.cshtml",new {id = "ServiceScore" })
+            </div>
+            <div class="tab-pane fade" id="pills-vesinh" role="tabpanel" aria-labelledby="pills-contact-tab">
+                @await Html.PartialAsync("~/Views/HotelDetail/_reviewBoxPartical.cshtml",new {id = "CleanlinessScore" })
+            </div>
+            <div class="tab-pane fade" id="pills-tiennghi" role="tabpanel" aria-labelledby="pills-contact-tab">
+                @await Html.PartialAsync("~/Views/HotelDetail/_reviewBoxPartical.cshtml",new {id = "RoomsScore" })
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+<section class="hotel-policies-parent" id="hotel-policies">
+    <h3 class="text-18">@Localizer["Hotel policy"]</h3>
+    <div class="hotel-policies">
+        <div class="checkin-checkout">
+            <div class="checkin">
+                <div class="text-12">@Localizer["Check in"]</div>
+                <span class="text-14-b">@Localizer["From"] 14:00</span>
+            </div>
+            <div class="checkout">
+                <div class="text-12">@Localizer["Check out"]</div>
+                <span class="text-14-b">@Localizer["From"] 12:00</span>
+            </div>
+        </div>
+        <div class="policies-child">
+            <div class="text-14-b po-child">@Localizer["Children Policy"]</div>
+            <p class="text-14-gray po-child">@Localizer["Children from 12 years old will be considered as adults"]. <br>@Localizer["Please enter the correct number of guests and age for the correct price"].</p>
+            @if (Model.NumberReviewers >3)
+            {
+                <a href="#" class="text-14-blue po-child">@Localizer["See more"] <i class="fa-solid fa-chevron-right"></i></a>
+            }
+        </div>
+    </div>
+</section>
+
+
+<!--modal review-->
+<div class="modal fade" id="write_reviews" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-reviews1 ">
+        <div class="modal-content ">
+            <div class="modal-body ">
+                <div class="benefits-list">
+                    <div class="row">
+                        <h5>@Localizer["Write a review"]</h5>
+                        <div class="rating-range-parent">
+                            <div class="row align-items-center">
+                                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                                    <div class="range-circle">
+                                        <div class="range-circle-text">
+                                            <div class="text-40 total-point">5.0</div>
+                                            <div class="text-18 total-name">Trung bình</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xxl-8 col-xl-8 col-lg-8 col-12">
+                                    <div class="range-process">
+                                        <div>
+                                            <div class="rating-range">
+                                                <div>@Localizer["Location"] <span class="type-rating-vitri "></span> </div>
+
+                                            </div>
+                                            <div class="js-range-slider-div">
+                                                <input type="text" class="js-range-slider" id="range-vitri" name="vitri" value="" />
+
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="rating-range">
+                                                <div>@Localizer["Price"] <span class="type-rating-giaca "></span></div>
+                                            </div>
+                                            <div class="js-range-slider-div">
+                                                <input type="text" class="js-range-slider" id="range-giaca" name="giaca" value="" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="rating-range">
+                                                <div>@Localizer["Serve"] <span class="type-rating-phucvu "></span></div>
+                                            </div>
+                                            <div class="js-range-slider-div">
+                                                <input type="text" class="js-range-slider" id="range-phucvu" name="phucvu" value="" />
+
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="rating-range">
+                                                <div>@Localizer["Cleanup"] <span class="type-rating-vesinh"></span></div>
+
+                                            </div>
+                                            <div class="js-range-slider-div">
+                                                <input type="text" class="js-range-slider" id="range-vesinh" name="vesinh" value="" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="rating-range">
+                                                <div>@Localizer["Comfortable"] <span class="type-rating-tiennghi "></span></div>
+                                            </div>
+                                            <div class="js-range-slider-div">
+                                                <input type="text" class="js-range-slider" id="range-tiennghi" name="tiennghi" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label">@Localizer["Content rated"]</label>
+                                        <textarea class="form-control content-body" id="exampleFormControlTextarea1 " rows="3"></textarea>
+                                    </div>
+                                    <button class="btn-login-form btn-submit  btn-ajax" type="submit">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                        @Localizer["Send"]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--modal thong bao-->
+<div class="modal fade" id="modal-danhgia" tabindex="-1" aria-labelledby="modal-danhgia" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-14-b pl-20 pt-20">@Localizer["Notification"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-info">
+                    <i class="fa-regular fa-circle-check ic-50"></i>
+                    <div class="text-18 pt-20 pb-10 modal-danhgia-body">@Localizer["Success"]</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

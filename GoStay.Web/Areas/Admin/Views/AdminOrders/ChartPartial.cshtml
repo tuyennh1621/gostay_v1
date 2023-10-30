@@ -1,0 +1,52 @@
+﻿@using GoStay.DataDto.OrderDto
+@using GoStay.DataDto.Statistical
+@using goStayCore.CommonCode
+@using Newtonsoft.Json
+@model OrderChartDto
+
+
+<div class="row">
+    <div class="col-xl-6 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Số lượng Order/ngày trong tháng (@System.DateTime.Now.Month/@System.DateTime.Now.Year)</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myOrderChar_GetOrderByMonth" data-key="@string.Join(",", Model.GetOrderByMonth.Select(kv => kv.Day))" data-value="@string.Join(",", Model.GetOrderByMonth.Select(kv => kv.Value))"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Tổng giá trị đơn hàng/ngày trong tháng (@System.DateTime.Now.Month/@System.DateTime.Now.Year)</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myOrderChar_GetOrderTotalMoneyByMonth" data-key="@string.Join(",", Model.GetOrderTotalMoneyByMonth.Select(kv => kv.Day))" data-value="@string.Join(",", Model.GetOrderTotalMoneyByMonth.Select(kv => kv.Value))"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6 col-lg-7">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Số lượng phòng được đặt/ngày trong tháng (@System.DateTime.Now.Month/@System.DateTime.Now.Year)</h6>
+
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myOrderChar_GetOrderRoomByMonth" data-key="@string.Join(",", Model.GetOrderRoomByMonth.Select(kv => kv.Day))" data-value="@string.Join(",", Model.GetOrderRoomByMonth.Select(kv => kv.Value))"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/admintheme/vendor/chart/Chart.js?v=1"></script>
+<script src="~/admintheme/js/demo/OrderChart.js?v=3"></script>

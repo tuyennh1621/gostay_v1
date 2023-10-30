@@ -1,0 +1,559 @@
+﻿@using GoStay.Common.Configuration
+@using GoStay.DataDto.Air
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model TicketOrder
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+    byte _active = 2;
+
+    ViewData["TitlePage"] = Model.Flights.FlightNumber + " từ " + Model.StartPoint + " đến " + Model.EndPoint;
+}
+@await Html.PartialAsync("~/Views/Shared/_statusTicketbooking.cshtml",_active )
+
+<style>
+    .tabcontent {
+        display: none;
+    }
+
+    .tab-package button.active {
+        background-color: #E5D8E9;
+        border: 1px solid #ce0aaa;
+    }
+
+        .tab-package button.active p {
+            color: #ce0aaa;
+        }
+</style>
+
+<form method="post" id="BookingFlight" data-Adult="@Model.Adult" data-Child="@Model.Child" data-Infant="@Model.Infant"
+      data-Flightsession="@Model.Flights.FlightSession" data-Classtk="@Model.FareOption.Class"
+      data-DataSession="@Model.DataSession">
+    <section class="flight-booking">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-8 col-xl-8 col-lg-8 col-12">
+                    <div class="booking-user-info" id="ContactInfo">
+                        <h3 class="text-16-b">@Localizer["Contact information"]</h3>
+                        @if (Model.UserInfo.UserId <= 1) 
+                        {
+                            <div class="bk-user-login">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#loginform">
+                                    <i class="fa-regular fa-circle-user ic-16-blue"></i>
+                                    <span class="text-14-blue">@Localizer["Sign in to get more preferred"]</span>
+                                </a>
+                            </div>
+                        }
+                        <div class="form">
+                            <div class="form-login">
+                                <div class="row">
+                                    <div class="col-xxl-6 col-12">
+                                        <div class="form-floating">
+                                            <input class="form-control form-control-custom"
+                                                   id="contactName" name="contactName" type="text"
+                                                   value="@Model.UserInfo.UserName" placeholder="@Localizer["Fullname"]"
+                                                   data-rule-required="true"
+                                                   data-msg-required="@Localizer["Fullname"] @Localizer["is required"]">
+                                            <label for="contactName">@Localizer["Fullname"]</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-xxl-6 col-12">
+                                        <div class="form-floating">
+                                            <input class="form-control form-control-custom"
+                                                   id="contactPhone" name="contactPhone" value="@Model.UserInfo.MobileNo"
+                                                   type="text" placeholder="@Localizer["Phone number"]"
+                                                   data-msg-required="@Localizer["Phone number"] @Localizer["is required"]"
+                                                   data-msg-number="@Localizer["Phone number"] @Localizer["is incorrect"]">
+                                            <label for="contactPhone">@Localizer["Phone number"]</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6 col-12">
+                                        <div class="form-floating">
+                                            <input class="form-control form-control-custom"
+                                                   id="contactEmail" name="contactEmail"
+                                                   value="@Model.UserInfo.Email" type="text"
+                                                   placeholder="@Localizer["Email"]"
+                                                   data-msg-required="@Localizer["Email"] @Localizer["is required"]"
+                                                   data-msg-email="@Localizer["Email"] @Localizer["is incorrect"]">
+                                            <label for="contactEmail">@Localizer["Email"]</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-6 col-12">
+                                        <div class="form-floating">
+                                            <input class="form-control form-control-custom" id="contactAddress" value="@Model.UserInfo.Address" type="text" placeholder="@AppConfigs.pls("địa chỉ")">
+                                            <label for="contactAddress">@Localizer["Address"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="booking-user-info">
+                        <h3 class="text-16-b">@Localizer["Passenger information"]</h3>
+                        <div class="bk-user-login">
+                            <p class="text-14-blue">
+                                @Localizer["Type in Vietnamese without accents and special characters, your full name matches on your ID."]
+                            </p>
+                        </div>
+                        <div class="user-info2" id="PassengerInfo">
+                            @for (int a = 1; a <= Model.Adult; a++)
+                            {
+                                <div class="passenger">
+                                    <div class="user-avatar-bk-flight">
+                                        <div class="user-avatar-flight">
+                                            <i class="fa-solid fa-user ic-12"></i>
+                                            <p class="text-14-semibold">@Localizer["Adult"] @a</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-10">
+                                        <div class="col-xxl-4 col-12 input-txtname ">
+                                            <label>@Localizer["Fullname"]</label>
+                                            <input class="form-control mt-10" type="text"
+                                               id="NameA_@a" name="NameA_@a"
+                                               placeholder="@Localizer["Fullname"]"
+                                               data-rule-required="true"
+                                               data-msg-required="@Localizer["Fullname"] @Localizer["is required"]">
+                                        </div>
+                                        <div class="col-xxl-4 col-12 input-txtsex" required>
+                                            <label>@Localizer["Sex"]</label>
+                                            <select class="form-select mt-10" id="GenderA_@a">
+                                                <option value="1">@Localizer["Male"]</option>
+                                                <option value="0">@Localizer["Female"]</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xxl-4 col-12 input-txtbirthday">
+                                            <label>@Localizer["Date of birth"]</label>
+                                            <input class="form-control mt-10 InputDate"
+                                               data-value="01/01/1995" type="text" id="DateofbirthA_@a" name="DateofbirthA_@a"
+                                               required placeholder="@Localizer["Date of birth"]"
+                                               data-rule-required="true"
+                                               data-msg-required="@Localizer["Date of birth"] @Localizer["is required"]">
+                                        </div>
+                                    </div>
+                                    @if (a == 1)
+                                    {
+                                        <div class="check-room-left mt-10">
+                                            <input class="form-check-input" type="checkbox" id="checkisContact">
+                                            <label for="checkisContact" class="form-check-label text-14-gray pl-10">
+                                                @Localizer["Passenger information is contact information"]
+                                            </label>
+                                        </div>
+                                    }
+
+                                </div>
+
+                            }
+                            @for (int c = 1; c <= Model.Child; c++)
+                            {
+                                <div class="passenger mt-20">
+                                    <div class="user-avatar-bk-flight">
+                                        <div class="user-avatar-flight">
+                                            <i class="fa-solid fa-user ic-12"></i>
+                                            <p class="text-14-semibold">@Localizer["Child"] 1 <span class="text-14-primary">(4 - 11 @Localizer["Years old"])</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-10">
+                                        <div class="col-xxl-4 col-12 input-txtname">
+                                            <label>@Localizer["Fullname"]</label>
+                                            <input class="form-control mt-10" type="text"
+                                               id="NameC_@c" name="NameC_@c"
+                                               placeholder="@Localizer["Fullname"]"
+                                               data-rule-required="true"
+                                               data-msg-required="@Localizer["Fullname"] @Localizer["is required"]">
+                                        </div>
+                                        <div class="col-xxl-4 col-12 input-txtsex">
+                                            <label>@Localizer["Sex"]</label>
+                                            <select class="form-select mt-10" id="GenderC_@c">
+                                                <option value="1">@Localizer["Male"]</option>
+                                                <option value="0">@Localizer["Female"]</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xxl-4 col-12 input-txtbirthday">
+                                            <label>@Localizer["Date of birth"]</label>
+                                            <input class="form-control mt-10 InputDate"
+                                               data-value="01/01/2015" type="text" id="DateofbirthC_@c" name="DateofbirthC_@c"
+                                               required placeholder="@Localizer["Date of birth"]"
+                                               data-rule-required="true"
+                                               data-msg-required="@Localizer["Date of birth"] @Localizer["is required"]">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            }
+                            @for (int i = 1; i <= Model.Infant; i++)
+                            {
+                                <div class="passenger mt-20">
+                                    <div class="user-avatar-bk-flight">
+                                        <div class="user-avatar-flight">
+                                            <i class="fa-solid fa-user ic-12"></i>
+                                            <p class="text-14-semibold">@Localizer["Infant"] <span class="text-14-primary">(Dưới 2 @Localizer["Years old"])</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-10">
+                                        <div class="col-xxl-4 col-12 input-txtname">
+                                            <label>@Localizer["Fullname"]</label>
+                                            <input class="form-control mt-10" type="text"
+                                               id="NameI_@i" name="NameI_@i"
+                                               placeholder="@Localizer["Fullname"]"
+                                               data-rule-required="true"
+                                               data-msg-required="@Localizer["Fullname"] @Localizer["is required"]">
+                                        </div>
+                                        <div class="col-xxl-4 col-12 input-txtsex">
+                                            <label>@Localizer["Sex"]</label>
+                                            <select class="form-select mt-10" id="GenderI_@i">
+                                                <option value="1">@Localizer["Male"]</option>
+                                                <option value="0">@Localizer["Female"]</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xxl-4 col-12 input-txtbirthday">
+                                            <label>@Localizer["Date of birth"]</label>
+                                            <input class="form-control mt-10 InputDate"
+                                               data-value="01/01/2020" id="DateofbirthI_@i" type="text" name="DateofbirthI_@i"
+                                               placeholder="@Localizer["Date of birth"]"
+                                               data-rule-required="true"
+                                               data-msg-required="@Localizer["Date of birth"] @Localizer["is required"]">
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+
+                    <div class="booking-user-info mt-30">
+                        <div class="package-bk">
+                            <div class="package-image">
+                                <img src="/assets/images/icons-suitcase.png">
+                            </div>
+                            <div class="package-text">
+                                <h3 class="text-16-b">@Localizer["Add extra baggage"]</h3>
+                                <p id="package-price" class="text-14-gray">@Localizer["Add extra baggage for a more convenient trip. Buy now with a lower price!"]</p>
+                            </div>
+                            @*<div class="bg-white border-0"><i class="fa-solid fa-circle-plus ic-20-primary mt-20" onclick="addPackage()"></i></div>*@
+                            <div class="bg-white border-0"><i class="fa-solid fa-circle-plus ic-20-primary mt-20" data-bs-toggle="modal" data-bs-target="#select_package"></i></div>
+
+                        </div>
+                        <div class="package-extra-link mt-10">
+                            <a href="#" class="text-14-gray">@Localizer["See more regulations on checked baggage"]<i class="fa-regular fa-circle-question pl-10"></i></a>
+                        </div>
+                    </div>
+                    @* <div class="booking-user-info mt-30">
+                    <div class="fl-insurance">
+                    <div class="check-room-left">
+                    <input class="form-check-input" type="checkbox">
+                    </div>
+                    <div class="package-text">
+                    <h3 class="text-16-b">@Localizer["Buy insurance"]</h3>
+                    <p class="text-14-gray">@Localizer["Buy insurance"] (68.000đ/@Localizer["Passenger"])</p>
+                    </div>
+                    <p class="text-14-gray">x 4 @Localizer["Passenger"]</p>
+                    <div class="text-14-b">
+                    272.000đ
+                    </div>
+                    </div>
+                    </div>*@
+                </div>
+                <div class="col-xxl-4 col-xl-4 col-lg-4 col-12">
+                    <div id="sidebar">
+                        <div class="fl-detail-sidebar mb-30">
+                            <div class="fl-top-select-1">
+                                <label class="flight-departure-label text-14-white">@Localizer["Flight"]</label>
+                                <div class="fl-top-content-listing">
+                                    <h3 class="title">
+                                        <a href="#">@Model.StartPoint <span><i class="fa-solid fa-arrow-right-long"></i>@Model.EndPoint </span></a>
+                                    </h3>
+                                    <ul class="fl-info-list">
+                                        <li>
+                                            <a>@Model.Flights.StartDate.ToString("dd/MM/yyyy")</a>
+                                            <span class="circle"></span>
+                                            <a>@Model.TotalPeople @Localizer["Passenger"]</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="bottom-select-flight-1">
+                                <div class="fl-item-left">
+                                    <div class="date-1">
+                                        <h3 class="text-16-b">@Model.Flights.StartDate.ToString("hh:mm")</h3>
+
+                                    </div>
+                                    <p class="text-12">@Model.Flights.Duration </p>
+                                    <div class="date-1">
+                                        <h3 class="text-16-b">@Model.Flights.EndDate.ToString("hh:mm")</h3>
+
+                                    </div>
+                                </div>
+                                <div class="fl-item-center">
+                                    <i class="fa-solid fa-plane-up fa-custom ic-12-blue"></i>
+                                    <div class="line-vertical"></div>
+                                    <i class="fa-solid fa-location-dot ic-12-blue"></i>
+                                </div>
+                                <div class="fl-item-right">
+                                    <div class="airport">
+                                        <h3 class="text-16-b">@Model.StartPoint</h3>
+                                    </div>
+                                    <div class="flight fl-listing">
+                                        <img src="/@Model.Flights.LogoAirline" alt="#">
+                                        <div>
+                                            <h3 class="text-14-b">@Model.Flights.AirlineName</h3>
+                                            <p class="text-12">@Model.Flights.FlightNumber / @Model.Flights.ListSegment.FirstOrDefault().Plane</p>
+                                        </div>
+                                    </div>
+                                    <div class="airport">
+                                        <h3 class="text-16-b">@Model.EndPoint</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line-horizontal"></div>
+
+                            <div class="detail-bk">
+                                <a href="#" class="text-14-primary">@Localizer["Flight details"] </a>
+                            </div>
+                        </div>
+                        <div class="sidebar_innner">
+                            <div class="hotel-detail-info-sidebar">
+                                <div class="detail-price-sidebar">
+                                    <h3 class="text-14-b title-info-sidebar">@Localizer["Price details"]</h3>
+                                    <div class="fl-bk-price-parent">
+                                        <div class="fl-bk-price-sidebar">
+                                            <div class="title-price text-14-gray">@Localizer["Class ticket"] </div>
+                                            <div class="bk-room-price">
+                                                <div class="price-parent text-14">
+                                                    @Model.FareOption.Class
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="fl-bk-price-sidebar">
+                                            <div class="title-price text-14-gray">@Localizer["Adult"] <span class="text-14"> x @Model.Adult</span></div>
+                                            <div class="bk-room-price">
+                                                <div class="sale-price">
+                                                    @AppConfigs.FormatCurrency("", Math.Round((decimal)
+                                                    (Model.FareOption.PriceAdult+Model.FareOption.FeeAdult+Model.FareOption.TaxAdult),0))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if (Model.Child > 0)
+                                        {
+                                            <div class="fl-bk-price-sidebar">
+                                                <div class="title-price text-14-gray">@Localizer["Child"] (4 - 11 @Localizer["Years old"]) <span class="text-14"> x @Model.Child</span></div>
+                                                <div class="bk-room-price">
+                                                    <div class="price-parent text-14">
+                                                        @AppConfigs.FormatCurrency("", Math.Round((decimal)
+                                                    (Model.FareOption.PriceChild+Model.FareOption.FeeChild+Model.FareOption.TaxChild),0))
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (Model.Infant > 0)
+                                        {
+                                            <div class="fl-bk-price-sidebar">
+                                                <div class="title-price text-14-gray">@Localizer["Infant"] (2 - 4 @Localizer["Years old"]) <span class="text-14"> x @Model.Infant</span></div>
+                                                <div class="bk-room-price">
+                                                    <div class="price-parent text-14">
+                                                        @AppConfigs.FormatCurrency("", Math.Round((decimal)
+                                                    (Model.FareOption.PriceInfant+Model.FareOption.FeeInfant+Model.FareOption.TaxInfant),0))
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="fl-bk-price-sidebar">
+                                            <div class="title-price text-14-gray">@Localizer["Tax and Fee"]</div>
+                                            <div class="bk-room-price">
+                                                <div class="price-parent text-14">
+                                                    @AppConfigs.FormatCurrency("", Math.Round((decimal)
+                                                    (Model.FareOption.IssueFee*(Model.Adult+Model.Child+Model.Infant)),0))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fl-bk-price-sidebar">
+                                            <div class="title-price text-14-gray">@Localizer["Service charge"]<i class="fa-regular fa-circle-question ic-12-blue pl-10"></i></div>
+                                            <div class="bk-room-price">
+                                                <div class="price-parent text-14">
+                                                    @AppConfigs.FormatCurrency("", Math.Round((decimal)
+                                                    (Model.FareOption.ServiceFee*(Model.Adult+Model.Child+Model.Infant)),0))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fl-bk-total">
+                                            <h3 class="text-14-b">@Localizer["Total fare"]</h3>
+                                            <h3 class="text-16-b">
+                                                @AppConfigs.FormatCurrency("", Math.Round((decimal)Model.TotalPrice,0))
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <div class="line-horizontal-primary"></div>
+
+                                    <div class="line-horizontal-primary"></div>
+                                    @*<div class="fl-bk-price-sidebar">
+                                    <div class="title-price text-14-gray">@Localizer["Discount code"]</div>
+                                    <div class="bk-room-cod">
+                                    <input type="text" class="form-control form-control1 text-12" placeholder="@Localizer["Insert code"]">
+                                    </div>
+                                    <div class="bk-room-button">
+                                    <button class="btn btn-primary button-custom text-12-white" type="button">@Localizer["Apply"]</button>
+                                    </div>
+                                    </div>*@
+                                    <div class="fl-bk-price-total">
+                                        <h3 class="text-14-b">@Localizer["Total amount"]</h3>
+                                        <h3 class="text-16-primary">
+                                            @AppConfigs.FormatCurrency("", Math.Round((decimal)Model.TotalPrice,0))
+                                        </h3>
+                                    </div>
+                                    <div class="fl-bk-sub-total">
+                                        <div class="text-12">@Localizer["Includes taxes, fees and surcharges"]</div>
+                                        <div class="text-12">
+                                            (@Localizer["Price for"] @Model.Adult @Localizer["Adult"], <br> @Model.Child @Localizer["Child"],<br> @Model.Infant @Localizer["Infant"] )
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="total-parent mt-20">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                        <label class="form-check-label text-14-gray" for="flexCheckDefault">
+                                            @Localizer["Request a VAT invoice"]
+                                        </label>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="btn-login-form btn-submit mt-10 mb-10 ">
+                                        @Localizer["Booking"]<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                                    </button>
+
+                                    <div class="text-12">
+                                        @Localizer[" Bằng cách nhấn vào nút này, bạn công nhận mình đã đọc và đồng ý với"]
+                                        <a href="#" class="text-12-primary">Điều kiện</a> và <a href="#" class="text-12-primary">Điều khoản</a> của chúng tôi
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<div class="modal fade" id="select_package" tabindex="-1" aria-labelledby="select_package" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-14-b pl-10" id="registerlabel">Thêm hành lý ký gửi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center gap-10">
+                    <p class="text-14-b">TP Hồ Chí Minh</p>
+                    <i class="fa-solid fa-arrow-right-long"></i>
+                    <p class="text-14-b">Hà Nội</p>
+                </div>
+                <p class="text-uppercase mt-10">Nguyen Van Anh</p>
+                <div class="container">
+                    <div class="row mt-10 tab-package">
+                        <button class="col-auto package border-box rounded-5 pd-10 text-center border_class tablinks" onclick="openCity(event, '15kg')">
+                            <p class="text-package-kilo">15kg</p>
+                            <p class="text-package-price">181.500đ</p>
+                        </button>
+                        <button class="col-auto package border-box rounded-5 pd-10 text-center border_class tablinks" onclick="openCity(event, '20kg')">
+                            <p>20kg</p>
+                            <p>201.500đ</p>
+                        </button>
+                        <button class="col-auto package border-box rounded-5 pd-10 text-center border_class tablinks" onclick="openCity(event, '25kg')">
+                            <p>25kg</p>
+                            <p>251.500đ</p>
+                        </button>
+                        <button class="col-auto package border-box rounded-5 pd-10 text-center border_class tablinks" onclick="openCity(event, '30kg')">
+                            <p>30kg</p>
+                            <p>301.500đ</p>
+                        </button>
+                        <button class="col-auto package border-box rounded-5 pd-10 text-center border_class tablinks" onclick="openCity(event, '35kg')">
+                            <p>35kg</p>
+                            <p>346.500đ</p>
+                        </button>
+                        <button class="col-auto package border-box rounded-5 pd-10 text-center border_class tablinks" onclick="openCity(event, '40kg')">
+                            <p>40kg</p>
+                            <p>396.000đ</p>
+                        </button>
+                    </div>
+                </div>
+                <hr class="mt-10 mb-10" />
+                <div class="d-flex justify-between mt-10">
+                    <div>
+                        <p>Tổng</p>
+                        <div id="15kg" class="total-left tabcontent">
+                            <p class="text-14-primary-b">181.500đ</p>
+                        </div>
+                        <div id="20kg" class="total-left tabcontent">
+                            <p class="text-14-primary-b">201.500đ</p>
+                        </div>
+                        <div id="25kg" class="total-left tabcontent">
+                            <p class="text-14-primary-b">251.500đ</p>
+                        </div>
+                        <div id="30kg" class="total-left tabcontent">
+                            <p class="text-14-primary-b">301.500đ</p>
+                        </div>
+                        <div id="35kg" class="total-left tabcontent">
+                            <p class="text-14-primary-b">346.500đ</p>
+                        </div>
+                        <div id="40kg" class="total-left tabcontent">
+                            <p class="text-14-primary-b">396.000đ</p>
+                        </div>
+                    </div>
+                    
+                    <button id="btn-package" class="button-action rounded-5 border-0">
+                        Áp dụng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        
+        //$(document).ready(function () {
+        //    $("#btn-package").click(function () {
+        //        $("#package-price").html("<p>396.000đ</p>");
+        //    });
+        //});
+
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        //const btnBooking = document.getElementById('btn-booking');
+        const inputEles = document.querySelectorAll('.form-floating');
+
+        //function setcontact() {
+
+        //}
+        $('#checkisContact').change(function () {
+            if (this.checked) {
+                $("#NameA_1").val($("#contactName").val());
+                $("#DateofbirthA_1").val('');
+            }
+            else {
+                $("#NameA_1").val('');
+            }
+
+        });
+    </script>
+}
+
+
+
+

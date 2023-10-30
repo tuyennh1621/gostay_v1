@@ -1,0 +1,58 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+
+<div id="sender">
+    <div>
+        <div class="form-select-grid">
+            <div class="form-floating form-select-custom">
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label">
+                                <option selected="">Việt Nam (+84)</option>
+                                <option value="1">Hoa Kỳ (+1)</option>
+                                <option value="2">Hàn Quốc (+82)</option>
+                                <option value="3">Hà Lan (+31)</option>
+                            </select>
+                            <label class="text-14-gray" for="floatingSelect">Quốc gia / Khu vực</label>
+                        </div>
+            <input class="form-control" id="number" type="text" placeholder="Nhập số điện thoại" required="">
+        <div class="text-12 mt-20">
+            <div id="recaptcha-container"></div>
+        </div>
+        <button onclick="phoneAuth()" class="btn-login-form btn-apple sc-login mt-20" type="button" id="btnloginwidthPhone">
+            <i class="fa-solid fa-phone"></i>
+            <div class="sc-login-name pl-10">Đăng nhập bằng số điện thoại</div>
+        </button>       
+        </div>
+    </div>
+</div>
+
+<div id="verifier" style="display:none;">
+    <div class="text-22 text-align-center pl-20">Nhập mã OTP</div>
+    <div x-data="pinHandler()" x-init="$nextTick(() => { $refs[0].focus() })" class="flex items-start justify-center min-h-screen">
+        <div>
+            <form id="enter-pin">
+                <template x-for="(input, index) in Array.from({ length: length })" :key="index">
+                    <input otpinput.prevent="handleInput($event.target)"
+                           otpkeydown.backspace="$event.target.value || focusPreviousRef($event.target.getAttribute('x-ref'))"
+                           autocomplete="off"
+                           :aria-label="`Pin ${index + 1}`"
+                           data-lpignore="true"
+                           :x-ref="index"
+                           class="text-center"
+                           type="text"
+                           maxlength="1">
+                </template>
+            </form>
+        </div>
+    </div>
+    <button id="verify" onclick="codeverify()" class="btn-login-form btn-submit mt-10" type="button">
+        Tiếp tục... <i class="fa-solid fa-arrow-trend-up pl-10"></i>
+    </button>
+@*    <div class="p-conf" style="display:none;"> Number Verified</div>
+    <div class="n-conf" style="display:none;">OTP ERROE</div>*@
+</div>
+
+@*add firebase SKD*@

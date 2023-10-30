@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<style>
+    #sign-out-button {
+        display: none;
+    }
+
+    #recaptcha-container {
+        display: none;
+    }
+</style>
+<form id="sign-in-form" action="#">
+    <!-- Input to enter the phone number -->
+    <div class="form-select-grid">
+        <div class="row pb-10">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-floating form-select-custom">
+                    <select class="form-select" id="floatingSelect" aria-label="Floating label">
+                        <option value="+84" selected>@Localizer["VietNam"] (+84)</option>
+                        <option value="+1">@Localizer["United State"] (+1)</option>
+                        <option value="+82">@Localizer["Korea"] (+82)</option>
+                        <option value="+31">@Localizer["Netherlands"] (+31)</option>
+                    </select>
+                    <label class="text-14-gray" for="floatingSelect">@Localizer["Country / Region"]</label>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <input class="form-control" type="text" id="phone-number" placeholder="@Localizer["Enter phone number"]" required="">
+            </div>
+        </div>
+    </div>
+    <div class="text-12 mt-10">
+        <div id="recaptcha-container"></div>
+    </div>
+    <button type="submit" disabled class="btn btn-login-form btn-apple sc-login mt-10" id="sign-in-button">
+        <i class="fa-solid fa-phone"></i>
+        <div class="sc-login-name pl-10">@Localizer["Sign in with your phone number"]</div>
+    </button>
+</form>
+
+<form id="verification-code-form" style="display:none;" action="#">
+   
+    <div class="text-22 text-align-center pl-20">@Localizer["Enter OTP"]</div>
+    <div x-data="pinHandler()" x-init="$nextTick(() => { $refs[0].focus() })" class="flex items-start justify-center min-h-screen">
+        <div>
+            <div id="enter-pin">
+                <template x-for="(input, index) in Array.from({ length: length })" :key="index">
+                    <input otpinput.prevent="handleInput($event.target)"
+                           otpkeydown.backspace="$event.target.value || focusPreviousRef($event.target.getAttribute('x-ref'))"
+                           autocomplete="off"
+                           :aria-label="`Pin ${index + 1}`"
+                           data-lpignore="true"
+                           :x-ref="index"
+                           class="text-center"
+                           type="text"
+                           maxlength="1">
+                </template>
+            </div>
+        </div>
+    </div>
+    <button type="submit" id="verify-code-button" disabled class="btn btn-login-form btn-submit mt-10">
+        @Localizer["Go on"] <i class="fa-solid fa-arrow-trend-up pl-10"></i>
+    </button>
+</form>

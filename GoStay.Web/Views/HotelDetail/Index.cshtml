@@ -1,0 +1,835 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.DataDto.Apis
+@using GoStay.DataDto.OrderDto
+@using GoStay.Web.Model
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model HotelDetailDto;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    decimal GetProcessBarWithPoint(decimal? point)
+    {
+        decimal value = 0;
+        if (point is null) return value;
+        else value = (point ?? 0) * 10;
+
+        return Math.Round(value,0);
+    }
+    // điểm trung bình
+    decimal? totalPoint = (Model.LocationScore + Model.ServiceScore + Model.RoomsScore + Model.CleanlinessScore + Model.ValueScore) / 5;
+
+}
+
+<style>
+    .autoplay-progress {
+        --progress: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: var(--progress);
+        height: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        background-color: var(--bs-primary);
+    }
+</style>
+<section class="search-fitler-breadcrumns">
+    <div id="url-title" data-id="@Model.Id" data-title="@Model.HotelName" data-slug="@Model.Slug" hidden></div>
+    <div class="search-filter-inner">
+        <div class="container">
+            <div class="hotel-search-form">
+                <div class="row search-filter1 align-items-center">
+                    <div class="col-12 p-0">
+                        <form asp-action="Index" asp-controller="Hotels" id="fromParaSearch" enctype="multipart/form-data" method="get">
+                            @await Html.PartialAsync("~/Views/Shared/_HotelSearchPatical.cshtml",new MainSearchModels{style=1,strPlace=Model.HotelName, IDH = @Model.Id})
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="breadcrumns">
+    <div class="container">
+        <div class="breadcrumns-1 mt-20 mb-30">
+            <div class="row">
+                <div class="col-auto br-parent">
+                    <div class=""><a href="@Url.Action("Index", "Home", new { area = ""})" title="Trang chủ">@Localizer["Home"]</a></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><a href="@Url.Action("Index", "Hotels", new { area = ""})" title="Khách sạn">@Localizer["Hotels"]</a></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><a href="/khach-san/@Model.TinhThanh_url" title="Khách sạn tại @Model.TinhThanh">@Model.TinhThanh</a></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><a href="/khach-san/@Model.TinhThanh_url/@Model.QuanHuyen_url" title="Khách sạn tại @Model.QuanHuyen, @Model.TinhThanh">@Model.QuanHuyen</a></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class=""><i class="fa-solid fa-chevron-right ic-12"></i></div>
+                </div>
+                <div class="col-auto br-parent">
+                    <div class="color-primary">@Model.HotelName</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="hotel_detail">
+    <div class="container">
+        <div class="detail-hotel-title-parent">
+            <div class="detail-hotel-title">
+                <div class="detail-hotel-title-child">
+                    <div class="hotel-title-left">
+                        <h3>@Model.HotelName</h3>
+                        <div class="rating-5-star1">
+                            <ul class="star">
+                                @for (int i = 0; i < Model.Rating; i++)
+                                {
+                                    <li><i class="fa-solid fa-star"></i></li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="user-review hidden">
+                            <div class="label2">
+                                <i class="fa-solid fa-umbrella"></i> @totalPoint
+                            </div>
+                        </div>
+                        <div class="sub-title grid-list-region">
+                            <span><i class="fa-solid fa-location-dot"></i>@Model.HotelAddress</span>
+                            <a href="#" class="more-map"><i class="fa-solid fa-map-location-dot"></i></a>
+                        </div>
+                    </div>
+                    <div class="hotel-title-right">
+                        <div class="detail-title-price">
+                            <div class="base_label">
+                                <p class="label_discount"><i class="fa-solid fa-arrow-down discount"> @Model.Discount %</i></p>
+                                <p class="base_price">@AppConfigs.FormatCurrency("VND", Math.Round(@Model.OriginalPrice,0)) </p>
+                            </div>
+                            <p class="price">@AppConfigs.FormatCurrency("VND", Math.Round(@Model.ActualPrice,0))</p>
+                        </div>
+                        <div class="button-title">
+                            <a href="#maps-sidebar" class="btn-login-form btn-submit">
+                                @Localizer["Booking"] <i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                            </a>
+                            <span>
+                                <i class="fa-regular fa-heart ic-20"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="hotel_detail" class="hotel-detail">
+            <div class="mb-30">
+                <div class="row">
+                    <div class="d-flex detail-main-image">
+                        @{
+                            int countAnh = 5;
+                            if (@Model.Pictures.Count < 5)
+                            {
+                                countAnh = @Model.Pictures.Count;
+                            }
+                        }
+                        @if (countAnh == 5)
+                        {
+                            <div class="detail-hotel-5-image">
+                                <div class="main_5">
+                                    <img alt="@Model.HotelName" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.Pictures[0]" onclick="showImageHotel(@Model.Id)">
+                                </div>
+                                <div class="main-5-4">
+
+                                    @for (int i = 1; i < countAnh; i++)
+                                    {
+                                        <div class="main_@(countAnh-i)">
+                                            <div class="thumb">
+                                                <img alt="@Model.HotelName" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.Pictures[i]" onclick="showImageHotel(@Model.Id)">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="thumb-button-5">
+                                <button type="button" class="btn-login-form btn-submit" onclick="showImageHotel(@Model.Id)">
+                                    @Localizer["See more"] @Model.TotalPicture @Localizer["picture"]
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="detail-hotel-@countAnh-image">
+                                @for (int i = 0; i < countAnh; i++)
+                                {
+                                    <div class="main_@(countAnh-i)">
+                                        <div class="thumb">
+                                            <img alt="@Model.HotelName" src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.Pictures[i]" onclick="showImageHotel(@Model.Id)">
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                            if (countAnh == 0)
+                            { }
+                            else
+                            {
+                                <div class="thumb-button-5">
+                                    <button type="button" class="btn-login-form btn-submit" onclick="showImageHotel(@Model.Id)">
+                                        @Localizer["See more"] @Model.TotalPicture @Localizer["picture"]
+                                    </button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="description pb-60">
+            <div class="row">
+                <div class="col-12">
+                    <div class="col-12" id="advantages_parent">
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 advantages">
+                            <div class="d-flex justify-between pdr-20">
+                                <h3 class="text-18">@Localizer["Advantages of the hotel"]</h3>
+                                <a class="more-advantages">@Localizer["See more"]</a>
+                            </div>
+                            <div class="advantages-list">
+                                @{
+                                    int countServices = 4;
+                                    if (@Model.Services.Count < 4)
+                                    {
+                                        countServices = @Model.Services.Count;
+                                    }
+                                }
+                                @for (int i = 0; i < countServices; i++)
+                                {
+                                    <div class="advantages1-title">
+                                      <i class="@Model.Services[@i].Icon"></i>
+                                      <p>@Model.Services[@i].NameLang</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 hotel-rating-parent">
+                            <div class="rating-title">
+                                <div class="text-18">
+                                    @Localizer["Reviews"]
+                                </div>
+                                <div class="label_rating user-list">
+                                    <div><i class="fa-solid fa-umbrella"></i>@totalPoint</div>
+                                </div>
+                            </div>
+                            <div class="rating-range-parent">
+                                <div>
+                                    <div class="text-14 rating-range">
+
+                                        <div>@Localizer["Location"]</div>
+                                        <div>@Model.LocationScore</div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.LocationScore)%" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-14 rating-range">
+                                        <div>@Localizer["Price"]</div>
+                                        <div>@Model.ValueScore</div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.ValueScore)%" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-14 rating-range">
+
+                                        <div>@Localizer["Serve"]</div>
+                                        <div>@Model.ServiceScore</div>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.ServiceScore)%" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-14 rating-range">
+
+                                        <div>@Localizer["Cleanup"]</div>
+                                        <div>@Model.CleanlinessScore</div>
+
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.CleanlinessScore)%" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-14 rating-range">
+
+                                        <div>@Localizer["Relax room"]</div>
+                                        <div>@Model.RoomsScore</div>
+
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-label="Basic example" style="width: @GetProcessBarWithPoint(Model.RoomsScore)%" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.Lat_map > 0 && Model.Lon_map > 0)
+                    {
+                        <div class="maps-sidebar" id="maps-sidebar">
+                            <div class="row">
+                                <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 maps-google">
+                                   <script defer>
+                                        function botCheck() {
+                                            var botPattern = "(googlebot\/|Googlebot-Mobile|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis)";
+                                            var re = new RegExp(botPattern, 'i');
+                                            var userAgent = navigator.userAgent;
+                                            if (re.test(userAgent)) {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+                                        (function (d, s, id) {
+
+                                            if (botCheck()) {
+                                                return;
+                                            }
+
+                                            var _keyGGMapAPI = 'AIzaSyBK3AZ1XLhsOCk6Gx6toG6KKE6sTOtgN6s'
+
+                                            var js, fjs = d.getElementsByTagName(s)[0];
+                                            if (d.getElementById(id)) { return; }
+                                            js = d.createElement(s); js.id = id;
+                                            js.onload = function () {
+                                                // remote script has loaded
+                                            };
+                                            js.src = "https://maps.googleapis.com/maps/api/js?key=" + _keyGGMapAPI + "&libraries=places&callback=initMap";
+                                            fjs.parentNode.insertBefore(js, fjs);
+                                        }(document, 'script', 'googleapis'));
+
+
+                                        var PlaceArray = ["restaurant", "cafe", "shopping_mall", "supermarket", "airport", "zoo", "spa","night_club", "bar", "amusement_park"];
+                                        var PlaceArrayName = ["Nhà hàng", "Cafe","Mua sắm", "Siêu thị", "Sân bay", "Sở thú", "Spa", "Night club", "Bar", "Công viên giải trí"];
+                                        const localmap = { lat: @Model.Lat_map?.ToString().Replace(",","."), lng: @Model.Lon_map?.ToString().Replace(",",".") };
+
+
+                                        function callback(results, status) {
+                                            "use strict";
+                                            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                                                for (var i = 0; i < results.length; i++) {
+                                                    createMarker(results[i]);
+                                                }
+                                            }
+                                        }
+                                        function createMarker(place) {
+
+                                            "use strict";
+                                            var place_icon;
+
+                                            place_icon = "/duan/5/images/map-icons/" + place.types['0'] + ".png";
+
+                                            var PlaceType = place.types['0'];
+
+                                            var Distance = distance(place.geometry.location.lat(), place.geometry.location.lng());
+
+                                            function distance(latitude2, longitude2) {
+                                                var lat1 = localmap.lat;
+                                                var lon1 = localmap.lng;
+                                                var lat2 = latitude2;
+                                                var lon2 = longitude2;
+
+                                                var radlat1 = Math.PI * lat1 / 180;
+                                                var radlat2 = Math.PI * lat2 / 180;
+                                                var radlon1 = Math.PI * lon1 / 180;
+                                                var radlon2 = Math.PI * lon2 / 180;
+                                                var theta = lon1 - lon2;
+                                                var radtheta = Math.PI * theta / 180;
+                                                var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+                                                dist = Math.acos(dist);
+                                                dist = dist * 180 / Math.PI;
+                                                dist = dist * 60 * 1.1515;
+
+                                                dist = dist * 1.609344;
+
+                                                return Math.round(1.3 * dist * 100)*10;
+                                            }
+
+                                           // jQuery("#ulListtientich").append("<li class=\"near-by-1\"><li class='left'><b>" + PlaceArrayName[PlaceArray.indexOf(PlaceType)] + "</b><div>" + place.name + "</div></li><li class='right'><label> ~ " + Distance + " Km</label><a data-name='" + place.name + "' data-lat='" + place.geometry.location.lat() + "' data-lon='" + place.geometry.location.lng() + "' class=\"lb-alink Route\"><i class=\"fas fa-route\" ></i></a></li></ul>");
+
+                                            jQuery("#ulListtientich").append("<li class=\"near-by-1\"><div class=\"text-14\">" + place.name + "</div><div class=\"text-14 text-light-1\">Cách ~" + Distance + "(m)</div></li>");
+                                            
+                                            
+                                        }
+                                        function initMap() {
+                                            const map = new google.maps.Map(document.getElementById("map"), {
+                                                zoom: 15,
+                                                center: localmap,
+                                            });
+                                            
+                                            const marker = new google.maps.Marker({
+                                                position: localmap,
+                                                map: map,
+                                            });
+
+                                            function binNearby(_rangetienichselector) {
+
+                                                PlaceArray.forEach(function (element, i) {
+                                                    var request = {
+                                                        location: localmap,
+                                                        radius: _rangetienichselector * 1,
+                                                        types: [element],
+                                                    };
+
+                                                    var service = new google.maps.places.PlacesService(map);
+                                                    service.nearbySearch(request, callback);
+                                                    
+                                                });
+
+                                                var cityCircle = new google.maps.Circle({
+                                                    strokeColor: '#FF0000',
+                                                    strokeOpacity: 0.8,
+                                                    strokeWeight: 1,
+                                                    fillColor: '#FF0000',
+                                                    fillOpacity: 0.05,
+                                                    map: map,
+                                                    center: localmap,
+                                                    radius: _rangetienichselector * 1
+                                                });
+                                            }
+
+                                            binNearby(1000);
+                                        }
+                                        window.initMap = initMap;
+                                    </script>
+                                    <div class="contact-maps">
+                                        <div id="map" class="map2"></div>
+                                    </div>
+                                    @*<div class="row maps-location">
+                                        <div>
+                                            <div class="location-popular">
+                                                <i class="fa-solid fa-route ic-16"></i>
+                                                <div class="text-14">
+                                                    Vị trí hiếm có - Cách bãi biển 480 m
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="location-popular">
+                                                <i class="fa-solid fa-map-location-dot ic-16-1"></i>
+                                                <div class="text-14">
+                                                    @Localizer["Popular places"]
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                </div>
+                                <div class="col-xxl-6 col-xl-6 col-lg-6 col-12 near-by">
+                                    <h3 class="text-14-b">@Localizer["Famous places"]</h3>
+                                    <ul id="ulListtientich" style="overflow: auto;max-height: 230px;">
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+                <div class="col-12" id="hotel-rooms">
+                    <section class="hotel-rooms-parent">
+                        <h3 class="text-18">@Localizer["Select rooms"]</h3>
+                        <div class="line-horizontal"></div>
+                        @foreach (var room in @Model.Rooms)
+                        {
+                            if (room.RoomStatus == 0)
+                            {
+                                <div class="hotel-rooms">
+                                    <div class="col-12 rooms-grid-parents">
+
+                                        <div class="hotel-rooms-title">
+                                            <h4 class="text-16" id="roomid-@room.Id">@room.Name</h4>
+                                        </div>
+                                        <div class="rooms-grid-header">
+                                            <div class="room-types">@Localizer["Kind of room"]</div>
+                                            <div>@Localizer["Utilities"]</div>
+                                            <div>@Localizer["Capacity"]</div>
+                                            <div>@Localizer["Price 1 night"]</div>
+                                            <div>@Localizer["Rooms"]</div>
+                                            <div></div>
+                                        </div>
+                                        <div class="rooms-grid">
+                                            <div>
+                                                <div onclick="showImageRoom('@room.Id','@room.Name','@room.NumMature','@room.RoomSize','@room.PriceValue','@room.Discount','@room.ViewRoom','@room.PalletbedText','@room.NewPrice', '@room.Idhotel')">
+                                                    <div class="room-images">
+                                                        @if (room.Pictures.Count > 0)
+                                                        {
+                                                            <img alt="@room.Name - @Model.HotelName" src="https://cdn.realtech.com.vn/@room.Pictures[0]" />
+                                                        }
+                                                    </div>
+                                                    <div class="rooms-thumb">
+                                                        @for (int j = 1; j < @room.Pictures.Count; j++)
+                                                        {
+                                                            <img alt="@room.Name - @Model.HotelName" src="https://cdn.realtech.com.vn/@room.Pictures[j]" />
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="room-info">
+
+                                                    <div class="room-info-1">
+                                                        <i class="fa-solid fa-person"></i>
+                                                        <p>@room.NumMature @Localizer["adult"]</p>
+                                                    </div>
+                                                    <div class="room-info-1">
+                                                        <i class="fa-solid fa-bed"></i>
+                                                        <p>@room.PalletbedText</p>
+                                                    </div>
+                                                    <div class="room-info-1">
+                                                        <i class="fa-solid fa-vector-square"></i>
+                                                        <p>@Localizer["Acreage"]: @room.RoomSize m²</p>
+                                                    </div>
+                                                    <div class="room-info-1">
+                                                        <i class="fa-solid fa-square-arrow-up-right"></i>
+                                                        <p>@Localizer["View room"]: @room.ViewRoom</p>
+                                                    </div>
+
+                                                    <div class="room-info-2" onclick="showService(@room.Id)">
+                                                        <i class="fa-solid fa-circle-plus"></i>
+                                                        <p>@Localizer["Other facilities"]</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="room-content">
+                                                <div class="room-benifits">
+                                                    @foreach (var service in @room.Services)
+                                                    {
+                                                        <div class="benifits">
+                                                            <div class="advlevel-@service.AdvantageLevel">
+                                                                <i class="fa-solid fa-check"></i>
+                                                                <span>@service.NameLang</span>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="room-sleeps">
+                                                    @for (int i = 0; i < @room.NumMature; i++){
+                                                        <i class="fa-solid fa-person"></i>
+                                                    }
+                                                    
+                                                    <div data-toggle="tooltip" data-placement="bottom" data-title="@Localizer["Children over 12 years old will be considered as adults"]
+                                                            . @Localizer["Please enter the correct number of guests and age for the correct price"].
+                                                            . @Localizer["Adult surcharge will be charged"]: 700.000đ
+                                                            . @Localizer["Children surcharge will be charged"]: 200.000đ">
+                                                        @Localizer["Maximum"] @room.NumMature @Localizer["adult"] <span>(@Localizer["2 children under 12 years old stay for FREE"]!)</span>
+                                                    </div>
+                                                   
+                                                </div>
+                                                <div class="room-price">
+                                                    <label><i class="fa-solid fa-arrow-down discount"> @room.Discount %</i></label>
+                                                    <div class="base-price">
+                                                        @AppConfigs.FormatCurrency("VND", Math.Round(@room.CurrentPrice,0))
+                                                    </div>
+                                                    <div class="sale-price">
+                                                        @AppConfigs.FormatCurrency("VND", Math.Round(@room.NewPrice,0))
+                                                    </div>
+                                                    <div class="text-12">
+                                                        @Localizer["Including taxes and fees"]
+                                                    </div>
+                                                </div>
+                                                <div class="room-number">
+                                                    <select class="select2 select2-container sm-form-control" id="numRoomOrder_@room.Id">
+                                                        @for (int i = 1; i <= @room.RemainNum; i++)
+                                                        {
+                                                            <option value="@i">@i </option>
+                                                        }
+                                                    </select>
+
+                                                    @*<select style="width:100%" class="select2 select2-container sm-form-control" required id="Type_ID" name="Type">
+                                                        @{
+                                                            foreach (var item in ViewBag.listType as List<TypeHotel>)
+                                                            {
+                                                                <option value="@item.Id">@item.Type</option>
+                                                            }
+                                                        }
+                                                    </select>*@
+                                                </div>
+                                            </div>
+                                            <div class="room-select">
+                                               <div class="sale-price">
+                                                    @AppConfigs.FormatCurrency("VND", Math.Round(@room.NewPrice,0))
+                                                </div>
+                                                @{
+                                                    var baseprice = (int)(@room.PriceValue * (decimal)(100 - @room.Discount) / 100 );
+                                                }
+                                                <a class="btn-login-form btn-submit mt-10 mb-10" onclick="SelectDate(@room.Id, @room.Idhotel, @baseprice, @room.MinNight )">Đặt phòng</a>
+
+                                                <div class="text-14">
+                                                    <p>@Localizer["There's only"] @room.RemainNum @Localizer["Rooms"]!</p>
+                                                    <span>@Localizer["We may run out of rooms within 2 days"]</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="hotel-rooms room-out">
+                                    <div class="col-12 rooms-grid-parents">
+                                        <div class="rooms-grid2">
+                                            <div>
+                                                <div class="room-images">
+                                                    @if (@room.Pictures.Count > 0)
+                                                    {
+                                                        <a href="#"><img alt="@room.Name - @Model.HotelName" src="https://cdn.realtech.com.vn/@room.Pictures[0]"></a>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="hotel-rooms-title2">
+                                                <h4 class="text-16">@room.Name</h4>
+                                                <p class="text-14-1">Mới đặt 7 tiếng trước</p>
+                                            </div>
+                                            <div class="label-out-room">
+                                                <a class="text-14-1">@Localizer["Out of room"]</a>
+                                            </div>
+                                            <div class="text-14">
+                                                Đang có nhu cầu cao về chỗ nghỉ này - hãy đặt phòng trống khi còn có thể!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        }
+                    </section>
+
+                    <!--partical view REVIEW -->
+                    @await Html.PartialAsync("~/Views/HotelDetail/_roomReviewPartical.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="collapse" id="galeryforHotel">
+    <div class="card card-body card-custom" id="hotel-body">
+    </div>
+</div>
+
+<div class="modal fade sh" id="gallery_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-gallery-content-custom">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="swiper mySwiper5">
+                    <div class="swiper-wrapper">
+                        @foreach (var item in Model.Pictures)
+                        {
+                            <div class="swiper-slide">
+                                <img src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@item">
+                            </div>
+                        }
+                    </div>
+                    <div class="swiper-button-next swiper-btn-next-custom-2"><i class="fa-solid fa-arrow-right-long"></i></div>
+                    <div class="swiper-button-prev swiper-btn-prev-custom-2"><i class="fa-solid fa-arrow-left-long"></i></div>
+                    <div class="autoplay-progress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="select_date_modal" tabindex="-1" aria-hidden="true" role="dialog">
+</div>
+<div class="modal fade" id="gallery_modal_room" tabindex="-1" aria-hidden="true">
+    
+</div>
+
+<div class="modal fade" id="modal_benefits" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-gallery-content-custom">
+        <div class="modal-content">
+            <div class="modal-body" id="ModalService">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml")
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
+
+
+<script>
+    function showImageRoom(_IDRooms, _RoomName, _NumMature, _RoomSize, _PriceValue, _Discount, _ViewDirection, _Palletbed, _NewPrice, _Idhotel) {
+        $.ajax({
+            type: "GET",
+            url: "/HotelDetail/showImageRoom",
+            data:
+            {
+                IDRooms: _IDRooms,
+                RoomName: _RoomName,
+                NumMature: _NumMature,
+                RoomSize: _RoomSize,
+                PriceValue: _PriceValue,
+                Discount: _Discount,
+                ViewRoom: _ViewDirection,
+                PalletbedText: _Palletbed,
+                NewPirce: _NewPrice,
+                Idhotel: _Idhotel,
+            },
+            success: function (data) {
+                
+                $('#gallery_modal_room').html(data);
+                $('#gallery_modal_room').modal('show');
+                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    function SelectDate(_IDRoom, _Idhotel, _BasePrice, _MinNight) {
+
+        $.ajax({
+            type: "GET",
+            url: "/HotelDetail/SelectDate",
+            data:
+            {
+                IDRoom: _IDRoom,
+                IdHotel: _Idhotel,
+                BasePrice: _BasePrice,
+                MinNight : _MinNight
+            },
+            success: function (data) {
+
+                $('#select_date_modal').html(data);
+                $('#select_date_modal').modal('show');
+
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+
+    function Booking(_IdHotel,_IdRoom) {
+        
+        var hiddenSelectedNight = $('#hiddenSelectedNight').val();
+        var hiddenMinNight = $('#hiddenMinNight').val();
+
+        if (hiddenSelectedNight < hiddenMinNight){
+            alert("Bạn cần chọn tối thiểu: "+ hiddenMinNight +" đêm để đặt phòng này.");
+            
+        }
+        else{
+            var selectdate = $('#hiddenRangeDate').val();
+            var _numRoom = document.getElementById("numRoomOrder_" + _IdRoom).value;
+
+            window.location.href = '/Orders/Index?IDHotel=' + _IdHotel + '&IDRoom=' + _IdRoom + ' &SelectDate=' + selectdate +
+                '&numRoom=' + _numRoom;
+        }
+        
+
+    };
+
+    function showImageHotel(_hotelId) {
+        if (sessionStorage.getItem("showImageHotel-hid" + _hotelId)) {
+            $('#hotel-body').html(sessionStorage.getItem("showImageHotel-hid" + _hotelId));
+            $('#galeryforHotel').collapse('show');
+        }
+        else{
+            $.ajax({
+                type: "GET",
+                url: "/HotelDetail/showImageHotel",
+                data:
+                {
+                    hotelId: _hotelId,
+                },
+                success: function (data) {
+                    $('#hotel-body').html(data);
+                    $('#galeryforHotel').collapse('show');
+                    sessionStorage.setItem("showImageHotel-hid" + _hotelId, data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                  //  alert("An error occured. Please try again!" + xhr);
+                }
+            })
+        }
+        
+    }
+
+    function showService(_IDRooms) {
+        $.ajax({
+            type: "GET",
+            url: "/HotelDetail/showAllServiceOnly",
+            data:
+            {
+                IDRooms: _IDRooms
+            },
+            success: function (data) {
+                $('#ModalService').html(data);
+                $('#modal_benefits').modal('show');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("An error occured. Please try again!");
+            }
+        })
+
+    }
+    const progressElement = document.querySelector(".autoplay-progress");
+    var mySwiper = new Swiper('.mySwiper5',
+        {
+            spaceBetween: 30,
+            speed: 1000,
+            navigation:
+            {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            autoplay:
+            {
+                delay: 3000,
+                disableOnInteraction: false
+            },
+            loop: true,
+            on: {
+                autoplayTimeLeft(s, time, progress) {
+                    progressElement.style.setProperty("--progress", (1 - progress) * 100 + '%');
+                }
+            }
+        });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('.collapse-gallery-grid').loadMoreResults({
+        //    tag: {
+        //        name: 'div',
+        //        'class': 'gallery-grid-expand'
+        //    },
+        //    displayedItems: 10,
+        //    showItems: 10,
+        //    button: {
+        //        'text': 'Xem thêm',
+        //        'class': 'loadmoreImage'
+        //    }
+        //});
+        checkUrlTitle();
+    })
+</script>

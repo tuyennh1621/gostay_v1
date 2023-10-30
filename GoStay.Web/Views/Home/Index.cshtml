@@ -1,0 +1,625 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using GoStay.Web.Master;
+@using GoStay.Web.Model
+@using GoStay.Web.ViewsModel
+@model HomeModels;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<section class="slider-area">
+    <div class="slider-text-parent">
+        <div class="slider-text text-center-slider">
+            <!-- Start slider Text -->
+            <div class="section-heading">
+                <div class="icon">
+                    <img data-src="assets/images/slider/click.svg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="#">
+                </div>
+                <h2 class="wow fadeInUp" data-wow-delay=".3s">@Localizer["One-touch booking of hotels in everywhere"]</h2>
+                <p class="wow fadeInUp" data-wow-delay=".1s">@Localizer["Find hotel great, home stays and more"]...</p>
+            </div>
+
+            <!-- End Slider Text -->
+        </div>
+    </div>
+    <div class="search-filter">
+        <div class="container-fluid pd-15">
+            <div class="cat-inner">
+                <div class="row search-filter1 align-items-center">
+                    <div class="col-12 p-0">
+                        <div class="tab-search">
+                            <button class="tablinks1 active" onclick="openSearch(event, 'Hotel')" id="defaultOpen"><i class="fa-solid fa-hotel"></i>@Localizer["Hotels"]</button>
+                            <button class="tablinks1" onclick="openSearch(event, 'Plane')"><i class="fa-solid fa-plane"></i>@Localizer["Flights ticket"]</button>
+                            <button class="tablinks1" onclick="openSearch(event, 'Tour')"><i class="fa-solid fa-route"></i>@Localizer["Tours"]</button>
+                        </div>
+                        <div id="Hotel" class="tabcontent2" style="display:block">
+                            <form asp-action="Index" asp-controller="Hotels" id="fromParaSearch" enctype="multipart/form-data" method="get">
+                                @await Html.PartialAsync("~/Views/Shared/_HotelSearchPatical.cshtml",new MainSearchModels{style=1, NumRoom=1,NumAdult=1,NumChildren=0})
+                            </form>
+                        </div>
+                        <div id="Plane" class="tabcontent2">
+                            <form asp-action="Index" asp-controller="Tickets" id="fromParaSearch" enctype="multipart/form-data" method="get">
+                                @await Html.PartialAsync("~/Views/Shared/_TicketSearchPartial.cshtml",new TicketSearchModels
+                                {
+                                IsHomePage = true,
+                                startPoints = new Dictionary<string, string>()
+                                {
+                                { "HAN", "Hà Nội (HAN)"},
+                                { "SGN", "TPHCM (SGN)"},
+                                { "DAD", "Đà Nẵng (DAD)"},
+                                { "VCS", "Bà Rịa Vũng Tàu (VCS)"},
+                                { "UIH", "Bình Định (UIH)"},
+                                { "CAH", "Cà Mau (CAH)"},
+                                { "VCA", "Cần Thơ (VCA)"},
+                                { "BMV", "Đắk Lăk (BMV)"},
+                                { "DIN", "Điện Biên (DIN)"},
+                                { "PXU", "Gia Lai (PXU)"},
+                                { "HPH", "Hải Phòng (HPH)"},
+                                { "HUI", "Huế (HUI)"},
+                                { "CXR", "Khánh Hòa (CXR)"},
+                                { "PQC", "Kiên Giang (PQC)"},
+                                { "VKG", "Kiên Giang (VKG)"},
+                                { "DLI", "Lâm Đồng (DLI)"},
+                                { "VII", "Nghệ An (VII)"},
+                                { "TBB", "Phú Yên (TBB)"},
+                                { "VDH", "Quảng Bình (VDH)"},
+                                { "VCL", "Quảng Nam (VCL)"},
+                                { "VDO", "Quảng Ninh (VDO)"},
+                                { "THD", "Thanh Hóa (THD)"},
+                                },
+                                endPoints = new Dictionary<string, string>()
+                                {
+                                { "SGN", "TPHCM (SGN)"},
+                                { "HAN", "Hà Nội (HAN)"},
+                                { "DAD", "Đà Nẵng (DAD)"},
+                                { "VCS", "Bà Rịa Vũng Tàu (VCS)"},
+                                { "UIH", "Bình Định (UIH)"},
+                                { "CAH", "Cà Mau (CAH)"},
+                                { "VCA", "Cần Thơ (VCA)"},
+                                { "BMV", "Đắk Lăk (BMV)"},
+                                { "DIN", "Điện Biên (DIN)"},
+                                { "PXU", "Gia Lai (PXU)"},
+                                { "HPH", "Hải Phòng (HPH)"},
+                                { "HUI", "Huế (HUI)"},
+                                { "CXR", "Khánh Hòa (CXR)"},
+                                { "PQC", "Kiên Giang (PQC)"},
+                                { "VKG", "Kiên Giang (VKG)"},
+                                { "DLI", "Lâm Đồng (DLI)"},
+                                { "VII", "Nghệ An (VII)"},
+                                { "TBB", "Phú Yên (TBB)"},
+                                { "VDH", "Quảng Bình (VDH)"},
+                                { "VCL", "Quảng Nam (VCL)"},
+                                { "VDO", "Quảng Ninh (VDO)"},
+                                { "THD", "Thanh Hóa (THD)"},
+                                }
+                                })
+                            </form>
+                        </div>
+                        <div id="Tour" class="tabcontent2">
+                            <form asp-action="Index" asp-controller="Tours" id="fromParaSearch" enctype="multipart/form-data" method="get">
+                                @await Html.PartialAsync("~/Views/Shared/_TourSearchPatical.cshtml",new MainSearchModels{style=1})
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid slider-background">
+    </div>
+</section>
+
+<section class="items-grid carousel1">
+    <div class="container">
+        <div class="row">
+            <div class="title-block1">
+                <div class="title-flash-sale">
+                    <h2><i class="fa-solid fa-fire"></i>@Localizer["Flash Sale"]</h2>
+                </div>
+                @*                <div id="countdown">
+                <ul>
+                <li class="count-down"><span id="days"></span>D</li>
+                <li class="text-12-primary">:</li>
+                <li class="count-down"><span id="hours"></span>H</li>
+                <li class="text-12-primary">:</li>
+                <li class="count-down"><span id="minutes"></span>M</li>
+                <li class="text-12-primary">:</li>
+                <li class="count-down"><span id="seconds"></span>S</li>
+                </ul>
+                </div>*@
+            </div>
+        </div>
+        <div id="main-carousel-topIndex" class="owl-carousel mt-30 mb-30">
+            @if (Model.ListTopSliderHotel == null)
+            {
+                return;
+            }
+            @foreach (var _item in Model.ListTopSliderHotel)
+            {
+                <div id="itemid_@_item.Id" class="item">
+                    <div class="single-grid">
+                        <div class="image">
+                            <div class="swiper mySwiper">
+                                <div class="swiper-wrapper">
+                                    @foreach (var img in _item.Pictures)
+                                    {
+                                        <div class="swiper-slide">
+                                            <a href="~/khach-san/@_item.Id/@_item.Slug" class="format-router">
+                                                <img title="@_item.HotelName" data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=600,height=600,quality=80/@img"
+                                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="
+                                                     alt="@_item.HotelName">
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="swiper-pagination swiper-pagination-custom"></div>
+                            </div>
+                            <div class="top-info">
+                                <div class="icon-hover">
+                                     <div class="heart">
+                                          <a href="#"><i class="fa-regular fa-heart"></i></a>
+                                     </div>
+                                </div>
+                                @if (@_item.Review_score > 0)
+                                {
+                                    <div class="label">
+                                        <ul class="label_review">
+                                            <li><a href="javascript:void(0)"><i class="fa-solid fa-umbrella"></i> @_item.Review_score</a></li>
+                                        </ul>
+                                        <ul class="text_review">
+                                            <li><a href="javascript:void(0)"> @AppConfigs.GetNameByPoint(@_item.Review_score)</a></li>
+                                        </ul>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                        <div class="content">
+                            <div class="top-content">
+                                <h3 class="title"><a href="~/khach-san/@_item.Id/@_item.Slug" class="format-router">@_item.HotelName </a></h3>
+                                <ul class="rating">
+                                    @for (int i = 0; i < _item.Rating; i++)
+                                    {
+                                        <li><i class="fa-solid fa-star"></i></li>
+                                    }
+                                </ul>
+                                <ul class="info-list">
+                                    <li><a href="javascript:void(0)"><i class="fa-solid fa-location-dot"></i>@_item.QuanHuyen - @_item.TinhThanh </a></li>
+                                </ul>
+                                <ul class="booking">
+                                    <li><a href="javascript:void(0)">@_item.LastOrderDate</a></li>
+                                </ul>
+                            </div>
+                            <div class="bottom-content">
+                                <p class="base_price"><span>@AppConfigs.FormatCurrency("VND", Math.Round(@_item.DailyBasePrice,0))</span></p>
+                                <p class="price"><span>@AppConfigs.FormatCurrency("VND", Math.Round(_item.ActualPrice,0))</span></p>
+                                <p href="javascript:void(0)" class="label_discount">- @_item.Discount %</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- End Carousel-->
+<!-- Start Banner Area -->
+<!-- Start Banner Area -->
+<section class="promotion-items wow fadeInUp" data-wow-delay=".2s">
+    <div class="container">
+        <div class="row">
+            <div class="title-block2">
+                <div class="title-block-2">
+                    <h2>@Localizer["Best promotion"]</h2>
+                    <p>@Localizer["Special promotion, discount and offer for you"]</p>
+                </div>
+                @*                <div class="btn-more">
+                <a href="#">@Localizer["See all"]<span><i class="fa-solid fa-arrow-right-long"></i></span></a>
+                </div>*@
+            </div>
+        </div>
+        <div id="main-carousel-promotionIndex" class="owl-carousel mt-30">
+            @foreach (var itemy in Model.BannerHomePage.BannerDetails.Where(x => x.ParentId == 2))
+            {
+                <div class="item">
+                    <div class="pr-image">
+                        <a title="@itemy.Description" href="@itemy.Link">
+                            <img alt="@itemy.Title" data-src="@itemy.Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!--/ End Fight Items Area -->
+<!-- Start Fight Items Area -->
+<section class="flight-items section wow fadeInUp" data-wow-delay=".2s">
+    <div class="container">
+        <div class="title-block2">
+            <div class="title-block-2">
+                <div class="title-block-flight">
+                    <h2>@Localizer["Cheapest flights from"]</h2>
+                    <div class="dropdown dropdown-custom">
+                        <span class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hà Nội</span>
+                        @*<ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Hà Nội</a></li>
+                        <li><a class="dropdown-item" href="#">TP Hồ Chí Minh</a></li>
+                        <li><a class="dropdown-item" href="#">Đà Nẵng</a></li>
+                        <li><a class="dropdown-item" href="#">Đà Lạt</a></li>
+                        <li><a class="dropdown-item" href="#">Quy Nhơn</a></li>
+                        <li><a class="dropdown-item" href="#">Nha Trang</a></li>
+                        <li><a class="dropdown-item" href="#">Phú Quốc</a></li>
+                        <li><a class="dropdown-item" href="#">Quảng Ninh</a></li>
+                        <li><a class="dropdown-item" href="#">Bà Rịa - Vũng Tàu</a></li>
+                        </ul>*@
+                    </div>
+                </div>
+                <p>@Localizer["The best priced flights in the month of departure From"] Hà Nội</p>
+            </div>
+            <div class="btn-more">
+                <a href="@Url.Action("Index", "Tickets", new { area = ""})">@Localizer["See now"]<span><i class="fa-solid fa-arrow-right-long"></i></span></a>
+            </div>
+        </div>
+        <div id="homepage-carousel-vemaybay" class="owl-carousel mt-30">
+        </div>
+    </div>
+</section>
+<!--/ End Fight Items Area -->
+<!-- Start Hotel Items Area -->
+<section class="items-grid section wow fadeInUp" data-wow-delay=".2s" id="showHotelsHomepage">
+    <div class="container">
+        <div class="row">
+            <div class="title-block">
+                <div class="title-block-tab">
+                    <a>@Localizer["Top hotels in Vietnam"]</a>
+                    <p>@Localizer["More 10000+ hotels, homestay, Resorts,.. cheapest everywhere in Vietnam"]</p>
+                </div>
+                <div class="tab-product">
+                    <button class="tablinks btntopHotel" data-tinhthanh="38" id="btntopchoicePQ">Phú Quốc</button>
+                    <button class="tablinks btntopHotel" data-tinhthanh="28" id="btntopchoiceDN">Đà Nẵng</button>
+                    <button class="tablinks btntopHotel" data-tinhthanh="62" id="btntopchoiceHA">Hội An</button>
+                    <button class="tablinks btntopHotel" data-tinhthanh="57" id="btntopchoiceNT">Nha Trang</button>
+                    <button class="tablinks btntopHotel" data-tinhthanh="39" id="btntopchoiceDL">Đà Lạt</button>
+                    <button class="tablinks btntopHotel" data-tinhthanh="58" id="btntopchoiceSP">Sa Pa</button>
+                    <button class="tablinks btntopHotel" data-tinhthanh="23" id="btntopchoiceHL">Hạ Long</button>
+                    <button class="tablinks btntopHotel" data-tinhthanh="6" id="btntopchoiceHCM">Hồ Chí Minh</button>
+                </div>
+            </div>
+            <div id="tabproduct">
+                @* @await Html.PartialAsync("~/Views/Home/GetHotelHomePage.cshtml", Model.ListHotelHomepage)*@
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /End Hotel Items Area -->
+<!-- Start goStay's Mall Area -->
+<section class="go-mall section wow fadeInUp" data-wow-delay=".2s">
+    <div class="container">
+        <div class="row">
+            <div class="title-block2">
+                <div class="title-block-2">
+                    <h2>goStay’s Mall</h2>
+                    <p>​@Localizer["​Let's start your journey to conquer the world with goStay"]</p>
+                </div>
+                <div class="btn-more">
+                    <a href="~/khach-san">@Localizer["See now"]<span><i class="fa-solid fa-arrow-right-long"></i></span></a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @{
+                var item = Model.BannerHomePage.BannerDetails.Where(x => x.ParentId == 3).ToArray();
+
+                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-4">
+                    <a title="@item[0].Description" href="@item[0].Link" class="cities-card mt-30">
+                        <div class="cities-card-image">
+                            <img alt="@item[0].Description" data-src="@item[0].Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                        </div>
+                        <div class="cities-card-content">
+                            <div class="brand">
+                                <img alt="" data-src="@item[0].Title" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                            </div>
+                        </div>
+                        <div class="cities-card-title">
+                            <h3 class="text-18-white cities-title">@item[0].Description</h3>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xxl-9 col-xl-9 col-lg-9 col-md-8">
+                    <div class="row pt-mb-30">
+                        <div class="col-xxl-4 col-xl-4 col-lg-4 col-6">
+                            <a title="@item[1].Description" href="@item[1].Link" class="cities-card1 mt-30">
+                                <div class="cities-card-image1">
+                                    <img alt="@item[1].Description" data-src="@item[1].Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                </div>
+                                <div class="cities-card-content">
+                                    <div class="brand">
+                                        <img alt="" data-src="@item[1].Title" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                    </div>
+                                </div>
+                                <div class="cities-card-title">
+                                    <h3 class="text-18-white cities-title">@item[1].Description</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-xxl-8 col-xl-8 col-lg-8 col-6">
+                            <a title="@item[2].Description" href="@item[2].Link" class="cities-card1 mt-30">
+                                <div class="cities-card-image1">
+                                    <img alt="@item[2].Description" data-src="@item[2].Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                </div>
+                                <div class="cities-card-content">
+                                    <div class="brand">
+                                        <img alt="" data-src="@item[2].Title" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                    </div>
+                                </div>
+                                <div class="cities-card-title">
+                                    <h3 class="text-18-white cities-title">@item[2].Description</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row pt-mb-30">
+                        <div class="col-xxl-4 col-xl-4 col-lg-4 col-6">
+                            <a title="@item[3].Description" href="@item[3].Link" class="cities-card1 mt-30">
+                                <div class="cities-card-image1">
+                                    <img alt="@item[3].Description" data-src="@item[3].Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                </div>
+                                <div class="cities-card-content">
+                                    <div class="brand">
+                                        <img alt="" data-src="@item[3].Title" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                    </div>
+                                </div>
+                                <div class="cities-card-title">
+                                    <h3 class="text-18-white cities-title">@item[3].Description</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-xxl-8 col-xl-8 col-lg-8 col-6">
+                            <a title="@item[4].Description" href="@item[4].Link" class="cities-card1 mt-30">
+                                <div class="cities-card-image1">
+                                    <img alt="@item[4].Description" data-src="@item[4].Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                </div>
+
+                                <div class="cities-card-content">
+                                    <div class="brand">
+                                        <img alt="" data-src="@item[4].Title" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                    </div>
+                                </div>
+                                <div class="cities-card-title">
+                                    <h3 class="text-18-white cities-title">@item[4].Description</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+<!--/ End goStay's Mall Area -->
+<!-- Start Tours Area -->
+<section class="items-grid section wow fadeInUp" data-wow-delay=".2s">
+    <div class="container">
+        <div class="row">
+            <div class="title-block">
+                <div class="title-block-tab">
+                    <a>@Localizer["Top Tours"]</a>
+                    <p>@Localizer["More 10000+ hotels, homestay, Resorts,.. cheapest everywhere in Vietnam"]</p>
+                </div>
+                <div class="tab-product">
+                    <button class="tablinks btntopTours" data-toursstyle="1" id="btntopTours1">6 @Localizer["Days"] 5 @Localizer["Nights"]</button>
+                    <button class="tablinks btntopTours" data-toursstyle="2" id="btntopTours2">5 @Localizer["Days"] 4 @Localizer["Nights"]</button>
+                    <button class="tablinks btntopTours" data-toursstyle="3" id="btntopTours3">4 @Localizer["Days"] 3 @Localizer["Nights"]</button>
+                    <button class="tablinks btntopTours" data-toursstyle="4" id="btntopTours4">3 @Localizer["Days"] 2 @Localizer["Nights"]</button>
+                    <button class="tablinks btntopTours" data-toursstyle="5" id="btntopTours5">2 @Localizer["Days"] 1 @Localizer["Nights"]</button>
+                    <button class="tablinks btntopTours" data-toursstyle="6" id="btntopTours6">1 @Localizer["Days"] 1 @Localizer["Nights"]</button>
+                </div>
+            </div>
+            <div id="tabproduct2">
+                @*@await Html.PartialAsync("~/Views/Home/GetTourHomePage.cshtml", Model.ListTourHomepage)*@
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /End Tour Area -->
+<!-- Start Location Area -->
+<section class="location-items section wow fadeInUp" data-wow-delay=".2s">
+    <div class="container">
+        <div class="title-block2">
+            <div class="title-block-2">
+                <h2>@Localizer["Favourite destinations for travelers"]</h2>
+                <p>​@Localizer["​Let's start your journey to conquer the world with goStay"]</p>
+            </div>
+            <div class="btn-more">
+                <a href="~/khach-san">@Localizer["See now"]<span><i class="fa-solid fa-arrow-right-long"></i></span></a>
+            </div>
+        </div>
+        <div id="main-carousel-locationIndex" class="owl-carousel mt-30">
+            @foreach (var itemz in Model.BannerHomePage.BannerDetails.Where(x => x.ParentId == 4))
+            {
+                <div class="item">
+                    <div class="col">
+                        <!-- Start Single Grid -->
+                        <div class="location-img">
+                            <a title="@itemz.Title" href="@itemz.Link"><img alt="@itemz.Title" data-src="@itemz.Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII="></a>
+                        </div>
+                        <div class="location-title text-center">
+                            <a title="@itemz.Title" href="@itemz.Link">@itemz.Title</a>
+                            @*<p>78,510 @Localizer["passengers"]</p>*@
+                        </div>
+                        <!-- End Single Grid -->
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+<!--/ End Location Area -->
+<!--/ Start Blog Items -->
+<section class="blog-items section wow fadeInUp" data-wow-delay=".2s">
+
+    <div class="container">
+        <div class="row">
+            <div class="title-block2">
+                <div class="title-block-2">
+                    <h2>@Localizer["Latest news"]</h2>
+                    <p>@Localizer["Special promotion, discount and offer for you"]</p>
+                </div>
+                <div class="btn-more">
+                    <a href="~/tin-tuc">@Localizer["See all"]<span><i class="fa-solid fa-arrow-right-long"></i></span></a>
+                </div>
+            </div>
+        </div>
+        <div class="single-head">
+            <div class="row">
+                @for (int i = 0; (Model.ListTopNews.Count > 0) && (i < 3); i++)
+                {
+                    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 mt-30 pt-mb-30">
+                        <!-- Start Single Grid -->
+                        <div class="single-grid">
+                            <div class="blog-image">
+                                <a href="/tin-tuc/@Model.ListTopNews[i].Id/@Model.ListTopNews[i].Slug" title="@Model.ListTopNews[i].Title" class="format-router"><img data-src="https://cdn.realtech.com.vn/cdn-cgi/image/fit=cover,width=800,height=600,quality=80/@Model.ListTopNews[i].PictureTitle" src="@Model.ListTopNews[i].PictureTitle" alt="@Model.ListTopNews[i].Title"></a>
+                            </div>
+                            <div class="blog-info">
+                                <a href="/tin-tuc/@Model.ListTopNews[i].Id/@Model.ListTopNews[i].Slug" title="@Model.ListTopNews[i].Title" class="format-router">@Model.ListTopNews[i].Title</a>
+                                <p><i class="fa-regular fa-clock"></i>@Model.ListTopNews[i].DateCreate.ToString("dd'/'MM'/'yyyy") - @Model.ListTopNews[i].UserName</p>
+                            </div>
+                        </div>
+                        <!-- End Single Grid -->
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ End Blog Items Area -->
+
+<div id="video-index">
+    <div class="video-box2 mb-60">
+        <div class="container">
+            <div class="d-flex align-items-center hot-trend mb-20">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <h2>
+                    <a title="Chuyên trang Video của Gostay" href="/video">@Localizer["Videos"]</a>
+                </h2>
+            </div>
+            <div class="video-box-grid">
+                <div class="row">
+                    @if (Model.video != null && Model.video.Count > 0)
+                    {
+                        var num0 = ConvertData.ConvertNumberClick(Model.video[0].Click);
+                        
+                        
+                        <div class="col-xxl-7 col-xl-7 col-12">
+                            <div class="p-0">
+                                <a class="w-100" href="/video/@Model.video[0].Id/@Model.video[0].Slug" title="@Model.video[0].Slug">
+                                    <div class="main-video-index">
+                                        <img src="@Model.video[0].PictureTitle" alt="@Model.video[0].Slug">
+                                        <div class="video">
+                                            <i class="fa-solid fa-play"></i>
+                                        </div>
+                                        <div class="breaking-info mt-10">
+                                            <div class="bk-cat3 mb-10">
+                                                @Model.video[0].Category
+                                            </div>
+                                            <h5>
+                                                @if (Model.video[0].Title != null)
+                                                {
+                                                    @Model.video[0].Title
+                                                }
+                                                else
+                                                {
+                                                    @Model.video[0].Name
+                                                }
+                                            </h5>
+                                        </div>
+                                        <div class="relate-video-date text-12 d-flex gap-10 align-items-center mt-1">
+                                            @num0 | @Localizer["views"]
+                                            <div class="">
+                                                <i class="fa-regular fa-clock"></i>
+                                                @Model.video[0].DateCreate
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xxl-5 col-xl-5 col-12">
+                            <div class="video-grid-index">
+                                @for (var i = 1; (i < Model.video.Count) && (i < 5); i++)
+                                {
+                                    var num = ConvertData.ConvertNumberClick(Model.video[i].Click);
+                                    <div class="p-0">
+                                        <a class="w-100" href="/video/@Model.video[i].Id/@Model.video[i].Slug" title="@Model.video[i].Slug">
+                                            <div class="main-video4">
+                                                <img src="@Model.video[i].PictureTitle" alt="@Model.video[i].Slug">
+                                                <div class="video">
+                                                    <i class="fa-solid fa-play"></i>
+                                                </div>
+                                                <div class="breaking-info mt-10">
+                                                    <div class="bk-cat3 mb-10">
+                                                        @Model.video[i].Category
+                                                    </div>
+                                                    <h5>
+                                                        @if (Model.video[i].Title != null)
+                                                        {
+                                                            @Model.video[i].Title
+                                                        }
+                                                        else
+                                                        {
+                                                            @Model.video[i].Name
+                                                        }
+                                                    </h5>
+                                                </div>
+                                                <div class="relate-video-date text-12 d-flex gap-10 align-items-center mt-1">
+                                                    @num | @Localizer["views"]
+                                                    <div class="">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        @Model.video[i].DateCreate
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="compare-tour" tabindex="-1" aria-labelledby="compare-tour" aria-hidden="true"></div>
+    
+<!-- Start Newsletter Area -->
+@await Html.PartialAsync("~/Views/Shared/_emailPartial.cshtml")
+<script>
+        function SubmitCompare(Id) {
+        var Url = '@Url.Action("CompareTours","Home")';
+        $.ajax({
+            type: "GET",
+            url: Url,
+            data: { IdTour: Id },
+            // datatype: "json",
+            cache: false,
+            async: false,
+            success: function (data) {
+                $('#compare-tour').html(data);
+                $('#compare-tour').modal('show');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        })
+    }
+</script>

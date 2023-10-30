@@ -1,0 +1,105 @@
+﻿@using DAL.Entities;
+@using GoStay.DataAccess.Entities
+@model PictureDto
+
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel">Add Pictures</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+</div>
+@using (Html.BeginForm("AddPicture", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "from_addpictureHotel", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <input type="hidden" id="Type_upload" name="Type" />
+        <input type="hidden" value="@Model.IdType" id="Id_Hotel" name="IdType" />
+        <div class="overwrite-class col-12 form-group">
+            <label for="inputFileIMG">Img<small class="text-danger">*</small></label>
+            <input type="file" multiple="multiple" id="inputFileIMG" name="Img" class="sm-form-control border-form-control">
+        </div>
+
+        <div class="overwrite-class col-12 form-group">
+            <label for="Name">Tên<small class="text-danger">*</small></label>
+            <input value="Image Title" type="text" tabindex="1" id="Name" name="Name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+        </div>
+
+        <div class="overwrite-class col-12 form-group">
+            <label for="Type">Ảnh của Khách sạn<small class="text-danger">*</small></label>
+        </div>
+        <div class="overwrite-class col-12 form-group">
+            <label for="Description">Mô tả<small class="text-danger">*</small></label>
+            <input type="text" tabindex="1" id="Description" name="Description" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+        </div>
+        <div class="overwrite-class col-12 form-group">
+            <label for="width">Độ rộng mong muốn<small class="text-danger">*</small></label>
+            <input value="1024" type="text" tabindex="1" id="width" name="width" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+        </div>
+
+        <div class="overwrite-class col-12 form-group">
+            <label for="Id Album ">Chọn Album <small class="text-danger">*</small></label>
+            <label for="Album">Tạo Album Mới<small class="text-danger">*</small></label>
+        </div>
+
+        <div class="overwrite-class col-12 form-group">
+            <select class="box-on-stock-option-region headerLeft_select form-select sm-form-control" autocomplete="off" id="IdAlbum" name="IdAlbum">
+                @{
+                    if (ViewBag.listAlbum == null)
+                        return;
+                    <option></option>
+                    foreach (var album in ViewBag.listAlbum as List<Album>)
+                    {
+                        <option value="@album.Id">@album.Name</option>
+                    }
+                }
+            </select>
+
+            <input type="text" tabindex="1" id="newAlbum" name="newAlbum" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+        <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+        <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+
+    </div>
+
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover  mb-0">
+        <thead>
+            <tr>
+
+                <th>ID</th>
+                <th>Pictures</th>
+                <th>Album</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (ViewBag.listPicture == null)
+                    return;
+                if (ViewBag.listPicture.Data.Items.Count > 0)
+                {
+                    foreach (var item in ViewBag.listPicture.Data.Items)
+                    {
+                        <tr id="trpic_@item.Id">
+                            <td>@item.Id</td>
+                            <td><img src="@item.UrlOut" style="width:100px;" /></td>
+                            <td>@item.IdAlbumNavigation?.Name</td>
+                            <td>
+                                <div class="justify-content-center">
+                                    <a class="dropdown-item" href="#!" onclick="DeletePicture('@item.Id');"><span class="icon-line-delete"></span> Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Users\**" />
+	  <EmbeddedResource Remove="Users\**" />
+	  <None Remove="Users\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="12.0.0" />
+		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+		<PackageReference Include="Microsoft.FeatureManagement" Version="2.5.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\GoStay.Common\GoStay.Common.csproj" />
+		<ProjectReference Include="..\GoStay.DataAccess\GoStay.DataAccess.csproj" />
+		<ProjectReference Include="..\GoStay.DataDto\GoStay.DataDto.csproj" />
+		<ProjectReference Include="..\GoStay.Repository\GoStay.Repository.csproj" />
+	</ItemGroup>
+
+</Project>

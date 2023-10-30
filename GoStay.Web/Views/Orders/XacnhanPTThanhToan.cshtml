@@ -1,0 +1,451 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.DataDto.OrderDto
+@using GoStay.Web.Model
+@using GoStay.Common.Configuration;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model OrderGetInfoDto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["TitlePage"] = "Xác nhận đặt phòng: " + Model.Title;
+
+}
+@if (Model.Style == 2)
+{
+
+    @await Html.PartialAsync("~/Views/Shared/_statusTourbooking.cshtml",Model.Status)
+}
+else
+{
+    @await Html.PartialAsync("~/Views/Shared/_statusHotelbooking.cshtml",Model.Status)
+}
+
+@if(Model.Style==2)
+{
+    <form method="post" id="signupForm" action="/Orders/PaymentMethodForTour">
+        <section class="hotel-booking-payment">
+            <div class="container">
+                <div class="row">
+                    @if (Model.IsLogined)
+                    {
+                        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-6 col-12">
+                            <div class="booking-user-info">
+                                <h3 class="text-16-b">@Localizer["Infomation"]</h3>
+                                <input class="form-check-input" hidden type="number" name="orderId" value="@Model.Id">
+                                <div class="form">
+                                    <div class="form-login">
+                                        <div class="row">
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input asp-for="UserName" class="form-control form-control-custom fullname"
+                                                   type="text" placeholder="@AppConfigs.pls("Họ tên")"
+                                                           data-val-required="@AppConfigs.pls("Họ tên")"
+                                                           data-rule-required="true"
+                                                           data-msg-required="@Localizer["Fullname"] @Localizer["is required"]">
+                                                    <label for="UserName">@Localizer["Fullname"] (*)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input asp-for="Mobile" class="form-control form-control-custom" type="text"
+                                                           placeholder="@AppConfigs.pls("số điện thoại")"
+                                                           data-val-required="@AppConfigs.pls("số điện thoại")"
+                                                           data-msg-required="@Localizer["Phone number"] @Localizer["is required"]"
+                                                           data-msg-number="@Localizer["Phone number"] @Localizer["is incorrect"]">
+                                                    <label for="Mobile">@Localizer["Phone"] (*)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input class="form-control form-control-custom set-email-order"
+                                                   type="text" placeholder="@AppConfigs.pls("Email")" asp-for="Email"
+                                                           data-msg-required="@Localizer["Email"] @Localizer["is required"]"
+                                                           data-msg-email="@Localizer["Email"] @Localizer["is incorrect"]">
+                                                    <label for="Email">@Localizer["Email"]</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input asp-for="Address" class="form-control form-control-custom" type="text" placeholder="@AppConfigs.pls("địa chỉ")">
+                                                    <label for="Address">@Localizer["Address"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-6 col-12">
+                        <div class="booking-payment-parent pd-30">
+                            <div class="d-flex align-items-center gap-10 justify-between">
+                                <h3 class="text-18 ">@Localizer["Select a payment method"]</h3>
+                                <div>
+                                    <select class="form-select" name="typePayment" id="typePaymentGroup" onchange="showGroupPayment()">
+                                        <option value="7">Thanh toán toàn bộ</option>
+                                        <option value="8">Đặt cọc (10%) </option>
+                                        <option value="4">Thanh toán khi khi nhận tour</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="line-horizontal"></div>
+                            @*<div class="payment-desc">
+                        <div class="text-14-gray desc-top"></div>
+                        <div class="text-14-gray"></div>
+                        </div>
+                        <hr>*@
+                            <div class="form mt-30">
+                                <div class="container">
+                                    <ul class="row">
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="momopay" value="1" data-typepay="1">
+                                                <label class="form-check-label" for="momopay">
+                                                    <div class="pay-icon">
+                                                        <img src="/assets/images/payment/momo.jpg">
+                                                        <div class="text-14">
+                                                            MoMo
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="flexRadioDisabledVNPAY" value="5" data-typepay="1">
+                                                <label class="form-check-label" for="flexRadioDisabledVNPAY">
+                                                    <div class="pay-icon zalopay">
+                                                        <img src="/assets/images/payment/zalopay.jpg">
+                                                        <div class="text-14">
+                                                            VNPay
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="flexRadioDisabledAppota" value="8" data-typepay="1">
+                                                <label class="form-check-label" for="flexRadioDisabledAppota">
+                                                    <div class="pay-icon cktt">
+                                                        <img src="/assets/images/payment/cktt.jpg">
+                                                        <div class="text-14">
+                                                            Ví tổng hợp Appotapay
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        @* <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadio" id="flexRadioDefault2" value="3" data-typepay="2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                    <div class="pay-icon cktt">
+                                    <img src="/assets/images/payment/cktt.jpg">
+                                    <div class="text-14">
+                                    @Localizer["Direct transfer"]
+                                    </div>
+                                    </div>
+                                    </label>
+                                    </div>
+                                    </li>*@
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="codpay" value="4" data-typepay="4">
+                                                <label class="form-check-label">
+                                                    <div class="pay-icon cod">
+                                                        <img src="/assets/images/payment/cod.jpg">
+                                                        <div class="text-14">
+                                                            @Localizer["Payment upon check-in"]
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-confirm">
+
+                        @if (!Model.IsLogined)
+                        {
+                            <a data-bs-toggle="modal" data-bs-target="#loginform" title="Đăng nhập" class="btn-login-form btn-submit mt-20">
+                                @Localizer["Booking"] <i class="fa-solid fa-circle-user pl-10"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button onclick="setPaymentMethod()" title="Xác nhận đặt tour và hoàn tất." class="btn-login-form btn-submit mt-20" type="submit">
+                                @Localizer["Booking"]<i class="fa-solid fa-check pl-10"></i>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+}
+else
+{
+    <form method="post" id="signupForm" action="/Orders/PaymentMethodForHotel">
+        <section class="hotel-booking-payment">
+            <div class="container">
+                <div class="row">
+                    @if (Model.IsLogined)
+                    {
+                        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-6 col-12">
+                            <div class="booking-user-info">
+                                <h3 class="text-16-b">@Localizer["Infomation"]</h3>
+                                <div class="form">
+                                    <input class="form-check-input" hidden type="number" name="orderId" value="@Model.Id">
+                                    <div class="form-login">
+                                        <div class="row">
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input asp-for="UserName" class="form-control form-control-custom fullname"
+                                                   type="text" placeholder="@AppConfigs.pls("Họ tên")"
+                                                           data-val-required="@AppConfigs.pls("Họ tên")"
+                                                           data-rule-required="true"
+                                                           data-msg-required="@Localizer["Fullname"] @Localizer["is required"]">
+                                                    <label for="UserName">@Localizer["Fullname"] (*)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input asp-for="Mobile" class="form-control form-control-custom" type="text"
+                                                           placeholder="@AppConfigs.pls("số điện thoại")"
+                                                           data-val-required="@AppConfigs.pls("số điện thoại")"
+                                                           data-msg-required="@Localizer["Phone number"] @Localizer["is required"]"
+                                                           data-msg-number="@Localizer["Phone number"] @Localizer["is incorrect"]">
+                                                    <label for="Mobile">@Localizer["Phone"] (*)</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input asp-for="Email" class="form-control form-control-custom set-email-order"
+                                                   type="text" placeholder="@AppConfigs.pls("Email")"
+                                                           data-msg-required="@Localizer["Email"] @Localizer["is required"]"
+                                                           data-msg-email="@Localizer["Email"] @Localizer["is incorrect"]">
+                                                    <label for="Email">@Localizer["Email"]</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-6 col-12">
+                                                <div class="form-floating">
+                                                    <input asp-for="Address" class="form-control form-control-custom" type="text" placeholder="@AppConfigs.pls("địa chỉ")">
+                                                    <label for="Address">@Localizer["Address"]</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-6 col-12">
+                        <div class="booking-payment-parent pd-30">
+                            <div class="d-flex align-items-center gap-10 justify-between">
+                                <h3 class="text-18 ">@Localizer["Select a payment method"]</h3>
+                                <div>
+                                    <select class="form-select" aria-label="Default select example" name="typePayment" id="typePaymentGroup" onchange="showGroupPayment()">
+                                        <option value="7">Thanh toán toàn bộ</option>
+                                        <option value="8">Đặt cọc (10%) </option>
+                                        <option value="4">Thanh toán khi khi nhận phòng</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="line-horizontal"></div>
+                            @*<div class="payment-desc">
+                        <div class="text-14-gray desc-top"></div>
+                        <div class="text-14-gray"></div>
+                        </div>
+                        <hr>*@
+                            <div class="form mt-30">
+                                <div class="container">
+                                    <ul class="row">
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="momopay" value="1" data-typepay="1">
+                                                <label class="form-check-label" for="momopay">
+                                                    <div class="pay-icon">
+                                                        <img src="/assets/images/payment/momo.jpg">
+                                                        <div class="text-14">
+                                                            MoMo
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="flexRadioDisabledVNPAY" value="5" data-typepay="1">
+                                                <label class="form-check-label" for="flexRadioDisabledVNPAY">
+                                                    <div class="pay-icon zalopay">
+                                                        <a href="~/home/PaymentGuide" title="hướng dẫn thanh toán"><img src="/assets/images/payment/zalopay.jpg"></a>
+                                                        <div class="text-14">
+                                                            VNPay
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="flexRadioDisabledAppota" value="8" data-typepay="1">
+                                                <label class="form-check-label" for="flexRadioDisabledAppota">
+                                                    <div class="pay-icon cktt">
+                                                        <img src="/assets/images/payment/cktt.jpg">
+                                                        <div class="text-14">
+                                                            Ví tổng hợp Appotapay
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        @* <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadio" id="flexRadioDefault2" value="3" data-typepay="2">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                    <div class="pay-icon cktt">
+                                    <img src="/assets/images/payment/cktt.jpg">
+                                    <div class="text-14">
+                                    @Localizer["Direct transfer"]
+                                    </div>
+                                    </div>
+                                    </label>
+                                    </div>
+                                    </li>*@
+                                        <li class="col-xxl-6 col-12 pt-10 pb-10 ratio-">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="flexRadio" id="codpay" value="4" data-typepay="4">
+                                                <label class="form-check-label">
+                                                    <div class="pay-icon cod">
+                                                        <img src="/assets/images/payment/cod.jpg">
+                                                        <div class="text-14">
+                                                            @Localizer["Payment upon check-in"]
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-confirm">
+
+                        @if (!Model.IsLogined)
+                        {
+                            <a data-bs-toggle="modal" data-bs-target="#loginform" title="Đăng nhập" class="btn-login-form btn-submit mt-20">
+                                @Localizer["Booking"] <i class="fa-solid fa-circle-user pl-10"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <button onclick="setPaymentMethod()" title="Xác nhận đặt phòng và hoàn tất." class="btn-login-form btn-submit mt-20" type="submit">
+                                @Localizer["Booking"]<i class="fa-solid fa-check pl-10"></i>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
+</script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>*@
+@section scripts{
+    <script>
+        $(document).ready(function(){
+            
+            $('input[name="flexRadio"]').click(function(){
+                $('input[name="flexRadio"]').each(function (){
+                    $(this).parents("li.ratio-").removeClass("ratio-active");
+                })
+                $(this).parents("li.ratio-").addClass("ratio-active");
+            })
+            var initMet = localStorage.getItem("method");
+            var initGrMet = localStorage.getItem("groupMethod");
+            if (initGrMet == null || initMet == null || initGrMet == 1 || initGrMet == 2) {
+                localStorage.setItem("groupMethod", 7);
+                localStorage.setItem("method", 1);
+            }
+            
+            setPaymentMethodDefault();
+            if ($('#typePaymentGroup').val() != 4) {
+                $('#codpay').attr("disabled", "disabled");
+            }else{
+                $('#flexRadioDisabledVNPAY').attr("disabled", "disabled");
+                $('#momopay').attr("disabled", "disabled");
+                $('#flexRadioDisabledAppota').attr("disabled", "disabled");
+                $('#codpay').click();
+            }
+        });
+        var header = {
+            "typ": "JWT",
+            "alg": "HS256",
+            "cty":"appotapay-api;v=1"
+        }
+        var data = {
+            "iss":"APPOTAPAY",
+            "jti": "FJcmF8uj2ISveL5FvvNk4pnp8xrhINz-1685508384",
+            "api_key":"FJcmF8uj2ISveL5FvvNk4pnp8xrhINz8" ,
+            "exp": 1685508384 
+        };
+        function base64url(source) {
+            // Encode in classical base64
+            encodedSource = CryptoJS.enc.Base64.stringify(source);
+
+            // Remove padding equal characters
+            encodedSource = encodedSource.replace(/=+$/, '');
+
+            // Replace characters according to base64url specifications
+            encodedSource = encodedSource.replace(/\+/g, '-');
+            encodedSource = encodedSource.replace(/\//g, '_');
+
+            return encodedSource;
+        }
+
+        function addIAT(request) {
+            debugger;
+            var iat = Math.floor(Date.now() / 1000) + 257;
+            data.exp = iat;
+            return data;
+        }
+
+        function run(){
+            debugger;
+            
+
+            //data = addIAT(data);
+
+            var secret = 'XAonJgy14YhtePEITXhyBS2unjfJLAV3';
+
+            // encode header
+            var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));
+            var encodedHeader = base64url(stringifiedHeader);
+
+            // encode data
+            var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
+            var encodedData = base64url(stringifiedData);
+
+            // build token
+            var token = encodedHeader + "." + encodedData;
+
+            // sign token
+            var signature = CryptoJS.HmacSHA256(token, secret);
+            signature = base64url(signature);
+            var signedToken = token + "." + signature;
+
+            postman.setEnvironmentVariable("payload", signedToken);
+        }
+
+       
+    </script>
+}

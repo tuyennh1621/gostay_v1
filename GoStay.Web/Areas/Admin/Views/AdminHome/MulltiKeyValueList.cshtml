@@ -1,0 +1,37 @@
+﻿@using DAL
+@using DAL.Entities
+
+@using DAL.Helpers.PageHelpers
+@using GoStay.Service
+@using goStayCore.CommonCode
+@model BasicDataModels
+
+@{
+    ViewData["Title"] = "Multivalues List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<table class="table table-bordered table-hover mb-0">
+    <thead>
+        <tr>
+
+            <th>ID</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model.MulltiKeyValue_list.Count() > 0)
+            {
+                foreach (var item in Model.MulltiKeyValue_list)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Title</td>
+                    </tr>
+                }
+
+            }
+        }
+
+    </tbody>
+</table>

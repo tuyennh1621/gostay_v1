@@ -1,0 +1,417 @@
+﻿@using GoStay.DataAccess.Entities;
+@{
+    ViewData["Title"] = "Video List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var videoUpload = ViewBag.ListVideoUploaded.Data;
+    //var videoUpload = ViewBag.ListVideoUploaded.Data.Where(item => item.Video != null);
+}
+
+<head>
+
+</head>
+@await Html.PartialAsync("~/Areas/Admin/Views/Shared/_PageSlider.cshtml", new DAL.Entities.GeneralData { PageTitle = "CREATE VIDEO NEWS " })
+<!-- #page-title end -->
+<style>
+
+    .btn-select-video {
+        width: 100%;
+        border: 1px solid #fff;
+        background-image: linear-gradient(to right, #3B4371, #F3904F) !important;
+    }
+
+    .append-video, .append-picture {
+        height: 200px;
+    }
+
+        .append-video video, .append-picture img {
+            height: 150px;
+            max-height: 150px;
+            width: 100%;
+        }
+
+    .action-col-table button:first-child {
+        background: #1ac3c6;
+        border: none;
+        color: #fff;
+    }
+
+    .action-col-table button:last-child {
+        background: #dc3545;
+        border: none;
+        color: #fff;
+    }
+</style>
+<link rel="stylesheet" href="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.css" />
+
+<section id="content">
+
+    <div class="content-wrap pb-0">
+
+        <div class="container clearfix">
+
+            <div class="row gutter-40 col-mb-80">
+
+
+                <div class="special-div-less-margin">
+                    <div>
+                        <button class="button button-3d button-rounded gradient-grey-orange  float-right" data-toggle="modal" data-target="#myPictureTitleModal"><i class="icon-plus"></i> Add Video</button>
+                    </div>
+                </div>
+                <div class="postcontent col-lg-12" id="MainDataSection">
+                    @*@await Html.PartialAsync("~/Areas/Admin/Views/NewsHome/NewsListPartial.cshtml", Model)*@
+                </div><!-- .postcontent end -->
+            </div>
+        </div>
+    </div>
+</section><!-- #content end -->
+
+<div class="modal fade" id="myPictureTitleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Picture Tile</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <form enctype="multipart/form-data" id="post-video">
+                </form>
+                @using (Html.BeginForm("AddVideoNews", "VideosHome", FormMethod.Post, new { area = "Admin", @id = "from_addpictureHotel", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-body">
+                        <input type="hidden" id="id_news" name="Id" />
+
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="inputFileIMG">Name<small class="text-danger">*</small></label>
+                            <input type="text" id="titleVideo" name="titleVideo" class="sm-form-control border-form-control" required>
+                        </div>
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="inputFileIMG">Video<small class="text-danger">*</small></label>
+                            <input type="file" id="uploadVideo" name="uploadVideo" class="sm-form-control border-form-control">
+                        </div>
+                        <div class="overwrite-class col-12 form-group">
+                            <label for="inputFileIMG">Img<small class="text-danger">*</small></label>
+                            <input type="file" id="uploadImg" name="uploadImg" class="sm-form-control border-form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+                        <button type="button" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean" onclick="precheckSubmit()"><i class="icon-save"></i> Save</button>
+                        <button type="submit" id="btn-sumbit-form-ad" hidden tabindex="7" class="button btn-sm button-3d button-rounded gradient-ocean" onclick=""><i class="icon-save"></i> Save</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="card">
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Thêm mới bài viết chứa video
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        @using (Html.BeginForm("CreateNews", "VideosHome", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data", @class = "row" }))
+                        {
+                            <div class="col-12 col-lg-3">
+
+
+                                <div class="append-video">
+                                    <video id="background-video" loop muted controls poster="https://torshizitrade.com/wp-content/uploads/2019/01/no-video.jpg">
+                                        <source src="#" type="video/mp4">
+                                    </video>
+                                </div>
+                                <div class="">
+
+                                    <a href="#" style="margin-left: 27px; margin-bottom:10px;" type="button" class="btn btn-danger rounded-0" data-toggle="modal" data-target="#UploadVideo" onclick="showInputVideo('file')">
+                                        <i class="fa fa-plus-circle"></i> Chọn video có sẵn
+                                    </a>
+                                    <a href="#" style="margin-left: 27px; margin-bottom:10px;" type="button" class="btn btn-primary rounded-0" onclick="showInputVideo('link')">
+                                        <i class="fa fa-plus-circle"></i> Sử dụng link link
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-3">
+
+                                <div class="append-picture">
+                                    <img src="https://cdn11.bigcommerce.com/s-1812kprzl2/images/stencil/original/products/426/5082/no-image__12882.1665668288.jpg?c=2">
+                                </div>
+                                <div class="">
+
+                                    <a href="#" style="margin-left: 27px; margin-bottom:10px;" type="button" class="btn btn-danger rounded-0" data-toggle="modal" data-target="#UploadPicture" onclick="showInputPicture('file')">
+                                        <i class="fa fa-plus-circle"></i> Chọn ảnh có sẵn
+                                    </a>
+                                    <a href="#" style="margin-left: 27px; margin-bottom:10px;" type="button" class="btn btn-primary rounded-0" onclick="showInputPicture('link')">
+                                        <i class="fa fa-plus-circle"></i> Sử dụng link link
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="row">
+                                    <div class="overwrite-class col-12 form-group" id="use-link-video" style="display: none">
+                                        <label for="Title">Link<small class="text-danger">*</small></label>
+                                        <input type="text" id="Video" name="Video" class="sm-form-control border-form-control" value="" placeholder="Sử dụng đường dẫn video tuyệt đối">
+                                    </div>
+                                    <div class="overwrite-class col-12 form-group" id="use-link-img" style="display: none">
+                                        <label for="Title">Link<small class="text-danger">*</small></label>
+                                        <input type="text" id="PictureTitle" name="PictureTitle" class="sm-form-control border-form-control" value="" placeholder="Sử dụng đường dẫn ảnh tuyệt đối">
+                                    </div>
+                                    <div class="overwrite-class col-12 form-group">
+                                        <label for="Title">Title<small class="text-danger">*</small></label>
+                                        <input type="text" id="Title" name="Title" class="sm-form-control border-form-control" required>
+                                    </div>
+                                    <div class="overwrite-class col-12 form-group">
+                                        <label for="category">Loại tin tức</label>
+                                        <select class="box-on-stock-option-region headerLeft_select custom-select" id="IdCategory" name="IdCategory">
+                                            @foreach (var category in ViewBag.Categories as IQueryable<NewsCategory>)
+                                            {
+                                                <option value="@category.Id">@category.Category</option>
+                                            }
+
+                                        </select>
+                                    </div>
+                                    <div class="overwrite-class col-12 form-group">
+                                        <label for="category">Ngôn ngữ</label>
+                                        <select class="box-on-stock-option-region headerLeft_select custom-select" id="LangId" name="LangId">
+                                            @foreach (var language in ViewBag.Languages as IQueryable<Language>)
+                                            {
+                                                <option value="@language.Id">@language.Language1</option>
+
+                                            }
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                    <textarea rows="50" id="Descriptions" name="Descriptions" class="ckeditor"></textarea>
+
+                                    <div class="overwrite-class col-12 form-group" style="display: flex;justify-content: right;">
+                                    <button type="submit" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean" onclick="showSearchLoader()"><i class="icon-save"></i> Save</button>
+                                    </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        
+            <div class="modal fade" id="UploadVideo">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Upload New video File</h4>
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Choose File:</label>
+                                <div class="row">
+                                    @for (int i = 0; i < videoUpload.Count; i++)
+                                    {
+                                        if (!string.IsNullOrEmpty(videoUpload[i].Video))
+                                                            {
+                                            <div class="data-video-item-@videoUpload[i].Id col-6 col-lg-4 mb-4" data-src-video="@videoUpload[i].Video">
+                                                <video class="w-100" controls preload="none">
+                                                    <source src="@videoUpload[i].Video" type="video/mp4">
+                                                </video>
+                                                <h3 class="text-center">@videoUpload[i].Name</h3>
+                                                <button class="btn-select-video" type="button" data-video="@videoUpload[i].Video" data-dismiss="modal" onclick="selectVideo(@videoUpload[i].Id)"> Chọn </button>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="UploadPicture">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Upload New Picture File</h4>
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Choose File:</label>
+                                <div class="row">
+                                    @for (int i = 0; i < videoUpload.Count; i++)
+                                    {
+                                        if (!string.IsNullOrEmpty(videoUpload[i].PictureTitle))
+                                        {
+                                            <div class="data-picture-item-@videoUpload[i].Id col-6 col-lg-4 mb-4" data-src-picture="@videoUpload[i].PictureTitle">
+                                                <img src="@videoUpload[i].PictureTitle">
+                                                <h3 class="text-center">@videoUpload[i].Name</h3>
+                                                <button class="btn-select-video" type="button" data-video="@videoUpload[i].PictureTitle" data-dismiss="modal" onclick="selectPictureTitle(@videoUpload[i].Id)"> Chọn </button>
+                                            </div>
+                                        }
+                                        
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+@section scripts{
+
+
+    <script>
+        $(document).ready(function () {
+            $("#page-index-common li").click(function () {
+                debugger;
+                $("#page-index-common li").removeClass("active");
+                $(this).addClass("active");
+                getDataSearch();
+            })
+            CKEDITOR.replace("Descriptions");
+        })
+        function getDataSearch() {
+            var param = new Object();
+            param.TextSearch = $("#search-common").val();
+            param.PageIndex = parseInt($("#page-index-common li.active a").attr("data-page"));
+            param.PageSize = parseInt($("#page-size-common option:selected").val());
+
+            console.log("param,.. ", param);
+            //callAjax("@Url.Action("GetListVideo", "VideosHome")", "POST", param);
+        }
+        function callAjax(url, action, param) {
+            $.ajax({
+                url: url,
+                type: action,
+                data: JSON.stringify(param),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    if (data.Code == 0)
+                        alert("Hoan thanh");
+                    else
+                        alert("lỗi");
+
+                    console.log(data);
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+            })
+        }
+        function showInputPicture(option) {
+            if (option == "link") {
+                $("#use-link-img").css("display", "block");
+                $(".append-picture").css("display", "none");
+                $("#PictureTitle").val('');
+
+            } else {
+                $("#use-link-picture").css("display", "none");
+                $(".append-picture").css("display", "block");
+                $("#PictureTitle").val('');
+            }
+        }
+        function showInputVideo(option) {
+            if (option == "link") {
+                $("#use-link-video").css("display", "block");
+                $(".append-video").css("display", "none");
+                $("#Video").val('');
+
+            } else {
+                $("#use-link-video").css("display", "none");
+                $(".append-video").css("display", "block");
+                $("#Video").val('');
+            }
+        }
+        function showDiv() {
+            showSearchLoader();
+            setTimeout(function () {
+                hideSearchLoader();
+            }, 5000);
+        }
+        function precheckSubmit(){
+            var til = $('#titleVideo').val();
+            var vi = $("#uploadVideo").val();
+            var im = $("#uploadImg").val();
+            
+            if(til.trim() == ""){
+                alert("bạn chưa điền tiêu đề cho video");
+                return;
+            }
+            if(vi == "" && im == ""){
+                alert("bạn chưa chọn file");
+                return;
+            }
+            if (vi != "" && !(vi.includes('.mov') || vi.includes('.mp4'))) {
+                alert("Video tải lên chưa đúng định dạng - vui lòng chọn video mp4 hoặc mov");
+                return;
+            }
+            if (!(im.includes('.jpg') || im.includes('.png') || im.includes('.gif') || im.includes('.xls') 
+                || im.includes('.xlsx') || im.includes('.jpeg') || im.includes('.webp')
+                || im.includes('.jfif')) && im != "" )
+            {
+                alert("Hình ảnh của bạn ko đúng định dạng, vui lòng chọn lại");
+                return;
+            }
+            var btn = $('#btn-sumbit-form-ad');
+            btn.click();
+        }
+        function selectVideo(id) {
+            var x = $(".data-video-item-" + id).html();
+            console.log(x);
+            $(".append-video").html('');
+            $(".append-video").html(x);
+            var res = $(".data-video-item-" + id).attr("data-src-video");
+            $("#Video").val(res);
+            $(".append-video .btn-select-video").remove();
+        }
+        function selectPictureTitle(id) {
+            var x = $(".data-picture-item-" + id).html();
+            console.log(x);
+            $(".append-picture").html('');
+            $(".append-picture").html(x);
+            var res = $(".data-picture-item-" + id).attr("data-src-picture");
+            $("#PictureTitle").val(res);
+            $(".append-picture .btn-select-video").remove();
+        }
+
+        function ContentNews(Id) {
+            debugger
+
+            var content = CKEDITOR.instances['Descriptions'].getData();
+
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    NewsId: Id,
+                    content: content,
+                },
+                url: "@Url.Action("EditContentNews", "NewsHome")",
+                success: function (data) {
+                    alert("Hoan thanh");
+                },
+            })
+        }
+    </script>
+}

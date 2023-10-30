@@ -1,0 +1,144 @@
+﻿@using GoStay.DataDto.OrderDto
+@model MoreInfoParam
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel">More Infor</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+</div>
+
+<div class="modal-body">
+    <div class="user-info2">
+        <div class="passenger">
+            <div class="user-avatar-bk-flight">
+                <div class="user-avatar-flight">
+                    <i class="fa-solid fa-user ic-12"></i>
+                    <p class="text-14-semibold">@Localizer["Adult"] 1</p>
+                </div>
+            </div>
+            <div class="row-1 user-info-tour mt-10">
+                <div class="input-txtname">
+                    <label>@Localizer["Fullname"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="Nguyễn Văn Anh">
+                </div>
+                <div class="input-txtsex">
+                    <label>@Localizer["Sex"]</label>
+                    <select class="form-select mt-10">
+                        <option selected>@Localizer["Male"]</option>
+                        <option value="1">@Localizer["Female"]</option>
+                        <option value="2">Unisex</option>
+                    </select>
+                </div>
+                <div class="input-txtbirthday">
+                    <label>@Localizer["Date of birth"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="dd / mm / yy">
+                </div>
+            </div>
+        </div>
+        <div class="passenger mt-20">
+            <div class="user-avatar-bk-flight">
+                <div class="user-avatar-flight">
+                    <i class="fa-solid fa-user ic-12"></i>
+                    <p class="text-14-semibold">@Localizer["Adult"] 2</p>
+                </div>
+            </div>
+            <div class="row-1 user-info-tour mt-10">
+                <div class="input-txtname">
+                    <label>@Localizer["Fullname"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="Nguyễn Văn Anh">
+                </div>
+                <div class="input-txtsex">
+                    <label>@Localizer["Sex"]</label>
+                    <select class="form-select mt-10">
+                        <option selected>@Localizer["Male"]</option>
+                        <option value="1">@Localizer["Female"]</option>
+                        <option value="2">Unisex</option>
+                    </select>
+                </div>
+                <div class="input-txtbirthday">
+                    <label>@Localizer["Date of birth"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="dd / mm / yy">
+                </div>
+            </div>
+        </div>
+        <div class="passenger mt-20">
+            <div class="user-avatar-bk-flight">
+                <div class="user-avatar-flight">
+                    <i class="fa-solid fa-user ic-12"></i>
+                    <p class="text-14-semibold">Trẻ em 1 <span class="text-14-primary">(4 - 11 @Localizer["Years old"])</span></p>
+                </div>
+            </div>
+            <div class="row-1 user-info-tour mt-10">
+                <div class="input-txtname">
+                    <label>@Localizer["Fullname"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="Nguyễn Văn Anh">
+                </div>
+                <div class="input-txtsex">
+                    <label>@Localizer["Sex"]</label>
+                    <select class="form-select mt-10">
+                        <option selected>@Localizer["Male"]</option>
+                        <option value="1">@Localizer["Female"]</option>
+                        <option value="2">Unisex</option>
+                    </select>
+                </div>
+                <div class="input-txtbirthday">
+                    <label>@Localizer["Date of birth"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="dd / mm / yy">
+                </div>
+            </div>
+        </div>
+        <div class="passenger mt-20">
+            <div class="user-avatar-bk-flight">
+                <div class="user-avatar-flight">
+                    <i class="fa-solid fa-user ic-12"></i>
+                    <p class="text-14-semibold">Trẻ em 2 <span class="text-14-primary">(2 - 4 @Localizer["Years old"])</span></p>
+                </div>
+            </div>
+            <div class="row-1 user-info-tour mt-10">
+                <div class="input-txt@Localizer["Male"]e">
+                    <label>@Localizer["Fullname"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="Nguyễn Văn Anh">
+                </div>
+                <div class="input-txtsex">
+                    <label>@Localizer["Sex"]</label>
+                    <select class="form-select mt-10">
+                        <option selected>@Localizer["Male"]</option>
+                        <option value="1">@Localizer["Female"]</option>
+                        <option value="2">Unisex</option>
+                    </select>
+                </div>
+                <div class="input-txtbirthday">
+                    <label>@Localizer["Date of birth"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="dd / mm / yy">
+                </div>
+            </div>
+        </div>
+        <div class="passenger mt-20">
+            <div class="user-avatar-bk-flight">
+                <div class="user-avatar-flight">
+                    <i class="fa-solid fa-user ic-12"></i>
+                    <p class="text-14-semibold">@Localizer["Infant"] <span class="text-14-primary">(@Localizer["Under"] 2 @Localizer["Years old"])</span></p>
+                </div>
+            </div>
+            <div class="row-1 user-info-tour mt-10">
+                <div class="input-txtname">
+                    <label>@Localizer["Fullname"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="Nguyễn Văn Anh">
+                </div>
+                <div class="input-txtsex">
+                    <label>@Localizer["Sex"]</label>
+                    <select class="form-select mt-10">
+                        <option selected>@Localizer["Male"]</option>
+                        <option value="1">@Localizer["Female"]</option>
+                        <option value="2">Unisex</option>
+                    </select>
+                </div>
+                <div class="input-txtbirthday">
+                    <label>@Localizer["Date of birth"]</label>
+                    <input class="form-control mt-10" type="text" placeholder="dd / mm / yy">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

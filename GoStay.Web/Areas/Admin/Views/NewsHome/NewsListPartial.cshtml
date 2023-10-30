@@ -1,0 +1,113 @@
+﻿@using GoStay.Common
+@using GoStay.DataDto.News
+
+@model ResponseBase<List<NewSearchOutDto>>
+
+<link rel="stylesheet" href="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.css" />
+<script src="/assets/helpers/JSTable-master/JSTable-master/src/jstable.js?v=1"></script>
+<script src="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.es5.min.js"></script>
+<script src="/assets/helpers/JSTable-master/JSTable-master/dist/polyfill-fetch.min.js"></script>
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: rebeccapurple;
+        color: white;
+    }
+</style>
+<div class="table-responsive">
+    
+    <table id="my_table" class="table table-bordered table-hover mb-0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tiêu đề</th>
+                <th> Ngày tạo</th>
+                <th> Loại tin tức</th>
+                <th> Ảnh minh họa</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.Data == null)
+                    return;
+                if (Model.Data.Count > 0)
+                {
+                    foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td style="white-space:inherit !important"><a target="_blank" href="/tin-tuc/@item.Id/@item.Slug">@item.Title</a></td>
+                            <td>@item.DateCreate</td>
+                            <th> @item.Category </th>
+                            <td><img src="@item.PictureTitle" style="width:150px;" /></td>
+                            <td>
+                                <a href="#" class="center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon-edit" style="font-size:23px;"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-right" style="">
+                                    <li>
+                                        <a class="dropdown-item" href="#!" onclick="EditNewsParam('@item.Id','@item.Title','@item.IdCategory','@item.Description','@item.LangId',
+                                                    '@string.Join(",", @item.Topics)')
+                                                    ;" data-toggle="modal" data-target="#myEditModal"><span class="icon-line-plus"></span> Edit</a>
+                                        <a class="dropdown-item" href="#!" onclick="DeleteNews('@item.Id');" data-toggle="modal" data-target="#myDeleteModal"><span class="icon-line-delete"></span> Delete</a>
+
+                                    </li>
+                                </ul>
+                                <a class="dropdown-item" href="@Url.Action("GetNewsId", "NewsHome",new { Id = @item.Id})"><span class="icon-line-plus"></span> Edit Content</a>
+                                <a class="dropdown-item" href="#!" onclick="EditNewsPictureTitle('@item.Id');" data-toggle="modal" data-target="#myPictureTitleModal"><span class="icon-line-plus"></span> Add Picture Title</a>
+
+                            </td>
+
+
+                        </tr>
+                    }
+
+                }
+            }
+        </tbody>
+    </table>
+</div>

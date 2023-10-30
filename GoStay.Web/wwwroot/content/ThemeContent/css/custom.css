@@ -1,0 +1,18 @@
+/* ----------------------------------------------------------------
+	Custom CSS
+
+	Add all your Custom Styled CSS here for New Styles or
+	Overwriting Default Theme Styles for Better Handling Updates
+-----------------------------------------------------------------*/
+
+
+@keyframes showPoupAnimation{
+	from {
+		top:-2rem;
+		opacity:0.5;
+	}
+	to {
+		top: 0;
+		opacity: 1;
+	}
+}

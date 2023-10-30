@@ -1,0 +1,318 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using GoStay.Common.Configuration
+@using Newtonsoft.Json
+@using goStayCore.CommonCode
+@using DAL.Entities
+@using GoStay.DataAccess.Entities
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject IHttpContextAccessor sessonContext
+@{
+    UserGostay user = null;
+    if (sessonContext != null && sessonContext.HttpContext != null)
+    {
+        var cookieValue = sessonContext.HttpContext.Request.Cookies[AppConfigs.CurrentUserCK];
+        if (!string.IsNullOrEmpty(cookieValue))
+        {
+            user = JsonConvert.DeserializeObject<UserGostay>(cookieValue);
+        }
+    }
+}
+
+<header class="header navbar-area">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div class="nav-inner">
+                    <nav class="navbar navbar-expand-lg">
+                        <a class="navbar-brand" title="Trang chủ Gostay" asp-area="" asp-controller="Home" asp-action="Index">
+                            <img src="/assets/images/logo/logo2.png" alt="Logo Gostay">
+                        </a>
+                        <button class="navbar-toggler mobile-menu-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse sub-menu-bar navbar_closed" id="navbarSupportedContent">
+                            <ul id="nav" class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <a title="@Localizer["Home"]" class="@AppConfigs.Activecss(0,AppConfigs.acvivemenu)" aria-controls="navbarSupportedContent" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a title="@Localizer["Hotels"]" class="@AppConfigs.Activecss(1,AppConfigs.acvivemenu)" href="@Url.Action("Index", "Hotels", new { area = ""})">@Localizer["Hotels"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a title="@Localizer["Flights"]" class="@AppConfigs.Activecss(3,AppConfigs.acvivemenu)" href="@Url.Action("Index", "Tickets", new { area = ""})">@Localizer["Flights"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a title="@Localizer["Tours"]" class="@AppConfigs.Activecss(2,AppConfigs.acvivemenu)" href="@Url.Action("Index", "Tours", new { area = ""})">@Localizer["Tours"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a title="@Localizer["News"]" class="@AppConfigs.Activecss(4,AppConfigs.acvivemenu)" href="~/tin-tuc">@Localizer["News"]</a>
+                                </li>
+                            </ul>
+                            @*<div class="languages">
+                            <button class="btn btn-languages" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="~/assets/images/@Thread.CurrentThread.CurrentUICulture.Name/flag.jpg">
+                            <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                            <li class="d-flex align-items-center dropdown-item">
+                            <a title="@Localizer["Language"]: @Localizer["English"]" href="?culture=en-US">
+                            <img alt="@Localizer["English"]" src="~/assets/images/en-US/flag.jpg"> @Localizer["English"]
+                            </a>
+                            </li>
+                            <li class="d-flex align-items-center dropdown-item">
+                            <a title="@Localizer["Language"]: @Localizer["Chinese"]" href="?culture=zh-CN">
+                            <img alt="@Localizer["Chinese"]" src="~/assets/images/zh-CN/flag.jpg"> @Localizer["Chinese"]
+                            </a>
+                            </li>
+                            <li class="d-flex align-items-center dropdown-item">
+                            <a title="@Localizer["Language"]: @Localizer["Vietnamese"]" href="?culture=vi-VN">
+                            <img alt="@Localizer["Vietnamese"]" src="~/assets/images/vi-VN/flag.jpg"> @Localizer["Vietnamese"]
+                            </a>
+                            </li>
+                            </ul>
+                            </div>*@
+                        </div> <!-- navbar collapse -->
+                        @*   <div class="become">
+                        <a title="Trở thành đối tác của Gostay" href="#">Trở thành đối tác?</a>
+                        </div>*@
+
+                        <div class="button-header">
+                            <div class="noti-header">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                            <button class="btn-chat" id="btnShowToast">
+                                <i class="fa-solid fa-comments pdr-5"></i>
+                                <div class="text-hide">@Localizer["Chat"]</div>
+                            </button>
+                            @{
+
+                                if (user != null && user.UserId > 0)
+                                {
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div class="click-drop-menu">
+                                                <i class="fa-solid fa-bars"></i>
+                                            </div>
+                                            <div class="click-drop-avata">
+                                                @{
+                                                    if (!string.IsNullOrEmpty(user.Picture))
+                                                    {
+                                                        <img data-src="@user.Picture" alt="@user.UserName" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img data-src="/assets/images/profile-user.png" alt="@user.UserName" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=">
+                                                    }
+                                                }
+                                            </div>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu2">
+                                            <li>
+                                                <a class="dropdown-item pl-20 set-uid" target="_blank" title="Trang quản trị dành cho đối tác của Gostay" href="https://partner.realtech.com.vn/UserDashboard">Gostay's Partner</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item pl-20 set-uid" target="_blank" title="Đăng mới phòng" href="https://partner.realtech.com.vn/quan-ly-khach-san">Đăng phòng</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item pl-20 set-uid" target="_blank" title="Quản lý các phòng bạn đã đặt" href="https://partner.realtech.com.vn/BookManager/MyRoomOrder">Quản lý đặt phòng</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item pl-20 set-uid" target="_blank" title="Quản lý các vé đã đặt" href="https://partner.realtech.com.vn/Air">Quản lý đặt vé</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item pl-20" title="Cập nhật thông tin tài khoản" href="#" data-bs-toggle="modal" data-bs-target="#registeremail">@Localizer["My Account"]</a>
+                                            </li>
+                                            <li><a title="Đăng xuất" href="#" class="dropdown-item pl-20" onclick="logout()">@Localizer["Log out"]</a></li>
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div class="click-drop-menu">
+                                                <i class="fa-solid fa-bars"></i>
+                                            </div>
+                                            <div class="click-drop-avata">
+                                                <i class="fa-solid fa-circle-user"></i>
+                                            </div>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a title="@Localizer["Log in"]" href="#" id="loginFormHome" class="dropdown-item pl-20" data-bs-toggle="modal" data-bs-target="#loginform">@Localizer["Log in"]</a>
+                                            </li>
+                                            <li><a title="@Localizer["Support"]" href="#" class="dropdown-item pl-20">@Localizer["Support"]</a></li>
+                                        </ul>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
+</header>
+
+@await Html.PartialAsync("~/Views/Shared/chatPartial.cshtml")
+
+<div class="toast" id="toast-chat-wellcome" data-bs-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <i class="fa-brands fa-rocketchat"></i>
+        <strong class="me-auto pl-10">@Localizer["Support online"]</strong>
+        <button type="button" data-bs-dismiss="toast" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="toast-body">
+        <div class="live-chat-parent-1">
+            <div class="header-toast-admin">
+                <div class="toast-admin-avatar">
+                    <img data-src="/assets/images/avatar/author-2.jpg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8Uw8AAj0BXe1cD0IAAAAASUVORK5CYII=" alt="Logo">
+                </div>
+                <div class="toast-admin-name">
+                    <div class="admin-name">
+                        Gostay's Chat AI
+                    </div>
+                    <div class="toast-admin-sub-name">
+                        @Localizer["Customer service agent"]
+                    </div>
+                    <div class="admin-status">
+                    </div>
+                </div>
+            </div>
+            <div class="header-welcome text-align-center mt-10 mb-10">
+                @Localizer["Welcome"]!
+            </div>
+            <div class="welcone-text">
+                @Localizer["I'm"] <b>Chat AI</b> @Localizer["from"] Gostay.vn, @Localizer["very pleased to support you"]
+            </div>
+            <ul id="ulQS" class="start-question mt-20">
+                <li class="faq-list">
+                    <a data-message="" class="btn-chat-faq">
+                        <i class="fa-solid fa-hotel"></i>
+                        @Localizer["You need help with the Hotel"]?
+                    </a>
+                </li>
+                <li class="faq-list">
+                    <a data-message="" class="btn-chat-faq">
+                        <i class="fa-solid fa-route"></i>
+                        @Localizer["You need help with Tours"]?
+                    </a>
+                </li>
+                <li class="faq-list">
+                    <a data-message="" class="btn-chat-faq">
+                        <i class="fa-solid fa-plane"></i>
+                        @Localizer["You need help with Airline Tickets"]?
+                    </a>
+                </li>
+                <li class="faq-list">
+                    <a data-message="" class="btn-chat-faq">
+                        <i class="fa-solid fa-question"></i>
+                        @Localizer["Other problems"]
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="loginform" tabindex="-1" aria-labelledby="loginform" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-14-b pl-10" id="registerlabel">@Localizer["Sign in or Register"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="login-form">
+                    <div class="form-floating-custom">
+                        <ul>
+                            <li id="loginwidthPhone">
+                                @await Html.PartialAsync("~/Views/Home/phone-visible.cshtml")
+                            </li>
+                            <li id="loginwidthEmail">
+                                @using (Html.BeginForm("Login", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "formlogin" }))
+                                {
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control form-control-custom" type="email" name="email" id="email" placeholder="@Localizer["Email login"]" required>
+                                        <label for="email">Email</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control form-control-custom" type="password" name="password" id="password" placeholder="@Localizer["Password"]" required>
+                                        <label for="password">@Localizer["Password"]</label>
+                                    </div>
+
+                                    <div class="room-button2">
+                                        <button onclick="loginbyAccount()" id="btnloginwemail" type="submit" class="btn btn-login-form btn-submit mt-20">@Localizer["Log in"] <i class="fa-solid fa-arrow-trend-up pl-10"></i></button>
+                                    </div>
+                                }
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div class="social-login pb-10">
+                        <div class="text-14">@Localizer["Or login with"]</div>
+                        <form>
+                            <div class="sc-login-parent">
+                                <button class="btn btn-login-form btn-apple sc-login mt-10" type="button" id="btnloginwidthPhone">
+                                    <i class="fa-solid fa-mobile"></i>
+                                    <div class="sc-login-name pl-10">Số điện thoại</div>
+                                </button>
+                                @*<button class="btn btn-login-form btn-email sc-login" type="button" id="btnloginwidthEmail">
+                                <i class="fa-solid fa-envelope"></i>
+                                <div class="sc-login-name pl-10">Gostay ID</div>
+                                </button>
+                                *@
+                                <button class="btn btn-login-form btn-google sc-login mt-10" type="button" id="btnloginwidthGoogle">
+                                    <i class="fa-brands fa-google"></i>
+                                    <div class="sc-login-name pl-10">Google</div>
+                                </button>
+                                <button class="btn btn-login-form btn-facebook sc-login mt-10" type="button" id="btnloginwidthFacebook">
+                                    <i class="fa-brands fa-facebook"></i>
+                                    <div class="sc-login-name pl-10">Facebook</div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Thongbao1" tabindex="-1" aria-labelledby="notification" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-14-b pl-10">Tạo hồ sơ của bạn</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-info">
+                    <i class="fa-regular fa-circle-check ic-50"></i>
+                    <div class="text-18 pt-20 pb-10">Chào mừng bạn đến với goStay</div>
+                    <div class="text-14 pl-10 pdr-10">
+                        Khám phá các nơi ở, nhà hàng địa phương và trải nghiệm độc đáo trên toàn thế giới.
+                    </div>
+                    <form class="form-floating-custom">
+                        <div class="verify-button mt-10">
+                            <button class="btn-login-form btn-submit mt-10" type="button" data-bs-toggle="modal" data-bs-target="#registeremail">
+                                Tiếp tục<i class="fa-solid fa-arrow-trend-up pl-10"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (user != null)
+{
+    @await Html.PartialAsync("~/Views/Home/UpdateUserInfo.cshtml",user)
+}

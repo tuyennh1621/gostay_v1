@@ -1,0 +1,539 @@
+﻿@using DAL.Entities;
+@using GoStay.DataAccess.Entities
+@using GoStay.DataDto.HotelDto
+@model RoomAddDto
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/assets/css/demo/orderDetail.css" rel="stylesheet" />
+    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+    <style>
+        /*ghi đè class*/
+
+        .select2-container--open {
+            z-index: 9999999
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        @using (Html.BeginForm("AddHotelRoom", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "TeacherAdd_form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-body">
+
+                <input type="hidden" value="@Model.Idhotel" id="roomIdhotel" name="Idhotel" />
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="roomName">Tên Phòng <small class="text-danger">*</small></label>
+                    <label for="roomSize"> Kích Thước <small class="text-danger">*</small></label>
+
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <input type="text" tabindex="1" id="roomName" name="Name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                    <input type="number" tabindex="1" id="roomSize" name="RoomSize" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="roomDescription">Mô tả<small class="text-danger">*</small></label>
+                    <label for="roomStatus">Trạng Thái <small class="text-danger">*</small></label>
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <input type="text" tabindex="1" id="roomDescription" name="Description" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomStatus" name="RoomStatus">
+                        <option selected="selected" input type="number" value="0"> Sẵn Sàng</option>
+                        <option input type="number" value="1">Đã đặt trước</option>
+                        <option input type="number" value="2">Đã nhận phòng</option>
+                        <option input type="number" value="3">Đã trả phòng</option>
+                        <option input type="number" value="4">Đang vệ sinh</option>
+                    </select>
+                </div>
+
+
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="roomPriceValue">Giá Phòng<small class="text-danger">*</small></label>
+                    <label for="roomDiscount">Giảm giá<small class="text-danger">*</small></label>
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <input type="number" tabindex="1" id="roomPriceValue" name="PriceValue" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomDiscount" name="Discount">
+                        <option></option>
+                        @{
+                            for (int i = 1; i <= 100; i++)
+                            {
+                                    <option input type="number" value="@i"> @i %</option>
+                            }
+                        }
+
+                    </select>
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="roomNumMature">Số Người Lớn<small class="text-danger">*</small></label>
+                    <label for="roomNumChild">Số trẻ em<small class="text-danger">*</small></label>
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomNumMature" name="NumMature">
+                        @for(int i =1;i<50;i++)
+                        {
+                            <option selected="selected" input type="number" value="@i"> @i Người</option>
+                        }
+                    </select>
+                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomNumChild" name="NumChild">
+                        @for (int i = 1; i < 50; i++)
+                        {
+                            <option selected="selected" input type="number" value="@i"> @i Người</option>
+                        }
+                    </select>
+
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="roomPalletbed">Số Giường+ Loại Giường<small class="text-danger">*</small></label>
+                </div>
+
+                <div class ="overwrite-class col-12 form-group">
+                    <select style="width:100%" class="select2 select2-container form-control" name="states[]" id="roomPalletbed" name="Palletbed">
+                        @foreach (var item in ViewBag.listPalletbed)
+                        {
+                            <option value="@item.Id"> @item.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="overwrite-class col-12 form-group ">
+                    <label for="roomView">Hướng Phòng<small class="text-danger">*</small></label>
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <select style="width:100%" class="select2 select2-container form-control" name="states[]" id="roomView" multiple="multiple" name="ViewRoom">
+                        @{
+                                <option></option>
+
+                            foreach (var view in ViewBag.listView as IQueryable<ViewDirection>)
+                            {
+                                    <option value="@view.Id">@view.NameView</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="overwrite-class col-12 form-group ">
+                    <label for="roomService">Tiện ích phòng</label>
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <select style="width:100%" class="select2 select2-container sm-form-control" name="states[]" id="roomService" name="ServiceRoom" multiple="multiple">
+                        @{
+                            <option></option>
+                            foreach (var service in ViewBag.listServiceRoom as IQueryable<Service>)
+                            {
+                                <option value="@service.Id">@service.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+                <button type="button" onclick="AddRoomPartial()" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+
+            </div>
+
+        }
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover  mb-0">
+                <thead>
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Room Name</th>
+                        <th>Status</th>
+                        <th>Giá phòng</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if (ViewBag.listRoomHotel == null)
+                            return;
+                        if (ViewBag.listRoomHotel.Data.Items.Count > 0)
+                        {
+                            foreach (var item in ViewBag.listRoomHotel.Data.Items)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.PriceValue</td>
+
+                                    <td>
+                                        <div class="justify-content-center">
+
+                                        <a class="dropdown-item" href="#!" onclick="AddPicture('@item.Id',1);" data-toggle="modal" data-target="#myAddPicture"><i class="icon-plus"></i> Add Picture</a>
+                                            
+                                        <a class="dropdown-item" href="#!" onclick="AddServiceRoom(@item.Id);" data-toggle="modal" data-target="#myAddServiceRoom"><i class="icon-plus"></i> Add Service</a>
+                                            <a class="dropdown-item" href="#!" onclick="EditRoomParam('@item.Id','@item.Idhotel', '@item.Name','@item.RoomSize','@item.Description',
+                                                                    '@item.RoomStatus','@item.PriceValue','@item.Discount','@item.NumMature','@item.NumChild','@item.Palletbed',
+                                                                     '@item.ViewRoom','@item.ServiceRoom')
+                                                                    ;" data-toggle="modal" data-target="#myEditRoom"><span class="icon-line-plus"></span> Edit</a>
+                                            <a class="dropdown-item" href="#!" onclick="DeleteItem(@item.Id);" data-toggle="modal" data-target="#myDeleteModal"><span class="icon-line-delete"></span> Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal fade" id="myEditRoom" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-body">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Edit HotelRoom</h4>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        @using (Html.BeginForm("EditHotelRoom", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "TeacherEdit_form", enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-body">
+
+                                <input type="hidden" id="roomId_edit" name="Id" value="@Model.Id" />
+                                <input type="hidden" id="roomIdHotel_edit" name="Idhotel" value="@Model.Idhotel" />
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <label for="roomName_edit">Tên Phòng <small class="text-danger">*</small></label>
+                                    <label for="roomSize_edit"> Kích Thước <small class="text-danger">*</small></label>
+
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <input type="text" tabindex="1" id="roomName_edit" name="Name" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                                    <input type="text" tabindex="1" id="roomSize_edit" name="RoomSize" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <label for="roomDescription_edit">Mô tả<small class="text-danger">*</small></label>
+                                    <label for="roomStatus_edit">Trạng Thái <small class="text-danger">*</small></label>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <input type="text" tabindex="1" id="roomDescription_edit" name="Description" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+                                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomStatus_edit" name="RoomStatus">
+                                        <option selected="selected" input type="number" value="0"> Sẵn Sàng</option>
+                                        <option input type="number" value="1">Đã đặt trước</option>
+                                        <option input type="number" value="2">Đã nhận phòng</option>
+                                        <option input type="number" value="3">Đã trả phòng</option>
+                                        <option input type="number" value="4">Đang vệ sinh</option>
+                                    </select>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <label for="roomPriceValue_edit">Giá Phòng<small class="text-danger">*</small></label>
+                                    <label for="roomDiscount_edit">Giảm giá<small class="text-danger">*</small></label>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <input type="text" tabindex="1" id="roomPriceValue_edit" name="PriceValue" autocomplete="off" class="sm-form-control border-form-control " placeholder="" />
+                                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomDiscount_edit" name="Discount">
+                                        <option></option>
+                                        @{
+                                            for (int i = 1; i <= 100; i++)
+                                            {
+                                                    <option input type="number" value="@i"value> @i %</option>
+                                            }
+                                        }
+
+                                    </select>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <label for="roomNumMature_edit">Số Người Lớn<small class="text-danger">*</small></label>
+                                    <label for="roomNumChild_edit">Số trẻ em<small class="text-danger">*</small></label>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomNumMature_edit" name="NumMature">
+                                        @for (int i = 1; i < 50; i++)
+                                        {
+                                            <option selected="selected" input type="number" value="@i"> @i Người</option>
+                                        }
+                                    </select>
+                                    <select class="box-on-stock-option-region headerLeft_select form-select form-control input-sm
+                                        valid " id="roomNumChild_edit" name="NumChild">
+                                        @for (int i = 1; i < 50; i++)
+                                        {
+                                            <option selected="selected" input type="number" value="@i"> @i Người</option>
+                                        }
+                                    </select>
+
+                                </div>
+
+                                <div class="overwrite-class  col-12 form-group">
+                                    <label for="roomPalletbed_edit">Số Giường+ Loại Giường<small class="text-danger">*</small></label>
+                                </div>
+
+                                <div class ="overwrite-class col-12 form-group" >
+                                    <select style="width:100%" class="select2 select2-container form-control" name="states[]" id="roomPalletbed_edit" name="Palletbed" >
+
+                                        @foreach (var item in ViewBag.listPalletbed)
+                                        {
+                                            <option  value="@item.Id"> @item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group ">
+                                    <label for="roomView_edit">Hướng Phòng<small class="text-danger">*</small></label>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <select style="width:100%" class="select2 select2-container form-control" name="states[]" id="roomView_edit" multiple="multiple" name="ViewRoom">
+                                        @{
+                                            <option></option>
+
+                                            foreach (var view in ViewBag.listView as IQueryable<ViewDirection>)
+                                            {
+                                                <option value="@view.Id">@view.NameView</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group ">
+                                    <label for="roomService_edit">Tiện ích phòng</label>
+                                </div>
+
+                                <div class="overwrite-class col-12 form-group">
+                                    <select style="width:100%" class="select2 select2-container sm-form-control" name="states[]" id="roomService_edit" name="ServiceRoom" multiple="multiple">
+                                        @{
+                                            <option></option>
+                                            foreach (var service in ViewBag.listServiceRoom as IQueryable<Service>)
+                                            {
+                                                <option value="@service.Id">@service.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+                                <button type="button" onclick="EditRoomJs()" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-edit"></i> Update</button>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myAddServiceRoom" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-body">
+                    <div class="modal-content" id="MainAddServiceRoom">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-body">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Delete HotelRoom</h4>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        @using (Html.BeginForm("DeleteHotelRoom", "HotelHome", FormMethod.Post, new { area = "Admin", @id = "CourseDelete_form", enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-body">
+                                <div class="col-12 form-group">
+                                    <div class="entry-title">
+                                        <h4><a href="demo-news-single.html">Do you want to delete this record?</a></h4>
+                                    </div>
+
+
+                                </div>
+                                <div>
+                                    <input type="hidden" id="Id_delete" name="Id" />
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Cancel</button>
+
+                                <button type="submit" tabindex="1" class="button  btn-sm button-3d button-rounded gradient-horizon"><i class="icon-trash2"></i> Delete</button>
+
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $(function () {
+            $('.select2').select2()
+        });
+        $(document).ready(function () { $("#select2_example").select2(); });
+
+        $(".chosen-select").chosen({
+            no_results_text: "Oops, nothing found!"
+        })
+
+
+        function AddServiceRoom(Id) {
+            $('#IdRoom_Service').val(Id);
+            var Url = '@Url.Action("TransitParamServiceRoom","HotelHome", new { area="Admin"})';
+            showSearchLoader();
+            $.ajax({
+                type: "GET",
+                url: Url,
+                data: { IDRoom: Id },
+                // datatype: "json",
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                    showSearchLoader();
+                },
+                success: function (data) {
+                    hideSearchLoader();
+
+                    $('#MainAddServiceRoom').html(data);
+
+                    $('#IdService_addRoom').select2({
+                        dropdownParent: $('#myAddServiceRoom'),
+                        allowClear: true
+                    });
+                    document.getElementById('btnAddServicesRooms').addEventListener('click', ServiceRoom);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hideSearchLoader();
+                    alert("An error occured. Please try again!");
+                }
+            })
+        }
+
+        function ServiceRoom() {
+            var idServices = $("#IdService_addRoom").val();
+
+            if (idServices == '') {
+                alert('Bạn cần chọn ít nhất 1 Services');
+                return;
+            }
+            var service = {
+                IdServices: $("#IdService_addRoom").val(),
+                IdHotelorRoom: $("#IdRoom_add").val()
+            }
+
+            ServiceRoom_CALLAJAX(service);
+        }
+
+        function ServiceRoom_CALLAJAX(service) {
+            showSearchLoader();
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                data:
+                {
+                    "fromdata": JSON.stringify(service),
+                },
+                url: "@Url.Action("AddServiceRoom", "HotelHome")",
+                success: function (data) {
+                    AddServiceRoom(service.IdHotelorRoom);
+                    //AddService(service.IdHotelorRoom);
+                },
+            })
+
+        }
+
+        function EditRoomParam(Id, Idhotel, Name, RoomSize, Description, RoomStatus, PriceValue, Discount, NumMature, NumChild, Palletbed, ViewRoom,ServiceRoom) 
+        {
+            $('#roomId_edit').val(Id);
+            $('#roomIdHotel_edit').val(Idhotel);
+            $('#roomName_edit').val(Name);
+            $('#roomSize_edit').val(RoomSize);
+            $('#roomDescription_edit').val(Description);
+            $('#roomStatus_edit').val(RoomStatus);
+            $('#roomPriceValue_edit').val(PriceValue);
+            $('#roomDiscount_edit').val(Discount);
+            $('#roomNumMature_edit').val(NumMature);
+            $('#roomNumChild_edit').val(NumChild);
+            
+            $('#roomPalletbed_edit').val(Palletbed).change();
+
+            if (ViewRoom.includes(',')) {
+                $('#roomView_edit').val(ViewRoom.split(',')).change();
+            }
+            else {
+                $('#roomView_edit').val(ViewRoom).change();
+            }
+            if (ServiceRoom.includes(',')) {
+                $('#roomService_edit').val(ServiceRoom.split(',')).change();
+            }
+            else {
+                $('#roomService_edit').val(ServiceRoom).change();
+            }
+        }
+
+        function RemoveServicesRoom(_IdService, _IdHotelorRoom) {
+
+            if (confirm("Bạn muốn xóa Services ID " + _IdService) == true) {
+                var Url = '@Url.Action("RemoveServiceRoom","ServicesHome", new { area="Admin"})';
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    data:
+                    {
+                        IdService: _IdService,
+                        IdHotelorRoom: _IdHotelorRoom
+                    },
+                    url: Url,
+                }).done(function (result) {
+                    AddServiceRoom(_IdHotelorRoom);
+                });
+            }
+
+        }
+    </script>           
+</body>
+</html>

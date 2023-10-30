@@ -1,0 +1,190 @@
+﻿@using GoStay.DataDto.TourDto
+@using GoStay.DataAccess.Entities
+@model List<TourDetailDto>;
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/assets/css/demo/orderDetail.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container">
+
+        @using (Html.BeginForm("AddTourDetail", "TourHome", FormMethod.Post, new { area = "Admin", @id = "TeacherAdd_form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div class="overwrite-class col-12 form-group">
+                    <label for="styleDetail">Thông tin tour</label>
+                    <label for="stt">Số thứ tự</label>
+                    <input type="hidden" id="idTour" name="IdTours" value="@Model.First().IdTours" />
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <select class="box-on-stock-option-region headerLeft_select" id="styleDetail">
+                        <option value="1">Lịch trình tour</option>
+                        <option value="2">Chính sách tour</option>
+                    </select>
+                    <input type="number" tabindex="1" id="stt"  autocomplete="off" class="sm-form-control border-form-control " value="10" placeholder="" required />
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="title">Tiêu đề</label>
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <textarea type="text" id="title" class="sm-form-control border-form-control "></textarea>
+                </div>
+
+                <div class="overwrite-class col-12 form-group">
+                    <label for="details_add">Nội dung chi tiết</label>
+                </div>
+                <div class="overwrite-class col-12 form-group">
+                    <textarea rows="5" id="details_add" class="ckeditor"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="button" btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+                <button type="button" onclick="AddTourDetail()" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Save</button>
+            </div>
+        }
+
+    </div>
+
+<div class="table-responsive">
+        <table class="table table-bordered table-hover  mb-0">
+            <thead>
+                <tr>
+                    <th>Detail Id</th>
+                    <th>Detail Title</th>
+                    <th>Detail Style</th>
+                    <th>Detail Content</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                if (Model == null)
+                    return;
+                    if (Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Title</td>
+
+                                @if (item.IdStyle == 1)
+                                {
+                                    <td>Lịch trình Tour</td>
+                                }
+                                else if(item.IdStyle == 2)
+                                {
+                                    <td>Chính sách Tour</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                <td><div id="divContentTour-@item.Id">@Html.Raw(@item.Details)</div></td>
+                                <td>
+                                    <div class="justify-content-center">
+
+                                        <a href="#" class="center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon-edit" style="font-size:23px;"></i></a>
+                                        <ul class="dropdown-menu dropdown-menu-right" style="">
+                                            <li>
+                                        <a class="dropdown-item" href="#!" onclick="EditTourDetailParam('@item.Id','@item.IdTours','@item.IdStyle','@item.Title','@item.Stt');"
+                                                data-toggle="modal" data-target="#myEditDetail"><span class="icon-line-plus"></span> Edit</a>
+                                            <a class="dropdown-item" href="#!" onclick="RemoveDetail('@item.Id','@item.IdTours');"><span class="icon-line-delete"></span> Remove </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="myEditDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-body">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Edit Tour Detail</h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    @using (Html.BeginForm("EditTourDetail", "TourHome", FormMethod.Post, new { area = "Admin", @id = "TeacherEdit_form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="modal-body">
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="id_detail_style_edit">Thông tin tour</label>
+                                <label for="stt_edit">Số thứ tự</label>
+                                <input type="hidden" for="id_detail_tour_edit" id="id_detail_tour_edit" name="IdTours" />
+                                <input type="hidden" for="id_detail_edit" id="id_detail_edit" name="Id" />
+
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <select class="box-on-stock-option-region headerLeft_select" id="id_detail_style_edit" name="IdStyle">
+                                    <option value="1">Lịch trình tour</option>
+                                    <option value="2">Chính sách tour</option>
+
+                                </select>
+                                <input type="number" tabindex="1" id="stt_edit" name="Stt" autocomplete="off" class="sm-form-control border-form-control " placeholder="" required />
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="detail_title_edit">Tiêu đề</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea type="text" id="detail_title_edit" class="sm-form-control border-form-control " name="Title"></textarea>
+                            </div>
+
+                            <div class="overwrite-class col-12 form-group">
+                                <label for="detail_content_edit">Nội dung chi tiết</label>
+                            </div>
+                            <div class="overwrite-class col-12 form-group">
+                                <textarea rows="5" id="detail_content_edit" class="ckeditor" ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button class="button btn-sm button-3d button-rounded gradient-earth" data-dismiss="modal"><i class="icon-lock"></i> Close</button>
+
+                            <button type="button" onclick="EditTourDetail()" tabindex="4" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-edit"></i> Update</button>
+
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function EditTourDetailParam(Id, IdTours, IdStyle, Title,Stt) 
+        {
+            debugger
+            $('#id_detail_edit').val(Id);
+            $('#id_detail_tour_edit').val(IdTours);
+            $('#id_detail_style_edit').val(IdStyle);
+            $('#detail_title_edit').val(Title);
+            $('#stt_edit').val(Stt);
+
+            var cten = $('#divContentTour-'+Id).html();
+            
+            CKEDITOR.instances['detail_content_edit'].setData(cten);
+     
+        }
+        CKEDITOR.replace("details_add");
+        CKEDITOR.replace("detail_content_edit");
+
+
+    </script>           
+</body>
+</html>

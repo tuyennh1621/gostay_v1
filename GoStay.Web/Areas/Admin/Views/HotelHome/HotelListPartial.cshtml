@@ -1,0 +1,209 @@
+﻿@using DAL
+@using DAL.Entities
+
+@using DAL.Helpers.PageHelpers
+@using GoStay.DataAccess.Entities
+@using GoStay.DataDto.HotelDto
+@using GoStay.Service
+@using GoStay.Common
+@using System.Globalization
+@using goStayCore.CommonCode
+@model ResponseBase<HotelListAdmin>
+<link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
+@{
+    int totalPage = (Model.Data != null && Model.Count > 0 && Model.Data.Total > 0) ? ((Model.Data.Total - 1) / Model.Data.PageSize + 1) : 0;
+    int pageNumber = Model.Data.PageIndex;
+    int pageSize = Model.Data.PageSize;
+    int FromIndex = pageNumber == 1 ? 1 : (pageNumber - 1) * pageSize + 1;
+    int totalCount = (Model.Count > 0) ? Model.Data.Total : 0;
+    int EndIndex = pageNumber == totalPage ? totalCount : pageNumber * pageSize;
+}
+<style>
+    .dropdown-showpage a {
+        color: #fff !important;
+        background: #1ABC9C;
+    }
+
+    .pagination button.active {
+        background-color: #1ABC9C;
+        color: white !important;
+    }
+    /* thêm màu nền khi người dùng hover vào class không active */
+    .pagination button:hover:not(.active) {
+        background-color: #1ABC9C !important;
+    }
+    /* css pagedList pagination*/
+    .pagination li {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+
+        .pagination li button {
+            min-width: 35px;
+            min-height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #C3D6C6;
+            color: #3f8740;
+            border-radius: 5px;
+        }
+
+            .pagination li button:hover {
+                background-color: #1ABC9C;
+                color: #fff;
+                transition: ease all .15s;
+            }
+
+    .pagination .active button {
+        color: #ffffff;
+        background-color: #3f8740;
+    }
+
+    .pagination .active span {
+        color: #fff;
+        background: #1ABC9C;
+        min-width: 35px;
+        min-height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #C3D6C6;
+        border-radius: 5px;
+    }
+
+    .order-code>a {
+        color: #1ABC9C !important;
+    }
+</style>
+
+<div class="d-flex flex-sm-row">
+    <p style="margin-top:10px;margin-right:10px">Hiển thị </p>
+    <div class="dropdown dropdown-showpage">
+        <a class="btn dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+            @pageSize
+        </a>
+
+        <ul class="dropdown-menu">
+            <li><button class="dropdown-item" onclick="NextPreData('25', '1')">25</button></li>
+            <li><button class="dropdown-item" onclick="NextPreData('50', '1')">50</button></li>
+            <li><button class="dropdown-item" onclick="NextPreData('100', '1')">100</button></li>
+        </ul>
+    </div>
+    <p style="margin-top:10px;margin-left:10px">   bản ghi</p>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover mb-0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên</th>
+                <th>Địa chỉ</th>
+                <th>Loại</th>
+                <th>Khoảng Giá</th>
+                <th>Edit</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model?.Data?.ListHotel?.Count > 0)
+                {
+                    foreach (var item in Model.Data.ListHotel)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td class="order-code" style="white-space:inherit !important"><a target="_blank" href="@Url.Action("Index", "HotelDetail",new { hotelId = @item.Id, Area = "" })">@item.Name </a> (@item.StrLatMap, @item.StrLonMap)</td>
+                            <td style="width:250px; white-space:inherit !important">@item.Address</td>
+                            <td>@item.TypeNavigation.Type</td>
+                            <td>@item.IdPriceRangeNavigation.TitleVnd</td>
+                            <td class="order-code">
+                                <a href="#" class="center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icon-edit" style="font-size:23px;"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-right" style="">
+                                    <li>
+                                        <a class="dropdown-item" href="#!" onclick="EditItem('@item.Id','@item.Name','@item.Rating', '@item.Address','@item.Meals','@item.IdTinhThanh','@item.Type','@item.IdPriceRange','@item.IdQuan','@item.IdPhuong','@item.Description','@item.Content','@item.LatMap','@item.LonMap');" data-toggle="modal" data-target="#myEditModal"><span class="icon-line-plus"></span> Edit</a>
+                                        <a class="dropdown-item" href="#!" onclick="AddPicture('@item.Id',0);" data-toggle="modal" data-target="#myAddPicture"><span class="icon-line-plus"></span> Add Pictures</a>
+                                        <a class="dropdown-item" href="#!" onclick="AddAlbum('@item.Id');" data-toggle="modal" data-target="#myAddAlbum"><span class="icon-line-plus"></span> Add Album</a>
+                                        <a class="dropdown-item" href="#!" onclick="AddService('@item.Id');" data-toggle="modal" data-target="#myAddService"><span class="icon-line-plus"></span> Add Service</a>
+
+                                        <a class="dropdown-item" href="#!" onclick="DeleteItem('@item.Id');" data-toggle="modal" data-target="#myDeleteModal"><span class="icon-line-delete"></span> Delete</a>
+
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="d-flex">
+                                <button onclick="EditMap('@item.Id','@System.Net.WebUtility.UrlEncode(@item.Name)','@item.LatMap','@item.LonMap');" class="button button-3d button-rounded gradient-grey-orange  float-right">
+                                    Map
+                                </button>
+                                <div class="justify-content-center">
+                                    <button class="button button-3d button-rounded gradient-grey-orange  float-right" href="#!" onclick="AddRoom('@item.Id');"
+                                    data-toggle="modal" data-target="#myAddRoom">
+                                        <i class="icon-plus"></i> Add Room
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    @*<div class="modal-footer">
+        <button type="button" onclick="NextPreData(@Model.Data.PageIndex-1)" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Prev</button>
+
+        <button type="button" onclick="NextPreData(@Model.Data.PageIndex+1)" tabindex="6" class="button btn-sm button-3d button-rounded gradient-ocean"><i class="icon-save"></i> Next</button>
+    </div>*@
+</div>
+
+<div class="mt-3">
+    @if (Model.Data != null && Model.Count > 0 && Model.Data.Total > 0)
+    {
+        <div class="row y-gap-30">
+            <div class="pagintion-table">
+                <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row">
+                    <p class="mb-3 mb-sm-0">
+                        Hiển thị từ
+                        <span>@FromIndex</span>
+                        đến
+                        <span>@EndIndex</span>
+                        của @Model.Data.Total bản ghi
+                    </p>
+                    <nav class="pagination ">
+                        <ul class="pagination mb-0">
+                            <li class="page-item "><button class="page-link" onclick="NextPreData(@Model.Data.PageSize.ToString(), '1')"> Fisrt </button></li>
+
+                            @for (int i = 1; i <= totalPage; i++)
+                            {
+                                string active = "";
+                                if (i == pageNumber) active = "active";
+                                if (pageNumber <= 3 && i <= 5)
+                                {
+                                    <li class="page-item "><button onclick="NextPreData(@Model.Data.PageSize.ToString(), @i.ToString())" class="page-link @active"> @i </button></li>
+
+                                }
+                                else if (pageNumber > 3 && i >= pageNumber - 2 && i <= pageNumber + 2)
+                                {
+                                    <li class="page-item "><button onclick="NextPreData(@Model.Data.PageSize.ToString(), @i.ToString())" class="page-link @active"> @i </button></li>
+
+                                }
+
+                            }
+                            <li class="page-item "><button class="page-link" onclick="NextPreData(@Model.Data.PageSize.ToString(), @totalPage.ToString())" tabindex="-1"> Last </button></li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="line"></div>
+
+@section scripts{
+    <script>
+    </script>
+}

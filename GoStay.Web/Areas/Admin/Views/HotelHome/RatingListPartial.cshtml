@@ -1,0 +1,132 @@
+﻿@using GoStay.Common
+@using GoStay.DataDto.RatingDto
+@using goStayCore.CommonCode
+@model ResponseBase<List<RatingAdminDto>>
+@{
+    Dictionary<byte, string> StatusRating = new Dictionary<byte, string>()
+    {
+        {0,"Chờ Duyệt"},
+        {1,"Đã Duyệt"},
+        {2,"Xóa"}
+    };
+}
+<link rel="stylesheet" href="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.css" />
+<script src="/assets/helpers/JSTable-master/JSTable-master/src/jstable.js?v=1"></script>
+<script src="/assets/helpers/JSTable-master/JSTable-master/dist/jstable.es5.min.js"></script>
+<script src="/assets/helpers/JSTable-master/JSTable-master/dist/polyfill-fetch.min.js"></script>
+<style>
+    /*ghi đè class*/
+    .overwrite-class {
+        display: flex;
+        gap: 10px !important;
+    }
+
+        .overwrite-class label {
+            flex: 1;
+        }
+
+        .overwrite-class input {
+            flex: 1;
+            margin-top: -15px;
+        }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-options {
+    }
+
+    .box-on-stock-option-region {
+        padding: 0px 15px;
+        margin-top: -15px;
+        flex: 1;
+        border: 2px solid #DDD;
+        transition: box-shadow .3s ease-in;
+        font-size: 14px;
+        background-color: #fff;
+    }
+
+    .select2-container--open {
+        z-index: 9999999
+    }
+
+    .modal-content {
+        margin-left: -65px;
+        justify-content: center;
+        width: 800px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: black;
+        font-weight: bold;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: rebeccapurple;
+        color: white;
+    }
+</style>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover mb-0" id="my_table">
+        <thead>
+            <tr>
+
+                <th> ID</th>
+                <th> IdUser </th>
+                <th> Tên Khách Sạn</th>
+                <th> Status</th>
+                <th> Comment</th>
+                <th> Rating</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.Data.Count > 0)
+                {
+                    foreach (var item in Model.Data)
+                    {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.IdUser</td>
+                                <td>@item.HotelName</td>
+                                <th>
+                                    <div class="col-md-3 form-group">
+                                        <select class="box-on-stock-option-region headerLeft_select" id="status" onchange="ChangeStatus(@item.Id)">
+                                            <option value="@item.Status">@StatusRating.SingleOrDefault(x=>x.Key == item.Status).Value</option>
+                                            @for(int i=0; i< 3; i++)
+                                        {
+                                            if (i != @item.Status)
+                                            {
+                                                    <option value="@i">@StatusRating.SingleOrDefault(x=>x.Key == i).Value</option>
+
+                                            }
+                                        }
+                                        </select>
+                                    </div>
+                                    
+                                </th>
+                                <th>@item.Description</th>
+                                <th>
+                                    LocationScore : @item.LocationScore -
+                                    ValueScore : @item.ValueScore -
+                                    ServiceScore : @item.ServiceScore -
+                                    CleanlinessScore : @item.CleanlinessScore -
+                                    RoomsScore : @item.RoomsScore
+                                </th>
+
+
+                            </tr>
+                    }
+
+                }
+            }
+
+        </tbody>
+    </table>
+    <ul class="listPage">
+           
+    </ul>
+</div>
+
